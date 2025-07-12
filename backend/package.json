@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "private": true,
+  "type": "commonjs",
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -14,6 +15,6 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "pg": "^8.16.3"
   }
 }
