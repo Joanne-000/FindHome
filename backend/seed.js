@@ -38,7 +38,7 @@ try {
   );
 
   await client.query(
-    `CREATE TABLE  IF NOT EXISTS users (
+    `CREATE TABLE  IF NOT EXISTS buyers (
    id SERIAL PRIMARY KEY,
     email VARCHAR NOT NULL,  
    password VARCHAR NOT NULL,
@@ -77,7 +77,7 @@ try {
   await client.query(
     `CREATE TABLE IF NOT EXISTS favourites (
    id SERIAL PRIMARY KEY,
-   user_id INT REFERENCES users(id) NOT NULL,
+   buyer_id INT REFERENCES buyers(id) NOT NULL,
    property_id INT REFERENCES properties(id) NOT NULL
   );
   `
@@ -94,7 +94,7 @@ try {
   await client.query(
     `CREATE TABLE IF NOT EXISTS interests (
    id SERIAL PRIMARY KEY,
-   user_id INT REFERENCES users(id) NOT NULL,
+   buyer_id INT REFERENCES buyers(id) NOT NULL,
  	agent_id INT REFERENCES agents(id) NOT NULL    ,
     timestamptz TIMESTAMPTZ DEFAULT now()
   );
@@ -120,26 +120,26 @@ try {
 
   console.log("inserting 2");
 
-  const userText1 =
-    "insert into users (email, password, displayName, contactNumber, userRole, preferContactMethod, preferLocation,preferBudget,preferRooms, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
-  const userValue1 = [
+  const buyerText1 =
+    "insert into buyers (email, password, displayName, contactNumber, userRole, preferContactMethod, preferLocation,preferBudget,preferRooms, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
+  const buyerValue1 = [
     "janice222@gmail.com",
     "222",
     "Janice",
     "22222222",
-    "user",
+    "buyer",
     "Whatsapp",
     "Bedok",
     600000,
     "3",
     "active",
   ];
-  const userValue2 = [
+  const buyerValue2 = [
     "michael666@gmail.com",
     "666",
     "Michael",
     "66666666",
-    "user",
+    "buyer",
     "Whatsapp",
     "Jurong",
     750000,
@@ -147,8 +147,8 @@ try {
     "active",
   ];
 
-  const userId1 = await client.query(userText1, userValue1);
-  //   const userId2 = await client.query(userText1, userValue2);
+  const buyerId1 = await client.query(buyerText1, buyerValue1);
+  const buyerId2 = await client.query(buyerText1, buyerValue2);
 
   console.log("inserting 3");
 
@@ -186,16 +186,16 @@ try {
   console.log("inserting 4");
 
   const favouriteText1 =
-    "insert into favourites (user_id, property_id) values ($1,$2) returning id";
-  const favouriteValue1 = [userId1.rows[0].id, propertyId1.rows[0].id];
-  const favouriteValue2 = [userId1.rows[0].id, propertyId2.rows[0].id];
+    "insert into favourites (buyer_id, property_id) values ($1,$2) returning id";
+  const favouriteValue1 = [buyerId1.rows[0].id, propertyId1.rows[0].id];
+  const favouriteValue2 = [buyerId1.rows[0].id, propertyId2.rows[0].id];
   await client.query(favouriteText1, favouriteValue1);
   await client.query(favouriteText1, favouriteValue2);
 
   const interestText1 =
-    "insert into interests (user_id, agent_id) values ($1,$2) returning id";
-  const interestValue1 = [userId1.rows[0].id, agentId.rows[0].id];
-  const interestValue2 = [userId1.rows[0].id, agentId.rows[0].id];
+    "insert into interests (buyer_id, agent_id) values ($1,$2) returning id";
+  const interestValue1 = [buyerId1.rows[0].id, agentId.rows[0].id];
+  const interestValue2 = [buyerId1.rows[0].id, agentId.rows[0].id];
   await client.query(interestText1, interestValue1);
   await client.query(interestText1, interestValue2);
 
@@ -204,8 +204,8 @@ try {
 
   const agents = await client.query("SELECT * FROM agents");
   console.log("agents", agents.rows[0]);
-  const users = await client.query("SELECT * FROM users");
-  console.log("users", users.rows[0]);
+  const buyers = await client.query("SELECT * FROM buyers");
+  console.log("users", buyers.rows[0]);
   const properties = await client.query("SELECT * FROM properties");
   console.log("properties", properties.rows[0]);
   const favourites = await client.query("SELECT * FROM favourites");

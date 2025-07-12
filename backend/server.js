@@ -1,10 +1,13 @@
 const express = require("express");
 require("dotenv").config();
-
 const pg = require("pg");
-
 const cors = require("cors");
 const logger = require("morgan");
+
+const authRouter = require("./routers/authRouter");
+const userRouter = require("./routers/userRouter");
+const listingRouter = require("./routers/listingRouter");
+const enquiryRouter = require("./routers/enquiryRouter");
 
 const app = express();
 const port = 3000;
@@ -23,7 +26,9 @@ pool.connect().catch((err) => {
 app.use(cors());
 app.use(express.json());
 app.use(logger("dev"));
+app.use("/", authRouter);
 
-app.get("/", (req, res) => res.send("Hello World!"));
-
+app.use("/listings", listingRouter);
+app.use("/enquiries", enquiryRouter);
+app.use("/:displayname", userRouter);
 app.listen(port, () => console.log(`Example app listening on port ${port}`));
