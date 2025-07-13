@@ -17,7 +17,7 @@ try {
   console.log("start");
 
   await client.query(
-    `DROP TABLE IF EXISTS agents, users,properties,favourites,images,interests CASCADE;`
+    `DROP TABLE IF EXISTS agents, buyers,properties,favourites,images,interests CASCADE;`
   );
   console.log("creating");
 
@@ -29,7 +29,7 @@ try {
     displayName VARCHAR NOT NULL,
     contactNumber VARCHAR NOT NULL,
     userRole VARCHAR NOT NULL,
-    agentId VARCHAR NOT NULL,
+    licenseId VARCHAR NOT NULL,
     profilePhoto VARCHAR NOT NULL,
     isActive VARCHAR NOT NULL,
     timestamptz TIMESTAMPTZ DEFAULT now()
@@ -103,7 +103,7 @@ try {
   console.log("inserting 1");
 
   const agentText1 =
-    "insert into agents (email, password, displayname, contactNumber, userRole, agentId, profilePhoto, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id";
+    "insert into agents (email, password, displayname, contactNumber, userRole, licenseId, profilePhoto, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id";
   const agentValue1 = [
     "philip123@gmail.com",
     "123",

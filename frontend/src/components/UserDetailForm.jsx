@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-// import { signUp } from "../services/authService";
+import { signUp } from "../services/authService";
 // import { getUser, updateUser } from "../services/userService";
 // import { deleteUser } from "../services/userService";
 // import isEmail from "validator/lib/isEmail";
@@ -15,7 +15,7 @@ const UserDetailForm = ({userId}) => {
         displayName: "",
         contactNumber: "",        
         userRole: "buyer",
-        agentId: "",
+        licenseId: "",
         isActive: "active",
         preferContactMethod: "",
         preferLocation: "",
@@ -34,7 +34,7 @@ const UserDetailForm = ({userId}) => {
 //         displayName: userProfile.displayName,
 //         contactNumber: userProfile.contactNumber,        
 //         userRole: userProfile.userRole,
-//         agentId: userProfile.agentId,
+//         licenseId: userProfile.licenseId,
 //         isActive: userProfile.isActive,
 //         preferContactMethod: userProfile.preferContactMethod,
 //         preferLocation: userProfile.preferLocation,
@@ -52,7 +52,7 @@ const UserDetailForm = ({userId}) => {
       displayName,
       contactNumber,
       userRole,
-      agentId,
+      licenseId,
       profilePhoto,
       isActive,
       preferContactMethod, 
@@ -74,22 +74,19 @@ const UserDetailForm = ({userId}) => {
   };
 
   const handleSubmit = async (evt) => {
-//     evt.preventDefault();
-//     try {
+    evt.preventDefault();
+    try {
 //       if (isEditing) {
 //         const updateProfile = await updateUser(userId, formData);
 //         // setUser(updateProfile);
 //       } else {
-//         const newUser = await signUp(formData);
-//         // setUser(newUser);
-//         setTimeout(() => {
-//           navigate(`/reservations`);
-//         }, 1500);
-//       }
-//     } catch (err) {
-//       setMessage(err.message);
-//     }
-console.log("submit")
+        const newUser = await signUp(formData);
+        console.log("sign up successful")
+        // setUser(newUser);
+    } catch (err) {
+      setMessage(err.message);
+    }
+console.log("submit", formData)
   };
 
   console.log(formData.userRole)
@@ -202,12 +199,12 @@ console.log("submit")
         {userRole === "agent" ? 
         <>
         <div >
-          <label >Agent Id:
+          <label >License Id:
           <input
             type="String"
-            id="agentId"
-            value={agentId}
-            name="agentId"
+            id="licenseId"
+            value={licenseId}
+            name="licenseId"
             onChange={handleChange}
             />
           </label>

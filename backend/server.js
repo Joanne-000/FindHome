@@ -32,3 +32,21 @@ app.use("/listings", listingRouter);
 app.use("/enquiries", enquiryRouter);
 app.use("/:displayname", userRouter);
 app.listen(port, () => console.log(`Example app listening on port ${port}`));
+
+async function checkPasswordEncryption() {
+  try {
+    const client = await pool.connect();
+
+    // Query to check password encryption setting
+    const res = await client.query("SHOW password_encryption;");
+    console.log("Password Encryption:", res.rows[0].password_encryption);
+
+    // Always release the client when done
+    client.release();
+  } catch (err) {
+    console.error("Error checking password encryption:", err);
+  }
+}
+
+// Call the function to check password encryption
+checkPasswordEncryption();
