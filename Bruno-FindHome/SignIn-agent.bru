@@ -1,0 +1,19 @@
+meta {
+  name: SignIn-agent
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3000/signin
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "email": "philip123@gmail.com",
+      "password": "123",
+      "userRole":"agent"
+  }
+}

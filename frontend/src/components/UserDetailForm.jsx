@@ -46,19 +46,19 @@ const UserDetailForm = ({userId}) => {
 //   }, [userId]);
 
   const {
-      email,
-      password,
-      passwordConf,
-      displayName,
-      contactNumber,
-      userRole,
-      licenseId,
-      profilePhoto,
-      isActive,
-      preferContactMethod, 
-      preferLocation,
-      preferBudget,
-      preferRooms,
+    email,
+    password,
+    passwordconf,
+    displayname,
+    contactnumber,
+    userrole,
+    licenseid,
+    profilephoto,
+    isactive,
+    prefercontactmethod,
+    preferlocation,
+    preferbudget,
+    preferrooms,
   } = formData;
 
   const handleChange = (evt) => {
@@ -69,7 +69,7 @@ const UserDetailForm = ({userId}) => {
   const handleRoleChange = (role) => {
     setFormData({
         ...formData,
-      userRole: role // Update only userRole
+      userrole: role // Update only userRole
     });
   };
 
@@ -83,6 +83,7 @@ const UserDetailForm = ({userId}) => {
         const newUser = await signUp(formData);
         console.log("sign up successful")
         // setUser(newUser);
+        navigate("/")
     } catch (err) {
       setMessage(err.message);
     }
@@ -156,9 +157,9 @@ console.log("submit", formData)
               <label >Confirm Password *:
               <input
                 type="password"
-                id="confirm"
-                value={passwordConf}
-                name="passwordConf"
+                id="passwordconf"
+                value={passwordconf}
+                name="passwordconf"
                 onChange={handleChange}
                 required
               />
@@ -170,9 +171,9 @@ console.log("submit", formData)
           <label >Display Name *:
           <input
             type="text"
-            id="displayName"
-            value={displayName}
-            name="displayName"
+            id="displayname"
+            value={displayname}
+            name="displayname"
             onChange={handleChange}
           />
           </label>
@@ -181,9 +182,9 @@ console.log("submit", formData)
           <label >Contact Number:
           <input
             type="String"
-            id="contactNumber"
-            value={contactNumber}
-            name="contactNumber"
+            id="contactnumber"
+            value={contactnumber}
+            name="contactnumber"
             onChange={handleChange}
           />
           </label>
@@ -196,15 +197,15 @@ console.log("submit", formData)
         Buyer
       </button>
         </div>
-        {userRole === "agent" ? 
+        {userrole === "agent" ? 
         <>
         <div >
           <label >License Id:
           <input
             type="String"
-            id="licenseId"
-            value={licenseId}
-            name="licenseId"
+            id="licenseid"
+            value={licenseid}
+            name="licenseid"
             onChange={handleChange}
             />
           </label>
@@ -213,9 +214,9 @@ console.log("submit", formData)
           <label >Profile Photo:
           <input
             type="String"
-            id="profilePhoto"
-            value={profilePhoto}
-            name="profilePhoto"
+            id="profilephoto"
+            value={profilephoto}
+            name="profilephoto"
             onChange={handleChange}
             />
           </label>
@@ -227,9 +228,9 @@ console.log("submit", formData)
           <label >Prefer Contact Method:
           <input
             type="String"
-            id="preferContactMethod"
-            value={preferContactMethod}
-            name="preferContactMethod"
+            id="prefercontactmethod"
+            value={prefercontactmethod}
+            name="prefercontactmethod"
             onChange={handleChange}
             />
           </label>
@@ -238,9 +239,9 @@ console.log("submit", formData)
           <label >Prefer Location:
           <input
             type="String"
-            id="preferLocation"
-            value={preferLocation}
-            name="preferLocation"
+            id="preferlocation"
+            value={preferlocation}
+            name="preferlocation"
             onChange={handleChange}
             />
           </label>
@@ -249,9 +250,9 @@ console.log("submit", formData)
           <label >Prefer Budget:
           <input
             type="Number"
-            id="preferBudget"
-            value={preferBudget}
-            name="preferBudget"
+            id="preferbudget"
+            value={preferbudget}
+            name="preferbudget"
             onChange={handleChange}
             />
           </label>
@@ -260,9 +261,9 @@ console.log("submit", formData)
           <label >Prefer Rooms:
           <input
             type="Number"
-            id="preferRooms"
-            value={preferRooms}
-            name="preferRooms"
+            id="preferrooms"
+            value={preferrooms}
+            name="preferrooms"
             onChange={handleChange}
             />
           </label>

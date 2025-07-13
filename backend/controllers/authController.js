@@ -7,143 +7,107 @@ const pool = new Pool({ connectionString: connection });
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { createPayload } = require("../middleware/utils");
-
-const saltRounds = 12;
-
-const userSignUp = async (client, req, res) => {
-  console.log("start in function");
-  const {
-    email,
-    password,
-    passwordConf,
-    displayName,
-    contactNumber,
-    userRole,
-    licenseId,
-    profilePhoto,
-    isActive,
-    preferContactMethod,
-    preferLocation,
-    preferBudget,
-    preferRooms,
-  } = req.body;
-
-  const role = req.body.userRole + "s";
-  console.log("req.body", req.body);
-  let user;
-  console.log("email", email);
-  const emailInDatabase = await client.query(
-    `select * from ${role} where email = $1`,
-    [email]
-  );
-  console.log("emailInDatabase", emailInDatabase.rows[0]);
-  if (emailInDatabase.rows[0]) {
-    return res.status(409).send({ err: "This Email has already been taken." });
-  }
-
-  const hashedPW = bcrypt.hash(password, saltRounds);
-  if (role === "agents") {
-    const agentText = `insert into ${role} (email, password, displayname, contactNumber, userRole, licenseId, profilePhoto, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id`;
-    const agentValue = [
-      email,
-      hashedPW,
-      displayName,
-      contactNumber,
-      userRole,
-      licenseId,
-      profilePhoto,
-      isActive,
-    ];
-
-    const result = await client.query(agentText, agentValue);
-    const agentId = result.rows[0];
-    const selectUser = await client.query(
-      `select * from ${role} where id = $1`,
-      [agentId.id]
-    );
-
-    user = selectUser.rows[0];
-  } else {
-    const buyerText = `insert into ${role} (email, password, displayName, contactNumber, userRole, preferContactMethod, preferLocation,preferBudget,preferRooms, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id`;
-    const buyerValue = [
-      email,
-      password,
-      displayName,
-      contactNumber,
-      userRole,
-      preferContactMethod,
-      preferLocation,
-      preferBudget,
-      preferRooms,
-      isActive,
-    ];
-    const result = await client.query(buyerText, buyerValue);
-    const buyerId = result.rows[0];
-
-    const selectUser = await client.query(
-      `select * from ${role} where id = $1`,
-      [buyerId.id]
-    );
-    user = selectUser.rows[0];
-  }
-  return user;
-};
+const {
+  createPayload,
+  emailInAgents,
+  emailInBuyers,
+  saveUser,
+} = require("../middleware/utils");
+const { userSignUp } = require("../middleware/utils-SignUp");
 
 const signUp = async (req, res) => {
   const client = await pool.connect();
   console.log("start in signup");
-
   try {
+    const emailInAgentsDB = emailInAgents(client, req.body.email);
+    const emailInBuyersDB = emailInBuyers(client, req.body.emalil);
+
+    if (emailInAgentsDB || emailInBuyersDB) {
+      return res
+        .status(409)
+        .send({ err: "This Email has already been taken." });
+    }
+    if (req.body.password !== req.body.passwordConf) {
+      return res.status(409).send({
+        err: "Password and Confirm Password are not the same. Please re-type.",
+      });
+    }
+
     try {
       console.log("start in try");
 
       await client.query("BEGIN");
+
       const user = await userSignUp(client, req, res);
       const payload = createPayload(user);
-
+      saveUser(user);
       const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
         expiresIn: "1hr",
       });
 
       res.status(201).json({ token });
-      await client.query("COMMIT");
 
+      await client.query("COMMIT");
       client.release();
     } catch (e) {
       await client.query("ROLLBACK");
       throw e;
     }
   } catch (err) {
-    res.status(500).json({ err: "Something went wrong." });
+    res.status(500).json({ err: err.message });
   }
 };
 
-// const signIn = async (req, res) => {
-//   try {
-//     const user = await User.findOne({ email: req.body.email });
-//     if (!user) {
-//       return res.status(404).json({ err: "Email address not found." });
-//     }
+const signIn = async (req, res) => {
+  try {
+    const client = await pool.connect();
 
-//     const isPasswordCorrect = bcrypt.compareSync(
-//       req.body.password,
-//       user.hashedPassword
-//     );
-//     if (!isPasswordCorrect) {
-//       return res.status(401).json({ err: "Invalid credentials." });
-//     }
-//     //to save the req.user as user
-//     const payload = createPayload(user);
+    const emailInAgentsDB = emailInAgents(client, req.body.email);
+    const emailInBuyersDB = emailInBuyers(client, req.body.emalil);
 
-//     const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
-//       expiresIn: "1hr",
-//     });
+    if (!emailInAgentsDB || !emailInBuyersDB) {
+      return res.status(404).send({ err: "Email address not found." });
+    }
+    try {
+      console.log("start in try");
+      console.log(req.body);
 
-//     res.status(200).json({ token });
-//   } catch (err) {
-//     res.status(500).json({ err: err.message });
-//   }
-// };
+      await client.query("BEGIN");
 
-module.exports = { signUp };
+      const { email, password, userrole } = req.body;
+      const role = userrole + "s";
+      const selectUser = await client.query(
+        `select * from ${role} where email = $1`,
+        [email]
+      );
+      console.log(selectUser.rows[0]);
+
+      const user = selectUser.rows[0];
+      console.log(password);
+      console.log(user.hashedpw);
+
+      const isPasswordCorrect = await bcrypt.compare(password, user.hashedpw);
+
+      if (!isPasswordCorrect) {
+        return res.status(401).json({ err: "Invalid credentials." });
+      }
+
+      const payload = createPayload(user);
+      const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
+        expiresIn: "1hr",
+      });
+
+      res.status(200).json({ token });
+
+      await client.query("COMMIT");
+      client.release();
+    } catch (e) {
+      await client.query("ROLLBACK");
+      throw e;
+    }
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+};
+
+module.exports = { signUp, signIn };

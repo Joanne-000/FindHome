@@ -4,9 +4,7 @@ const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}`;
 const signUp = async (formData) => {
   try {
     console.log("signup start");
-    const res = await axios.post(`${BASE_URL}/signup`, formData, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const res = await axios.post(`${BASE_URL}/signup`, formData);
     const data = res.data;
     console.log("signup data", res.data);
 
@@ -21,45 +19,16 @@ const signUp = async (formData) => {
     }
   } catch (error) {
     console.error(error.response.data.err);
-  }
-};
-
-const signUpOld = async (formData) => {
-  try {
-    const res = await fetch(`${BASE_URL}/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await res.json();
-
-    if (data.err) {
-      throw new Error(data.err);
-    }
-
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      return JSON.parse(atob(data.token.split(".")[1])).payload;
-    }
-
-    throw new Error("Invalid response from server");
-  } catch (err) {
-    console.log(err);
-    throw new Error(err);
+    throw new Error(error);
   }
 };
 
 const signIn = async (formData) => {
   try {
-    const res = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    const res = await axios.post(`${BASE_URL}/signin`, formData);
+    const data = res.data;
+    console.log("signin data", res.data);
 
-    const data = await res.json();
-    console.log(data);
     if (data.err) {
       throw new Error(data.err);
     }
@@ -72,9 +41,9 @@ const signIn = async (formData) => {
     }
 
     throw new Error("Invalid response from server");
-  } catch (err) {
-    console.log(err);
-    throw new Error(err);
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
   }
 };
 

@@ -1,5 +1,6 @@
 const express = require("express");
 require("dotenv").config();
+const bcrypt = require("bcrypt");
 
 const pg = require("pg");
 const { Pool } = pg;
@@ -11,6 +12,7 @@ const client = await pool.connect();
 
 const res = await client.query("SELECT $1::text as message", ["Hello world!"]);
 console.log(res.rows[0].message);
+const saltRounds = 12;
 
 try {
   await client.query("BEGIN");
@@ -25,7 +27,7 @@ try {
     `CREATE TABLE IF NOT EXISTS agents (
     id SERIAL PRIMARY KEY,
     email VARCHAR NOT NULL,  
-    password VARCHAR NOT NULL,
+    hashedPW VARCHAR NOT NULL,
     displayName VARCHAR NOT NULL,
     contactNumber VARCHAR NOT NULL,
     userRole VARCHAR NOT NULL,
@@ -41,7 +43,7 @@ try {
     `CREATE TABLE  IF NOT EXISTS buyers (
    id SERIAL PRIMARY KEY,
     email VARCHAR NOT NULL,  
-   password VARCHAR NOT NULL,
+   hashedPW VARCHAR NOT NULL,
    displayName VARCHAR NOT NULL,
    contactNumber VARCHAR NOT NULL,
    userRole VARCHAR NOT NULL,
@@ -102,11 +104,13 @@ try {
   );
   console.log("inserting 1");
 
+  const hashedPWAgent = await bcrypt.hash("123", saltRounds);
+
   const agentText1 =
-    "insert into agents (email, password, displayname, contactNumber, userRole, licenseId, profilePhoto, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id";
+    "insert into agents (email, hashedPW, displayname, contactNumber, userRole, licenseId, profilePhoto, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id";
   const agentValue1 = [
     "philip123@gmail.com",
-    "123",
+    hashedPWAgent,
     "Philip Tan",
     "22223333",
     "agent",
@@ -119,12 +123,14 @@ try {
   console.log("agentId", agentId.rows[0].id);
 
   console.log("inserting 2");
+  const hashedPWBuyer1 = await bcrypt.hash("222", saltRounds);
+  const hashedPWBuyer2 = await bcrypt.hash("666", saltRounds);
 
   const buyerText1 =
-    "insert into buyers (email, password, displayName, contactNumber, userRole, preferContactMethod, preferLocation,preferBudget,preferRooms, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
+    "insert into buyers (email, hashedPW, displayName, contactNumber, userRole, preferContactMethod, preferLocation,preferBudget,preferRooms, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
   const buyerValue1 = [
     "janice222@gmail.com",
-    "222",
+    hashedPWBuyer1,
     "Janice",
     "22222222",
     "buyer",
@@ -136,7 +142,7 @@ try {
   ];
   const buyerValue2 = [
     "michael666@gmail.com",
-    "666",
+    hashedPWBuyer2,
     "Michael",
     "66666666",
     "buyer",

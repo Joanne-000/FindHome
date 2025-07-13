@@ -1,0 +1,19 @@
+meta {
+  name: SignIn-buyer
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/signin
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "email": "janice222@gmail.com",
+      "password": "222",
+      "userRole":"buyer"
+  }
+}
