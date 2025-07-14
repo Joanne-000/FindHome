@@ -9,29 +9,23 @@ const pool = new Pool({ connectionString: connection });
 
 const getUser = async (req, res) => {
   const client = await pool.connect();
-
   try {
     const currentUser = loadUser(req);
     const userId = Number(req.params.userId);
-    const role = currentUser.userrole + "s";
-
     if (currentUser.id !== userId) {
       res.status(403).send("Unauthorized User");
     }
 
     try {
       console.log("start in try");
-
       await client.query("BEGIN");
 
+      const role = currentUser.userrole + "s";
       const text = `select * from ${role} where id = $1`;
       const value = [userId];
       const result = await client.query(text, value);
-
       const user = result.rows[0];
-
       res.status(200).json(user);
-
       await client.query("COMMIT");
       client.release();
     } catch (error) {
@@ -45,24 +39,19 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const client = await pool.connect();
-
   try {
     const currentUser = loadUser(req);
     const userId = Number(req.params.userId);
-
     if (currentUser.id !== userId) {
       res.status(403).send("Unauthorized User");
     }
 
     try {
       console.log("start in try");
-
       await client.query("BEGIN");
 
       const user = await editUser(client, req, res);
-
       res.status(200).json(user);
-
       await client.query("COMMIT");
       client.release();
     } catch (error) {
@@ -76,24 +65,18 @@ const updateUser = async (req, res) => {
 
 const destroyUser = async (req, res) => {
   const client = await pool.connect();
-
   try {
     const currentUser = loadUser(req);
     const userId = Number(req.params.userId);
-
     if (currentUser.id !== userId) {
       res.status(403).send("Unauthorized User");
     }
 
     try {
       console.log("start in try");
-
       await client.query("BEGIN");
-
       const user = await delUser(client, req, res);
-
       res.status(200).json(user);
-
       await client.query("COMMIT");
       client.release();
     } catch (error) {
