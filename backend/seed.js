@@ -71,6 +71,7 @@ try {
    bathroom INT NOT NULL,
    typeoflease VARCHAR NOT NULL,
    description VARCHAR,
+   status VARCHAR NOT NULL,
    timestamptz TIMESTAMPTZ DEFAULT now()
   );
   `
@@ -88,6 +89,7 @@ try {
   await client.query(
     `CREATE TABLE IF NOT EXISTS images (
    id SERIAL PRIMARY KEY,
+   imageurl VARCHAR NOT NULL,
  	property_id INT REFERENCES properties(id) NOT NULL
   );
   `
@@ -118,16 +120,27 @@ try {
     "https://sbr.com.sg/sites/default/files/users/user3327/rsz_my-passport-photo_2.jpg",
     "active",
   ];
+  const agentValue2 = [
+    "jessie123@hotmail.com",
+    hashedPWAgent,
+    "Jessie",
+    "22223333",
+    "agent",
+    "12345678",
+    "https://sbr.com.sg/sites/default/files/users/user3327/rsz_my-passport-photo_1.jpg",
+    "active",
+  ];
+  const agentId1 = await client.query(agentText1, agentValue1);
+  const agentId2 = await client.query(agentText1, agentValue2);
 
-  const agentId = await client.query(agentText1, agentValue1);
-  console.log("agentId", agentId.rows[0].id);
+  console.log("agentId", agentId1.rows[0].id);
 
   console.log("inserting 2");
   const hashedPWBuyer1 = await bcrypt.hash("222", saltRounds);
   const hashedPWBuyer2 = await bcrypt.hash("666", saltRounds);
 
   const buyerText1 =
-    "insert into buyers (email, hashedpw, displayname, contactnumber, userrole,prefercontactmethod, preferlocation, preferbudget,preferrooms, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
+    "insert into buyers (email, hashedpw, displayname, contactnumber, userrole,prefercontactmethod, preferlocation, preferbudget, preferrooms, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
   const buyerValue1 = [
     "janice222@gmail.com",
     hashedPWBuyer1,
@@ -159,9 +172,9 @@ try {
   console.log("inserting 3");
 
   const propertyText1 =
-    "insert into properties (agent_id, propertyname, address, price, town, nearestmrt, unitsize ,bedroom,bathroom, typeoflease, description) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id";
+    "insert into properties (agent_id, propertyname, address, price, town, nearestmrt, unitsize ,bedroom,bathroom, typeoflease, description, status) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning id";
   const propertyValue1 = [
-    agentId.rows[0].id,
+    agentId1.rows[0].id,
     "Blk 222 Bedok North",
     "#11-222 Blk 222 Bedok North, Singpore 476222",
     630000,
@@ -172,12 +185,13 @@ try {
     2,
     "99-year lease",
     "NA",
+    "available",
   ];
   const propertyValue2 = [
-    agentId.rows[0].id,
+    agentId1.rows[0].id,
     "Blk 144 Jurong East",
     "#03-002 Blk 144 Jurong East Drive 3, Singpore 632114",
-    530000,
+    650000,
     "Jurong East",
     "Jurong East",
     89,
@@ -185,23 +199,90 @@ try {
     2,
     "99-year lease",
     "NA",
+    "available",
+  ];
+  const propertyValue3 = [
+    agentId1.rows[0].id,
+    "Blk 106 Jurong North Street 4",
+    "#06-112 Blk 106 Jurong North Street 4, Singpore 633106",
+    530000,
+    "Jurong North",
+    "Jurong East",
+    89,
+    3,
+    2,
+    "99-year lease",
+    "NA",
+    "available",
+  ];
+  const propertyValue4 = [
+    agentId2.rows[0].id,
+    "Blk 333 Tampines Street 96",
+    "#05-111 Blk 333 Tampines Street 96, Singpore 486333",
+    830000,
+    "Tampines",
+    "Tampines",
+    93,
+    3,
+    2,
+    "99-year lease",
+    "NA",
+    "available",
   ];
   const propertyId1 = await client.query(propertyText1, propertyValue1);
   const propertyId2 = await client.query(propertyText1, propertyValue2);
+  const propertyId3 = await client.query(propertyText1, propertyValue3);
+  const propertyId4 = await client.query(propertyText1, propertyValue4);
 
   console.log("inserting 4");
+
+  const listingImageText1 =
+    "insert into images (property_id, imageurl) values ($1,$2) returning id";
+  const listingImageValue1 = [
+    propertyId1.rows[0].id,
+    "https://landtransportguru.net/web/wp-content/uploads/2016/07/ewl_ew5_mar16-9.jpg",
+  ];
+  const listingImageValue2 = [
+    propertyId2.rows[0].id,
+    "https://static.mothership.sg/1/2024/07/Screenshot-2024-07-04-at-10.03.03.jpeg",
+  ];
+  const listingImageValue3 = [
+    propertyId3.rows[0].id,
+    "https://upload.wikimedia.org/wikipedia/commons/4/4c/Jurong_East_MRT_station_230622.jpg",
+  ];
+  const listingImageValue4 = [
+    propertyId3.rows[0].id,
+    "https://www.hdb.gov.sg/-/media/HDBContent/Images/SCEG/our-towns-jurong-east-1.png",
+  ];
+  const listingImageValue5 = [
+    propertyId4.rows[0].id,
+    "https://static.mothership.sg/1/2024/07/Screenshot-2024-07-04-at-10.03.03.jpeg",
+  ];
+  const listingImageValue6 = [
+    propertyId2.rows[0].id,
+    "https://www.hdb.gov.sg/-/media/HDBContent/Images/SCEG/our-towns-jurong-east-1.png",
+  ];
+
+  await client.query(listingImageText1, listingImageValue1);
+  await client.query(listingImageText1, listingImageValue2);
+  await client.query(listingImageText1, listingImageValue3);
+  await client.query(listingImageText1, listingImageValue4);
+  await client.query(listingImageText1, listingImageValue5);
+  await client.query(listingImageText1, listingImageValue6);
+
+  console.log("inserting 5");
 
   const favouriteText1 =
     "insert into favourites (buyer_id, property_id) values ($1,$2) returning id";
   const favouriteValue1 = [buyerId1.rows[0].id, propertyId1.rows[0].id];
-  const favouriteValue2 = [buyerId1.rows[0].id, propertyId2.rows[0].id];
+  const favouriteValue2 = [buyerId1.rows[0].id, propertyId3.rows[0].id];
   await client.query(favouriteText1, favouriteValue1);
   await client.query(favouriteText1, favouriteValue2);
 
   const interestText1 =
     "insert into interests (buyer_id, agent_id) values ($1,$2) returning id";
-  const interestValue1 = [buyerId1.rows[0].id, agentId.rows[0].id];
-  const interestValue2 = [buyerId1.rows[0].id, agentId.rows[0].id];
+  const interestValue1 = [buyerId1.rows[0].id, agentId1.rows[0].id];
+  const interestValue2 = [buyerId2.rows[0].id, agentId1.rows[0].id];
   await client.query(interestText1, interestValue1);
   await client.query(interestText1, interestValue2);
 
@@ -214,6 +295,8 @@ try {
   console.log("users", buyers.rows[0]);
   const properties = await client.query("SELECT * FROM properties");
   console.log("properties", properties.rows[0]);
+  const images = await client.query("SELECT * FROM images");
+  console.log("properties", images.rows[0]);
   const favourites = await client.query("SELECT * FROM favourites");
   console.log("favourites", favourites.rows[0]);
   const interests = await client.query("SELECT * FROM interests");

@@ -1,7 +1,7 @@
 const { loadUser } = require("../middleware/utils");
-const { addProperty } = require("../middleware/utils-createProperty");
+const { addProperty } = require("../middleware/utils-addProperty");
+const { addImages } = require("../middleware/utils-addImages");
 
-const express = require("express");
 require("dotenv").config();
 const pg = require("pg");
 const { Pool } = pg;
@@ -80,8 +80,8 @@ const createProperty = async (req, res) => {
       await client.query("BEGIN");
 
       const listing = await addProperty(client, req);
-
-      res.status(200).json(listing);
+      const images = await addImages(client, req, listing.id);
+      res.status(200).json({ listing, images });
 
       await client.query("COMMIT");
       client.release();
