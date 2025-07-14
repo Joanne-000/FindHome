@@ -1,5 +1,5 @@
 const { loadUser } = require("../middleware/utils");
-const { addProperty } = require("../middleware/utils-addProperty");
+const { addListing } = require("../middleware/utils-addListing");
 const { addImages } = require("../middleware/utils-addImages");
 
 require("dotenv").config();
@@ -15,11 +15,11 @@ const getProperties = async (req, res) => {
     try {
       console.log("start in try");
       await client.query("BEGIN");
-      const result = await client.query(`select * from properties`);
+      const listingsResult = await client.query(`select * from listings`);
 
-      const properties = result.rows;
+      const listings = listingsResult.rows;
 
-      res.status(200).json(properties);
+      res.status(200).json(listings);
 
       await client.query("COMMIT");
       client.release();
@@ -41,13 +41,18 @@ const getOneProperty = async (req, res) => {
       console.log("start in try");
       await client.query("BEGIN");
 
-      const text = `select * from properties where id = $1`;
+      const text = `select * from listings where id = $1`;
       const value = [listingId];
-      const result = await client.query(text, value);
+      const listingResult = await client.query(text, value);
+      const listing = listingResult.rows;
 
-      const properties = result.rows;
+      const imagesResult = await client.query(
+        `select * from images where listing_id = $1`,
+        [listingId]
+      );
+      const images = imagesResult.rows;
 
-      res.status(200).json(properties);
+      res.status(200).json({ listing, images });
 
       await client.query("COMMIT");
       client.release();
@@ -60,26 +65,25 @@ const getOneProperty = async (req, res) => {
   }
 };
 
-const createProperty = async (req, res) => {
+const createListing = async (req, res) => {
   const client = await pool.connect();
-  console.log("req", req.body);
-  console.log("req", req.user);
-  console.log("req", req.params.userId);
 
   try {
     const currentUser = loadUser(req);
     const userId = Number(req.params.userId);
-    if (currentUser.id !== userId && currentUser.userrole !== "agent") {
+    if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       res.status(403).send("Unauthorized User");
     }
-    console.log("req", req.body);
+    console.log("currentUser.id ", currentUser.id);
+    console.log("userId", userId);
+    console.log("currentUser.userrole", currentUser.userrole);
 
     try {
       console.log("start in try");
 
       await client.query("BEGIN");
 
-      const listing = await addProperty(client, req);
+      const listing = await addListing(client, req);
       const images = await addImages(client, req, listing.id);
       res.status(200).json({ listing, images });
 
@@ -149,4 +153,4 @@ const updateProperty = async (req, res) => {
 //   }
 // };
 
-module.exports = { getProperties, getOneProperty, createProperty };
+module.exports = { getProperties, getOneProperty, createListing };

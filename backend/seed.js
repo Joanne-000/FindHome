@@ -19,7 +19,7 @@ try {
   console.log("start");
 
   await client.query(
-    `DROP TABLE IF EXISTS agents, buyers,properties,favourites,images,interests CASCADE;`
+    `DROP TABLE IF EXISTS agents, buyers,listings,favourites,images,interests CASCADE;`
   );
   console.log("creating");
 
@@ -58,7 +58,7 @@ try {
   );
 
   await client.query(
-    `CREATE TABLE IF NOT EXISTS properties (
+    `CREATE TABLE IF NOT EXISTS listings (
    id SERIAL PRIMARY KEY,
  	agent_id INT REFERENCES agents(id) NOT NULL,  
    propertyname VARCHAR NOT NULL,
@@ -81,7 +81,7 @@ try {
     `CREATE TABLE IF NOT EXISTS favourites (
    id SERIAL PRIMARY KEY,
    buyer_id INT REFERENCES buyers(id) NOT NULL,
-   property_id INT REFERENCES properties(id) NOT NULL
+   listing_id INT REFERENCES listings(id) NOT NULL
   );
   `
   );
@@ -90,7 +90,7 @@ try {
     `CREATE TABLE IF NOT EXISTS images (
    id SERIAL PRIMARY KEY,
    imageurl VARCHAR NOT NULL,
- 	property_id INT REFERENCES properties(id) NOT NULL
+   listing_id INT REFERENCES listings(id) NOT NULL
   );
   `
   );
@@ -172,7 +172,7 @@ try {
   console.log("inserting 3");
 
   const propertyText1 =
-    "insert into properties (agent_id, propertyname, address, price, town, nearestmrt, unitsize ,bedroom,bathroom, typeoflease, description, status) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning id";
+    "insert into listings (agent_id, propertyname, address, price, town, nearestmrt, unitsize ,bedroom,bathroom, typeoflease, description, status) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning id";
   const propertyValue1 = [
     agentId1.rows[0].id,
     "Blk 222 Bedok North",
@@ -237,7 +237,7 @@ try {
   console.log("inserting 4");
 
   const listingImageText1 =
-    "insert into images (property_id, imageurl) values ($1,$2) returning id";
+    "insert into images (listing_id, imageurl) values ($1,$2) returning id";
   const listingImageValue1 = [
     propertyId1.rows[0].id,
     "https://landtransportguru.net/web/wp-content/uploads/2016/07/ewl_ew5_mar16-9.jpg",
@@ -273,7 +273,7 @@ try {
   console.log("inserting 5");
 
   const favouriteText1 =
-    "insert into favourites (buyer_id, property_id) values ($1,$2) returning id";
+    "insert into favourites (buyer_id, listing_id) values ($1,$2) returning id";
   const favouriteValue1 = [buyerId1.rows[0].id, propertyId1.rows[0].id];
   const favouriteValue2 = [buyerId1.rows[0].id, propertyId3.rows[0].id];
   await client.query(favouriteText1, favouriteValue1);
@@ -293,7 +293,7 @@ try {
   console.log("agents", agents.rows[0]);
   const buyers = await client.query("SELECT * FROM buyers");
   console.log("users", buyers.rows[0]);
-  const properties = await client.query("SELECT * FROM properties");
+  const properties = await client.query("SELECT * FROM listings");
   console.log("properties", properties.rows[0]);
   const images = await client.query("SELECT * FROM images");
   console.log("properties", images.rows[0]);
