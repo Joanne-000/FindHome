@@ -4,9 +4,9 @@ meta {
   seq: 8
 }
 
-get {
-  url: http://localhost:3000/profile/:userId
-  body: none
+put {
+  url: http://localhost:3000/profile/:userId/edit
+  body: json
   auth: bearer
 }
 
@@ -15,13 +15,19 @@ params:path {
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyLCJlbWFpbCI6Implc3NpZTg4OEBob3RtYWlsLmNvbSIsImhhc2hlZHB3IjoiJDJiJDEyJC9Od3FsVXdtYm0zMU5vNWNoQlczZ083TjBXeWs1ZVZHMlZIQ2JrbjBKM2dkWHZDNnpsN2VpIiwiZGlzcGxheW5hbWUiOiJKZXNzaWUiLCJjb250YWN0bnVtYmVyIjoiNTU1NTU1NTUiLCJ1c2Vycm9sZSI6ImFnZW50IiwibGljZW5zZWlkIjoiNTU1NTU1NTUiLCJpc2FjdGl2ZSI6ImFjdGl2ZSJ9LCJpYXQiOjE3NTI0NjgwMjIsImV4cCI6MTc1MjQ3MTYyMn0.C9fLhycPfPIfDhj1UPY3J0JKxVG7SiI828TRFbwjl5U
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyLCJlbWFpbCI6Implc3NpZTg4OEBob3RtYWlsLmNvbSIsImhhc2hlZHB3IjoiJDJiJDEyJC9Od3FsVXdtYm0zMU5vNWNoQlczZ083TjBXeWs1ZVZHMlZIQ2JrbjBKM2dkWHZDNnpsN2VpIiwiZGlzcGxheW5hbWUiOiJKZXNzaWUiLCJjb250YWN0bnVtYmVyIjoiNTU1NTU1NTUiLCJ1c2Vycm9sZSI6ImFnZW50IiwibGljZW5zZWlkIjoiNTU1NTU1NTUiLCJpc2FjdGl2ZSI6ImFjdGl2ZSJ9LCJpYXQiOjE3NTI0ODAwMDksImV4cCI6MTc1MjQ4MzYwOX0.LYircmTs_9FOb_52tcM8K0GSV4khyjZcKreU32vsdrM
 }
 
 body:json {
   {
-      "email": "philip123@gmail.com",
-      "password": "123",
-      "userrole":"agent"
+      "email": "jessie888@hotmail.com",
+      "password": "888",
+      "displayname": "Jessie",
+      "contactnumber": "88888888",
+      "userrole": "agent",
+      "licenseid": "88888888",
+      "isactive": "active",
+      "passwordconf": "888",
+      "profilephoto": "https://www.rawpixel.com/image/12359840/png-white-background-cat"
   }
 }

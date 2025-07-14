@@ -56,6 +56,29 @@ const editUser = async (client, req, res) => {
   return user;
 };
 
+const delUser = async (client, req, res) => {
+  console.log("start in function");
+  const { email, userrole, isactive } = req.body;
+
+  const role = userrole + "s";
+  let user;
+
+  const values = [isactive];
+
+  const text = `update ${role} set isactive=$1 where email=$2 returning id`;
+  const value = [...values, email];
+  const result = await client.query(text, value);
+  const userId = result.rows[0].id;
+
+  const selectUser = await client.query(`select * from ${role} where id = $1`, [
+    userId,
+  ]);
+
+  user = selectUser.rows[0];
+  return user;
+};
+
 module.exports = {
   editUser,
+  delUser,
 };

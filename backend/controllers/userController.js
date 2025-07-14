@@ -1,5 +1,5 @@
 const { loadUser } = require("../middleware/utils");
-const { editUser } = require("../middleware/utils-editUser");
+const { editUser, delUser } = require("../middleware/utils-editUser");
 const express = require("express");
 require("dotenv").config();
 const pg = require("pg");
@@ -73,4 +73,36 @@ const updateUser = async (req, res) => {
     res.status(500).json({ err: err.message });
   }
 };
-module.exports = { getUser, updateUser };
+
+const destroyUser = async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const currentUser = loadUser(req);
+    const userId = Number(req.params.userId);
+
+    if (currentUser.id !== userId) {
+      res.status(403).send("Unauthorized User");
+    }
+
+    try {
+      console.log("start in try");
+
+      await client.query("BEGIN");
+
+      const user = await delUser(client, req, res);
+
+      res.status(200).json(user);
+
+      await client.query("COMMIT");
+      client.release();
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    }
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+};
+
+module.exports = { getUser, updateUser, destroyUser };

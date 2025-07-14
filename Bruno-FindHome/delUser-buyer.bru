@@ -1,0 +1,35 @@
+meta {
+  name: delUser-buyer
+  type: http
+  seq: 10
+}
+
+put {
+  url: http://localhost:3000/profile/:userId/edit
+  body: json
+  auth: bearer
+}
+
+params:path {
+  userId: 3
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJlbWFpbCI6ImtlbjU1NUBnbWFpbC5jb20iLCJoYXNoZWRwdyI6IiQyYiQxMiRpTE0xRWRPdDQ0cHRaNUZ2QnZpR1oucVRPMlQ4T0w3bWZGUFkxekZheDU3eEFrSFU5dVRPeSIsImRpc3BsYXluYW1lIjoiS2VuIiwiY29udGFjdG51bWJlciI6IjEyMzEyMzEyIiwidXNlcnJvbGUiOiJidXllciIsImlzYWN0aXZlIjoiYWN0aXZlIiwicHJlZmVyY29udGFjdG1ldGhvZCI6IndoYXRzYXBwIiwicHJlZmVybG9jYXRpb24iOiJiZWRvayIsInByZWZlcmJ1ZGdldCI6IjY1MDAwMC4wMCIsInByZWZlcnJvb21zIjozfSwiaWF0IjoxNzUyNDgwNDg0LCJleHAiOjE3NTI0ODQwODR9.sfb69lsIWAW6DA2_0LoD_zaIcWUwE5trjloBMicgFfE
+}
+
+body:json {
+  {
+      "email": "ken555@gmail.com",
+      "password": "555",
+      "displayname": "Ken",
+      "contactnumber": "55555555",
+      "userrole": "buyer",
+      "isactive": "active",
+      "prefercontactmethod": "whatsapp",
+      "preferlocation": "jurong east",
+      "preferbudget": "650000",
+      "preferrooms": "3",
+      "passwordconf": "555"
+  }
+}
