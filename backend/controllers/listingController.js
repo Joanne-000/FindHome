@@ -1,5 +1,6 @@
 const { loadUser } = require("../middleware/utils");
-const { editUser, delUser } = require("../middleware/utils-editUser");
+const { addProperty } = require("../middleware/utils-createProperty");
+
 const express = require("express");
 require("dotenv").config();
 const pg = require("pg");
@@ -59,17 +60,44 @@ const getOneProperty = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const createProperty = async (req, res) => {
   const client = await pool.connect();
+  console.log("req", req.body);
+  console.log("req", req.user);
+  console.log("req", req.params.userId);
 
   try {
     const currentUser = loadUser(req);
     const userId = Number(req.params.userId);
-
-    if (currentUser.id !== userId) {
+    if (currentUser.id !== userId && currentUser.userrole !== "agent") {
       res.status(403).send("Unauthorized User");
     }
+    console.log("req", req.body);
 
+    try {
+      console.log("start in try");
+
+      await client.query("BEGIN");
+
+      const listing = await addProperty(client, req);
+
+      res.status(200).json(listing);
+
+      await client.query("COMMIT");
+      client.release();
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    }
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+};
+
+const updateProperty = async (req, res) => {
+  const client = await pool.connect();
+
+  try {
     try {
       console.log("start in try");
 
@@ -121,4 +149,4 @@ const updateUser = async (req, res) => {
 //   }
 // };
 
-module.exports = { getProperties, getOneProperty };
+module.exports = { getProperties, getOneProperty, createProperty };

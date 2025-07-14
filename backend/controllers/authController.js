@@ -58,7 +58,7 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const client = await pool.connect();
-  console.log("start in signup");
+  console.log("start in signin");
   try {
     const emailInAgentsDB = await emailInAgents(client, req.body.email);
     const emailInBuyersDB = await emailInBuyers(client, req.body.email);

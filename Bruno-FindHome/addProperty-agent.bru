@@ -1,0 +1,32 @@
+meta {
+  name: addProperty-agent
+  type: http
+  seq: 13
+}
+
+post {
+  url: http://localhost:3000/listings
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: 
+}
+
+body:json {
+    {
+      "agent_id": 1,
+      "propertyname": "Blk 144 Jurong East",
+      "address": "#03-002 Blk 144 Jurong East Drive 3, Singpore 632114",
+      "price": "530000.00",
+      "town": "Jurong East",
+      "nearestmrt": "Jurong East",
+      "unitsize": 89,
+      "bedroom": 3,
+      "bathroom": 2,
+      "typeoflease": "99-year lease",
+      "description": "NA"
+    }
+  
+}

@@ -22,11 +22,10 @@ const createPayload = (user) => {
 };
 
 const emailInAgents = async (client, email) => {
-  const text = `select * from agents where email = $1, isactive = $2`;
+  const text = `select * from agents where email = $1 AND isactive = $2`;
   const value = [email, "active"];
   const result = await client.query(text, value);
-  console.log(result.rows[0]);
-  console.log(result.rows.length);
+
   if (result.rows.length === 0) {
     return false;
   }
@@ -34,12 +33,9 @@ const emailInAgents = async (client, email) => {
 };
 
 const emailInBuyers = async (client, email) => {
-  const text = `select * from buyers where email = $1, isactive = $2`;
+  const text = `select * from buyers where email = $1 AND isactive = $2`;
   const value = [email, "active"];
   const result = await client.query(text, value);
-
-  console.log(result.rows[0]);
-  console.log(result.rows.length);
 
   if (result.rows.length === 0) {
     return false;
