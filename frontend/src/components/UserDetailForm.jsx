@@ -12,15 +12,16 @@ const UserDetailForm = ({userId}) => {
   const [formData, setFormData] = useState({
     email: "",
         password:"",
-        displayName: "",
-        contactNumber: "",        
-        userRole: "buyer",
-        licenseId: "",
-        isActive: "active",
-        preferContactMethod: "",
-        preferLocation: "",
-        preferBudget: "",
-        preferRooms:"",
+        displayname: "",
+        contactnumber: "",        
+        userrole: "buyer",
+        licenseid: "",
+        profilephoto: "",
+        isactive: "active",
+        prefercontactmethod: "",
+        preferlocation: "",
+        preferbudget: "",
+        preferrooms:"",
   });
 
   const isEditing = userId ? true : false;
@@ -31,15 +32,16 @@ const UserDetailForm = ({userId}) => {
 //       setFormData({
 //         email: userProfile.email,
 //         password: userProfile.password,
-//         displayName: userProfile.displayName,
-//         contactNumber: userProfile.contactNumber,        
-//         userRole: userProfile.userRole,
-//         licenseId: userProfile.licenseId,
-//         isActive: userProfile.isActive,
-//         preferContactMethod: userProfile.preferContactMethod,
-//         preferLocation: userProfile.preferLocation,
-//         preferBudget: userProfile.preferBudget,
-//         preferRooms: userProfile.preferRooms,
+//         displayname: userProfile.displayName,
+//         contactnumber: userProfile.contactNumber,        
+//         userrole: userProfile.userRole,
+//         licenseid: userProfile.licenseId,
+//        profilephoto: userProfile.profilephoto,
+//         isactive: userProfile.isActive,
+//         prefercontactmethod: userProfile.preferContactMethod,
+//         preferlocation: userProfile.preferLocation,
+//         preferbudget: userProfile.preferBudget,
+//         preferrooms: userProfile.preferRooms,
 //       });
 //     };
 //     fetchUserProfile();
@@ -83,14 +85,12 @@ const UserDetailForm = ({userId}) => {
         const newUser = await signUp(formData);
         console.log("sign up successful")
         // setUser(newUser);
-        navigate("/")
+        navigate(`/${displayname}`)
     } catch (err) {
       setMessage(err.message);
     }
 console.log("submit", formData)
   };
-
-  console.log(formData.userRole)
 //   const handleDelete = async () => {
 //     await deleteUser(userId);
 //     // setUser("");

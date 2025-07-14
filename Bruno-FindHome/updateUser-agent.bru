@@ -1,0 +1,27 @@
+meta {
+  name: updateUser-agent
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:3000/profile/:userId
+  body: none
+  auth: bearer
+}
+
+params:path {
+  userId: 2
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyLCJlbWFpbCI6Implc3NpZTg4OEBob3RtYWlsLmNvbSIsImhhc2hlZHB3IjoiJDJiJDEyJC9Od3FsVXdtYm0zMU5vNWNoQlczZ083TjBXeWs1ZVZHMlZIQ2JrbjBKM2dkWHZDNnpsN2VpIiwiZGlzcGxheW5hbWUiOiJKZXNzaWUiLCJjb250YWN0bnVtYmVyIjoiNTU1NTU1NTUiLCJ1c2Vycm9sZSI6ImFnZW50IiwibGljZW5zZWlkIjoiNTU1NTU1NTUiLCJpc2FjdGl2ZSI6ImFjdGl2ZSJ9LCJpYXQiOjE3NTI0NjgwMjIsImV4cCI6MTc1MjQ3MTYyMn0.C9fLhycPfPIfDhj1UPY3J0JKxVG7SiI828TRFbwjl5U
+}
+
+body:json {
+  {
+      "email": "philip123@gmail.com",
+      "password": "123",
+      "userrole":"agent"
+  }
+}

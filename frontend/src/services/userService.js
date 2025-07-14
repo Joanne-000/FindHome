@@ -4,6 +4,7 @@ const getUserFromToken = () => {
 
   if (!token) return null;
 
+  console.log(JSON.parse(atob(token.split(".")[1])).payload);
   return JSON.parse(atob(token.split(".")[1])).payload;
 };
 
@@ -14,7 +15,7 @@ const getUser = async (userId) => {
   // currentUser is get from token when we save suring signin.
   try {
     const currentUser = getUserFromToken();
-    if (currentUser._id !== userId) {
+    if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
       const res = await fetch(`${BASE_URL}/${userId}`, {

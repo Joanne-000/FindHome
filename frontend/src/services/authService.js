@@ -5,7 +5,9 @@ const signUp = async (formData) => {
   try {
     console.log("signup start");
     const res = await axios.post(`${BASE_URL}/signup`, formData);
-    const data = res.data;
+    console.log("signup res", res);
+
+    const data = await res.data;
     console.log("signup data", res.data);
 
     if (data.err) {

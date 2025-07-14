@@ -19,11 +19,8 @@ const signUp = async (req, res) => {
   const client = await pool.connect();
   console.log("start in signup");
   try {
-    console.log("req.body.email", req.body.email);
-
     const emailInAgentsDB = await emailInAgents(client, req.body.email);
     const emailInBuyersDB = await emailInBuyers(client, req.body.email);
-
     if (emailInAgentsDB || emailInBuyersDB) {
       return res
         .status(409)
@@ -39,12 +36,8 @@ const signUp = async (req, res) => {
       console.log("start in try");
 
       await client.query("BEGIN");
-
       const user = await userSignUp(client, req, res);
       const payload = createPayload(user);
-      console.log("user", user);
-      console.log("payload", payload);
-
       saveUser(req, payload);
       const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
         expiresIn: "1hr",
@@ -54,9 +47,9 @@ const signUp = async (req, res) => {
 
       await client.query("COMMIT");
       client.release();
-    } catch (e) {
+    } catch (error) {
       await client.query("ROLLBACK");
-      throw e;
+      throw error;
     }
   } catch (err) {
     res.status(500).json({ err: err.message });
@@ -67,13 +60,8 @@ const signIn = async (req, res) => {
   const client = await pool.connect();
   console.log("start in signup");
   try {
-    console.log("req.body.email", req.body.email);
-
     const emailInAgentsDB = await emailInAgents(client, req.body.email);
     const emailInBuyersDB = await emailInBuyers(client, req.body.email);
-    console.log("emailInAgentsDB", emailInAgentsDB);
-    console.log("emailInBuyersDB", emailInBuyersDB);
-
     if (emailInAgentsDB && emailInBuyersDB) {
       return res.status(404).send({ err: "Email address not found." });
     }
@@ -88,10 +76,7 @@ const signIn = async (req, res) => {
       const value = [email];
 
       const result = await client.query(text, value);
-      console.log(result);
       const user = result.rows[0];
-      console.log("user", user);
-
       const isPasswordCorrect = await bcrypt.compare(password, user.hashedpw);
 
       if (!isPasswordCorrect) {
@@ -100,10 +85,7 @@ const signIn = async (req, res) => {
 
       saveUser(req, user);
       const payload = createPayload(user);
-      console.log(" saveUser", saveUser(req, user));
 
-      console.log("user", user);
-      console.log("payload", payload);
       const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
         expiresIn: "1hr",
       });
@@ -112,9 +94,9 @@ const signIn = async (req, res) => {
 
       await client.query("COMMIT");
       client.release();
-    } catch (e) {
+    } catch (error) {
       await client.query("ROLLBACK");
-      throw e;
+      throw error;
     }
   } catch (err) {
     res.status(500).json({ err: err.message });
