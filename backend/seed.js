@@ -27,13 +27,13 @@ try {
     `CREATE TABLE IF NOT EXISTS agents (
     id SERIAL PRIMARY KEY,
     email VARCHAR NOT NULL,  
-    hashedPW VARCHAR NOT NULL,
-    displayName VARCHAR NOT NULL,
-    contactNumber VARCHAR NOT NULL,
-    userRole VARCHAR NOT NULL,
-    licenseId VARCHAR NOT NULL,
-    profilePhoto VARCHAR NOT NULL,
-    isActive VARCHAR NOT NULL,
+    hashedpw VARCHAR NOT NULL,
+    displayname VARCHAR NOT NULL,
+    contactnumber VARCHAR NOT NULL,
+    userrole VARCHAR NOT NULL,
+    licenseid VARCHAR NOT NULL,
+    profilephoto VARCHAR NOT NULL,
+    isactive VARCHAR NOT NULL,
     timestamptz TIMESTAMPTZ DEFAULT now()
   );
   `
@@ -43,15 +43,15 @@ try {
     `CREATE TABLE  IF NOT EXISTS buyers (
    id SERIAL PRIMARY KEY,
     email VARCHAR NOT NULL,  
-   hashedPW VARCHAR NOT NULL,
-   displayName VARCHAR NOT NULL,
-   contactNumber VARCHAR NOT NULL,
-   userRole VARCHAR NOT NULL,
-   preferContactMethod VARCHAR NOT NULL,
-    preferLocation VARCHAR NOT NULL,
-    preferBudget Numeric(12,2) NOT NULL,
-    preferRooms INT NOT NULL,
-    isActive VARCHAR NOT NULL,
+   hashedpw VARCHAR NOT NULL,
+   displayname VARCHAR NOT NULL,
+   contactnumber VARCHAR NOT NULL,
+   userrole VARCHAR NOT NULL,
+   prefercontactmethod VARCHAR NOT NULL,
+    preferlocation VARCHAR NOT NULL,
+    preferbudget Numeric(12,2) NOT NULL,
+    preferrooms INT NOT NULL,
+    isactive VARCHAR NOT NULL,
     timestamptz TIMESTAMPTZ DEFAULT now()
  )
   `
@@ -61,15 +61,15 @@ try {
     `CREATE TABLE IF NOT EXISTS properties (
    id SERIAL PRIMARY KEY,
  	agent_id INT REFERENCES agents(id) NOT NULL,  
-   propertyName VARCHAR NOT NULL,
+   propertyname VARCHAR NOT NULL,
    address VARCHAR NOT NULL,
    price Numeric(12,2) NOT NULL,
    town VARCHAR NOT NULL,
-   nearestMRT VARCHAR NOT NULL,
-   unitSize INT NOT NULL,
+   nearestmrt VARCHAR NOT NULL,
+   unitsize INT NOT NULL,
    bedroom INT NOT NULL,
    bathroom INT NOT NULL,
-   typeOfLease VARCHAR NOT NULL,
+   typeoflease VARCHAR NOT NULL,
    description VARCHAR,
    timestamptz TIMESTAMPTZ DEFAULT now()
   );
@@ -107,7 +107,7 @@ try {
   const hashedPWAgent = await bcrypt.hash("123", saltRounds);
 
   const agentText1 =
-    "insert into agents (email, hashedPW, displayname, contactNumber, userRole, licenseId, profilePhoto, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id";
+    "insert into agents (email, hashedpw, displayname, contactnumber, userrole, licenseid, profilephoto, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id";
   const agentValue1 = [
     "philip123@gmail.com",
     hashedPWAgent,
@@ -127,7 +127,7 @@ try {
   const hashedPWBuyer2 = await bcrypt.hash("666", saltRounds);
 
   const buyerText1 =
-    "insert into buyers (email, hashedPW, displayName, contactNumber, userRole, preferContactMethod, preferLocation,preferBudget,preferRooms, isActive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
+    "insert into buyers (email, hashedpw, displayname, contactnumber, userrole,prefercontactmethod, preferlocation, preferbudget,preferrooms, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
   const buyerValue1 = [
     "janice222@gmail.com",
     hashedPWBuyer1,
@@ -159,7 +159,7 @@ try {
   console.log("inserting 3");
 
   const propertyText1 =
-    "insert into properties (agent_id, propertyName, address, price, town, nearestMRT, unitSize ,bedroom,bathroom, typeOfLease, description) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id";
+    "insert into properties (agent_id, propertyname, address, price, town, nearestmrt, unitsize ,bedroom,bathroom, typeoflease, description) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id";
   const propertyValue1 = [
     agentId.rows[0].id,
     "Blk 222 Bedok North",

@@ -19,15 +19,17 @@ const signUp = async (req, res) => {
   const client = await pool.connect();
   console.log("start in signup");
   try {
-    const emailInAgentsDB = emailInAgents(client, req.body.email);
-    const emailInBuyersDB = emailInBuyers(client, req.body.emalil);
+    console.log("req.body.email", req.body.email);
+
+    const emailInAgentsDB = await emailInAgents(client, req.body.email);
+    const emailInBuyersDB = await emailInBuyers(client, req.body.email);
 
     if (emailInAgentsDB || emailInBuyersDB) {
       return res
         .status(409)
         .send({ err: "This Email has already been taken." });
     }
-    if (req.body.password !== req.body.passwordConf) {
+    if (req.body.password !== req.body.passwordconf) {
       return res.status(409).send({
         err: "Password and Confirm Password are not the same. Please re-type.",
       });
@@ -40,7 +42,10 @@ const signUp = async (req, res) => {
 
       const user = await userSignUp(client, req, res);
       const payload = createPayload(user);
-      saveUser(user);
+      console.log("user", user);
+      console.log("payload", payload);
+
+      saveUser(req, payload);
       const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
         expiresIn: "1hr",
       });
@@ -59,32 +64,33 @@ const signUp = async (req, res) => {
 };
 
 const signIn = async (req, res) => {
+  const client = await pool.connect();
+  console.log("start in signup");
   try {
-    const client = await pool.connect();
+    console.log("req.body.email", req.body.email);
 
-    const emailInAgentsDB = emailInAgents(client, req.body.email);
-    const emailInBuyersDB = emailInBuyers(client, req.body.emalil);
+    const emailInAgentsDB = await emailInAgents(client, req.body.email);
+    const emailInBuyersDB = await emailInBuyers(client, req.body.email);
+    console.log("emailInAgentsDB", emailInAgentsDB);
+    console.log("emailInBuyersDB", emailInBuyersDB);
 
-    if (!emailInAgentsDB || !emailInBuyersDB) {
+    if (emailInAgentsDB && emailInBuyersDB) {
       return res.status(404).send({ err: "Email address not found." });
     }
+
     try {
       console.log("start in try");
-      console.log(req.body);
-
       await client.query("BEGIN");
 
       const { email, password, userrole } = req.body;
       const role = userrole + "s";
-      const selectUser = await client.query(
-        `select * from ${role} where email = $1`,
-        [email]
-      );
-      console.log(selectUser.rows[0]);
+      const text = `select * from ${role} where email = $1`;
+      const value = [email];
 
-      const user = selectUser.rows[0];
-      console.log(password);
-      console.log(user.hashedpw);
+      const result = await client.query(text, value);
+      console.log(result);
+      const user = result.rows[0];
+      console.log("user", user);
 
       const isPasswordCorrect = await bcrypt.compare(password, user.hashedpw);
 
@@ -92,7 +98,12 @@ const signIn = async (req, res) => {
         return res.status(401).json({ err: "Invalid credentials." });
       }
 
+      saveUser(req, user);
       const payload = createPayload(user);
+      console.log(" saveUser", saveUser(req, user));
+
+      console.log("user", user);
+      console.log("payload", payload);
       const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
         expiresIn: "1hr",
       });

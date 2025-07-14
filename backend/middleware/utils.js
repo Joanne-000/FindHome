@@ -6,8 +6,9 @@ const loadUser = (req) => req.user;
 
 const createPayload = (user) => {
   return {
+    id: user.id,
     email: user.email,
-    password: user.password,
+    hashedpw: user.hashedpw,
     displayname: user.displayname,
     contactnumber: user.contactnumber,
     userrole: user.userrole,
@@ -21,17 +22,29 @@ const createPayload = (user) => {
 };
 
 const emailInAgents = async (client, email) => {
-  const result = await client.query(`select * from agents where email = $1`, [
-    email,
-  ]);
-  return result;
+  const text = `select * from agents where email = $1`;
+  const value = [email];
+  const result = await client.query(text, value);
+  console.log(result.rows[0]);
+  console.log(result.rows.length);
+  if (result.rows.length === 0) {
+    return false;
+  }
+  return true;
 };
 
 const emailInBuyers = async (client, email) => {
-  const result = await client.query(`select * from buyers where email = $1`, [
-    email,
-  ]);
-  return result;
+  const text = `select * from buyers where email = $1`;
+  const value = [email];
+  const result = await client.query(text, value);
+
+  console.log(result.rows[0]);
+  console.log(result.rows.length);
+
+  if (result.rows.length === 0) {
+    return false;
+  }
+  return true;
 };
 
 module.exports = {

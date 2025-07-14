@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 const userSignUp = async (client, req, res) => {
   const saltRounds = 12;
   console.log("start in function");
@@ -17,16 +19,16 @@ const userSignUp = async (client, req, res) => {
     preferrooms,
   } = req.body;
 
-  const role = userRole + "s";
+  const role = userrole + "s";
   let user;
 
-  const hashedPW = await bcrypt.hash(password, saltRounds);
+  const hashedpw = await bcrypt.hash(password, saltRounds);
 
   if (role === "agents") {
-    const agentText = `insert into ${role} (email, password, displayname, contactnumber, userrole, licenseid, profilephoto, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id`;
+    const agentText = `insert into ${role} (email, hashedpw, displayname, contactnumber, userrole, licenseid, profilephoto, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id`;
     const agentValue = [
       email,
-      hashedPW,
+      hashedpw,
       displayname,
       contactnumber,
       userrole,
@@ -44,10 +46,10 @@ const userSignUp = async (client, req, res) => {
 
     user = selectUser.rows[0];
   } else {
-    const buyerText = `insert into ${role} (email, password, displayname, contactnumber, userrole,prefercontactmethod, preferlocation, preferbudget,preferrooms, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id`;
+    const buyerText = `insert into ${role} (email, hashedpw, displayname, contactnumber, userrole,prefercontactmethod, preferlocation, preferbudget,preferrooms, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id`;
     const buyerValue = [
       email,
-      hashedPW,
+      hashedpw,
       displayname,
       contactnumber,
       userrole,

@@ -30,7 +30,7 @@ app.use("/", authRouter);
 
 app.use("/listings", listingRouter);
 app.use("/enquiries", enquiryRouter);
-app.use("/:displayname", userRouter);
+app.use("/profile", userRouter);
 app.listen(port, () => console.log(`Example app listening on port ${port}`));
 
 async function checkPasswordEncryption() {
