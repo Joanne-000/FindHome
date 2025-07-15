@@ -5,10 +5,7 @@ const signUp = async (formData) => {
   try {
     console.log("signup start");
     const res = await axios.post(`${BASE_URL}/signup`, formData);
-    console.log("signup res", res);
-
     const data = await res.data;
-    console.log("signup data", res.data);
 
     if (data.err) {
       console.log(data.err);
@@ -17,7 +14,8 @@ const signUp = async (formData) => {
 
     if (data.token) {
       localStorage.setItem("token", data.token);
-      return JSON.parse(atob(data.token.split(".")[1])).payload;
+      const payload = JSON.parse(atob(data.token.split(".")[1])).payload;
+      return payload;
     }
   } catch (error) {
     console.error(error.response.data.err);

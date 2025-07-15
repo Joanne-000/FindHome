@@ -1,29 +1,28 @@
-// import { getUserFromToken } from "../contexts/UserContext";
-const getUserFromToken = () => {
-  const token = localStorage.getItem("token");
-
-  if (!token) return null;
-
-  console.log(JSON.parse(atob(token.split(".")[1])).payload);
-  return JSON.parse(atob(token.split(".")[1])).payload;
-};
+import axios from "axios";
+import { getUserFromToken } from "../contexts/UserContext";
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/profile`;
 
-const getUser = async (userId) => {
+const getUser = async (username) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
-    const currentUser = getUserFromToken();
-    if (currentUser.id !== userId) {
+    console.log("get user start");
+
+    const currentUser = await getUserFromToken();
+    console.log("currentUser.name", currentUser.displayname);
+    console.log("username", username);
+    if (currentUser.displayname !== username) {
       throw new Error("Unauthorized");
     } else {
-      const res = await fetch(`${BASE_URL}/${userId}`, {
+      console.log("get user");
+      const res = await axios.get(`${BASE_URL}/${currentUser.id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+      console.log("res", res);
 
       // if (!res.ok) throw new Error("Failed to show user details");
-      const data = await res.json();
+      const data = await res.data;
       if (data.err) {
         throw new Error(data.err);
       }
@@ -41,11 +40,9 @@ const updateUser = async (userId, userFormData) => {
     if (currentUser._id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      const res = await fetch(`${BASE_URL}/${userId}/edit`, {
-        method: "PUT",
+      const res = await axios.put(`${BASE_URL}/${userId}`, userFormData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
         },
         body: JSON.stringify(userFormData),
       });

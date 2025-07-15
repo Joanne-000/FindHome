@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router";
 import { signUp } from "../services/authService";
 // import { getUser, updateUser } from "../services/userService";
 // import { deleteUser } from "../services/userService";
 // import isEmail from "validator/lib/isEmail";
+import {
+  useMutation,
+} from '@tanstack/react-query'
 
 const UserDetailForm = ({userId}) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const { setUser } = useContext(UserContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -24,28 +29,15 @@ const UserDetailForm = ({userId}) => {
         preferrooms:"",
   });
 
-  const isEditing = userId ? true : false;
+  const {mutate} = useMutation({
+    mutationFn:  signUp,
+    onSuccess: (newUser)=>{
+      console.log(newUser)
+      setUser(newUser);
+      navigate(`/profile`)
+    }})
 
-//   useEffect(() => {
-//     const fetchUserProfile = async () => {
-//       const userProfile = await getUser(userId);
-//       setFormData({
-//         email: userProfile.email,
-//         password: userProfile.password,
-//         displayname: userProfile.displayName,
-//         contactnumber: userProfile.contactNumber,        
-//         userrole: userProfile.userRole,
-//         licenseid: userProfile.licenseId,
-//        profilephoto: userProfile.profilephoto,
-//         isactive: userProfile.isActive,
-//         prefercontactmethod: userProfile.preferContactMethod,
-//         preferlocation: userProfile.preferLocation,
-//         preferbudget: userProfile.preferBudget,
-//         preferrooms: userProfile.preferRooms,
-//       });
-//     };
-//     fetchUserProfile();
-//   }, [userId]);
+  const isEditing = userId ? true : false;
 
   const {
     email,
@@ -77,44 +69,7 @@ const UserDetailForm = ({userId}) => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    try {
-//       if (isEditing) {
-//         const updateProfile = await updateUser(userId, formData);
-//         // setUser(updateProfile);
-//       } else {
-        const newUser = await signUp(formData);
-        console.log("sign up successful")
-        // setUser(newUser);
-        navigate(`/${displayname}`)
-    } catch (err) {
-      setMessage(err.message);
-    }
-console.log("submit", formData)
-  };
-//   const handleDelete = async () => {
-//     await deleteUser(userId);
-//     // setUser("");
-//     localStorage.removeItem("token")
-//     navigate(`/`);
-//   }
-  const isFormInvalid = () => {
-    // if(isEditing){
-    //   if(contactNumber.length === 0 ){
-    //     const result = displayName.length >2 && birthday 
-    //     return !result;
-    //   }else{
-    //     const result = contactNumber.length >7 && displayName.length >2 && birthday
-    //     return !result;
-    //   }
-    // }else{
-    //   if(contactNumber.length === 0 ){
-    //     const result = displayName.length >2 && birthday && isEmail(email) && password.length >2 && password === passwordConf
-    //     return !result;
-    //   }else{
-    //     const result = contactNumber.length >7 && displayName.length >2 && birthday && isEmail(email) && password.length >2 && password === passwordConf
-    //     return !result;
-    //   }
-    // }
+    mutate(formData)
   };
 
   return (
@@ -272,7 +227,7 @@ console.log("submit", formData)
         }
         {isEditing ? (
           <div >
-            <button type="submit" disabled={isFormInvalid()}>
+            <button type="submit" >
               Update Profile
             </button>
             <button type="button" onClick={() => setIsModalOpen(true)}>
@@ -286,7 +241,6 @@ console.log("submit", formData)
           <div >
             <button
               type="submit"
-              disabled={isFormInvalid()}
             >
               Sign Up
             </button>

@@ -10,6 +10,12 @@ const pool = new Pool({ connectionString: connection });
 const getUser = async (req, res) => {
   const client = await pool.connect();
   try {
+    const currentUser = loadUser(req);
+    const userId = Number(req.params.userId);
+    if (currentUser.id !== userId) {
+      res.status(403).send("Unauthorized User");
+    }
+
     try {
       console.log("start in try");
       await client.query("BEGIN");

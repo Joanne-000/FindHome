@@ -1,45 +1,56 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 import { Link, useNavigate } from "react-router";
 import { getUser } from "../services/userService";
 // import { deleteUser } from "../services/userService";
 // import isEmail from "validator/lib/isEmail";
+import {
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 const UserProfile = () => {
-  const userId = useParams()
+  const { user } = useContext(UserContext);
+
+  const queryClient = useQueryClient()
+  const query = useQuery({ queryKey: ['profile'], queryFn: getUser(user.displayname) })
+
+
   const navigate = useNavigate();
   const [profile, setProfile] = useState({
     email: "",
-    password:"",
-    displayName: "",
-    contactNumber: "",        
-    userRole: "buyer",
-    licenseId: "",
+    displayname: "",
+    contactnumber: "",        
+    userrole: "buyer",
+    licenseid: "",
     profilephoto: "",
-    isActive: "active",
-    preferContactMethod: "",
-    preferLocation: "",
-    preferBudget: "",
-    preferRooms:"",
+    isactive: "active",
+    prefercontactmethod: "",
+    preferlocation: "",
+    preferbudget: "",
+    preferrooms:"",
   });
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const userProfile = await getUser(userId);
+      console.log("useeffect start")      
+      console.log("username",user)
+
+      const userProfile = await getUser(user.displayname);
       setProfile({
         email: userProfile.email,
         password: userProfile.password,
-        displayname: userProfile.displayName,
-        contactnumber: userProfile.contactNumber,        
-        userrole: userProfile.userRole,
-        licenseid: userProfile.licenseId,
+        displayname: userProfile.displayname,
+        contactnumber: userProfile.contactnumber,        
+        userrole: userProfile.userrole,
+        licenseid: userProfile.licenseid,
        profilephoto: userProfile.profilephoto,
-        isactive: userProfile.isActive,
-        prefercontactmethod: userProfile.preferContactMethod,
-        preferlocation: userProfile.preferLocation,
-        preferbudget: userProfile.preferBudget,
-        preferrooms: userProfile.preferRooms,
+        isactive: userProfile.isactive,
+        prefercontactmethod: userProfile.prefercontactmethod,
+        preferlocation: userProfile.preferlocation,
+        preferbudget: userProfile.preferbudget,
+        preferrooms: userProfile.preferrooms,
       });
     };
     fetchUserProfile();
