@@ -95,8 +95,12 @@ const destroyFavourite = async (req, res) => {
       console.log("start in try");
       await client.query("BEGIN");
 
-      const listing = await delListing(client, req, listingId);
-      res.status(200).json(listing);
+      const result = await client.query(
+        `delete from favourites where listing_id = $1`,
+        [listingId]
+      );
+      const fav = result.rows;
+      res.status(200).send("Removed listing from favourite list");
 
       await client.query("COMMIT");
       client.release();
