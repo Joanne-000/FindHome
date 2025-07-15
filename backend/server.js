@@ -7,7 +7,7 @@ const logger = require("morgan");
 const authRouter = require("./routers/authRouter");
 const userRouter = require("./routers/userRouter");
 const listingRouter = require("./routers/listingRouter");
-const enquiryRouter = require("./routers/enquiryRouter");
+const favouriteRouter = require("./routers/favouriteRouter");
 
 const app = express();
 const port = 3000;
@@ -29,7 +29,7 @@ app.use(logger("dev"));
 app.use("/", authRouter);
 
 app.use("/listings", listingRouter);
-app.use("/enquiries", enquiryRouter);
+app.use("/favourites", favouriteRouter);
 app.use("/profile", userRouter);
 app.listen(port, () => console.log(`Example app listening on port ${port}`));
 
