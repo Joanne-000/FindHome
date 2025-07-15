@@ -58,7 +58,22 @@ const getFavourites = async (req, res) => {
       await client.query("BEGIN");
 
       const result = await client.query(
-        `select * from favourites join listings on listings.id =  favourites.listing_id where buyer_id = $1`,
+        `select favourites.id AS favourite_id,
+        listings.id AS listing_id,
+        listings.propertyname,
+        listings.address,
+        listings.price,
+        listings.town,
+        listings.nearestmrt,
+        listings.unitsize,
+        listings.bedroom,
+        listings.bathroom,
+        listings.typeoflease,
+        listings.description,
+        listings.status,
+        listings.timestamptz,
+        favourites.buyer_id
+        from favourites join listings on listings.id =  favourites.listing_id where buyer_id = $1`,
         [userId]
       );
       const fav = result.rows;
@@ -85,7 +100,7 @@ const destroyFavourite = async (req, res) => {
   try {
     const currentUser = loadUser(req);
     const userId = Number(req.params.userId);
-    const listingId = Number(req.params.listingId);
+    const favId = Number(req.params.favId);
 
     if (currentUser.id !== userId || currentUser.userrole !== "buyer") {
       res.status(403).send("Unauthorized User");
@@ -96,8 +111,8 @@ const destroyFavourite = async (req, res) => {
       await client.query("BEGIN");
 
       const result = await client.query(
-        `delete from favourites where listing_id = $1`,
-        [listingId]
+        `delete from favourites where id = $1`,
+        [favId]
       );
       const fav = result.rows;
       res.status(200).send("Removed listing from favourite list");

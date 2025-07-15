@@ -4,9 +4,9 @@ meta {
   seq: 20
 }
 
-post {
-  url: http://localhost:3000/favourites/:userId/:listingId
-  body: json
+delete {
+  url: http://localhost:3000/favourites/:userId/:listingId/del
+  body: none
   auth: bearer
 }
 

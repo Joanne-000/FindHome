@@ -5,13 +5,17 @@ meta {
 }
 
 get {
-  url: http://localhost:3000/listings
+  url: http://localhost:3000/favourites/:userId
   body: none
   auth: bearer
 }
 
+params:path {
+  userId: 3
+}
+
 auth:bearer {
-  token: 
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJlbWFpbCI6ImtlbjU1NUBnbWFpbC5jb20iLCJoYXNoZWRwdyI6IiQyYiQxMiQ0OE5iSC5yOTNubDRBaTdOR04vNkRPbUR6dmFlMW1pMEVTME5mY0ZaL2p6a05lVHFBZUV6eSIsImRpc3BsYXluYW1lIjoiS2VuIiwiY29udGFjdG51bWJlciI6IjEyMzEyMzEyIiwidXNlcnJvbGUiOiJidXllciIsImlzYWN0aXZlIjoiYWN0aXZlIiwicHJlZmVyY29udGFjdG1ldGhvZCI6IndoYXRzYXBwIiwicHJlZmVybG9jYXRpb24iOiJiZWRvayIsInByZWZlcmJ1ZGdldCI6IjY1MDAwMC4wMCIsInByZWZlcnJvb21zIjozfSwiaWF0IjoxNzUyNTU5NDIyLCJleHAiOjE3NTI1NjMwMjJ9.tCxsGDuvInmNXbwYAiHCpbQlXgsqBgekFUigHNuv_v8
 }
 
 body:json {
