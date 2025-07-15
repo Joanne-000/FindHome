@@ -85,13 +85,10 @@ const UserProfile = () => {
         </div>
         }
           <div >
-            <button type="button">
+            <button type="button" onClick={() => navigate("/profile/edit")}>
               Edit
             </button>
-            <button type="button">
-              Delete
-            </button>
-            <button  type="button">
+            <button  type="button" onClick={() => navigate("/profile")}>
               Cancel
             </button>
           </div>

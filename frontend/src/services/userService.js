@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getUserFromToken } from "../contexts/UserContext";
+import { redirect } from "react-router";
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/profile`;
 
@@ -20,7 +21,7 @@ const getUser = async (userId) => {
       });
       console.log("res", res);
 
-      // if (!res.ok) throw new Error("Failed to show user details");
+      if (res.status !== 200) throw new Error("Failed to show user details");
       const data = await res.data;
       console.log("data", data);
 
@@ -38,17 +39,23 @@ const getUser = async (userId) => {
 const updateUser = async (userId, userFormData) => {
   try {
     const currentUser = getUserFromToken();
-    if (currentUser._id !== userId) {
+    console.log("userId", userId);
+    console.log("currentUser.id", currentUser.id);
+    console.log("userFormData", userFormData);
+
+    if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      const res = await axios.put(`${BASE_URL}/${userId}`, userFormData, {
+      const res = await axios.put(`${BASE_URL}/${userId}/edit`, userFormData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(userFormData),
       });
 
-      const data = await res.json();
+      if (res.status !== 200) throw new Error("Failed to update user details");
+
+      const data = await res.data;
 
       if (data.token) {
         localStorage.setItem("token", data.token);
@@ -71,18 +78,20 @@ const updateUser = async (userId, userFormData) => {
 const deleteUser = async (userId, userFormData) => {
   try {
     const currentUser = getUserFromToken();
-    if (currentUser._id !== userId) {
+    if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      const res = await fetch(`${BASE_URL}/${userId}/delete`, {
+      const res = await axios.put(`${BASE_URL}/${userId}/del`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userFormData),
       });
-      const data = await res.json();
+
+      if (res.status !== 200) throw new Error("Failed to update user details");
+
+      const data = await res.data;
       if (data.err) {
         throw new Error(data.err);
       }

@@ -1,15 +1,19 @@
-import { useState,useContext } from "react";
+import { useEffect, useState,useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router";
 import { signUp } from "../services/authService";
-// import { getUser, updateUser } from "../services/userService";
+import { getUser, updateUser } from "../services/userService";
 // import { deleteUser } from "../services/userService";
 // import isEmail from "validator/lib/isEmail";
 import {
   useMutation,
 } from '@tanstack/react-query'
 
+
 const UserDetailForm = ({userId}) => {
+  const isEditing = userId ? true : false;
+
+
   const { setUser } = useContext(UserContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -29,23 +33,53 @@ const UserDetailForm = ({userId}) => {
         preferrooms:"",
   });
 
-  const {mutate,isPending, isError, error } = useMutation({
-    mutationFn:  signUp,
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const userProfile = await getUser(userId);
+      setFormData({
+        email: userProfile?.email || "",
+      displayname: userProfile?.displayname || "",
+      contactnumber: userProfile?.contactnumber || "",
+      userrole: userProfile?.userrole || "",
+      licenseid: userProfile?.licenseid || "",
+      profilephoto: userProfile?.profilephoto || "",
+      isactive: userProfile?.isactive || "",
+      prefercontactmethod: userProfile?.prefercontactmethod || "",
+      preferlocation: userProfile?.preferlocation || "",
+      preferbudget: userProfile?.preferbudget || "",
+      preferrooms: userProfile?.preferrooms || "",
+      });
+    };
+    fetchUserProfile();
+  }, [userId]);
+
+  const createMutation = useMutation({
+    mutationFn: signUp,
     onSuccess: (payload)=>{
       console.log(payload)
       setUser(payload);
       navigate(`/profile`)
     }})
 
-    if (isPending) {
+    
+    const updateMutation = useMutation({
+      mutationFn: ({ userId, formData }) => updateUser(userId, formData),
+      onSuccess: (payload)=>{
+        console.log(payload)
+        setUser(payload);
+        navigate(`/profile`)
+      }})
+
+    if (createMutation.isPending || updateMutation.isPending) {
       return <progress />
     }
 
-    if (isError) {
-    return <span> {error.message}</span>
+    if (createMutation.isError) {
+    return <span> {createMutation.error.message}</span>
     }
-  
-  const isEditing = userId ? true : false;
+    if ( updateMutation.isError) {
+      return <span> {updateMutation.error.message}</span>
+      }
 
   const {
     email,
@@ -74,10 +108,17 @@ const UserDetailForm = ({userId}) => {
       userrole: role // Update only userRole
     });
   };
+  console.log("formData",formData)
 
   const handleSubmit = async (evt) => {
+    if(isEditing){
+      console.log("userId,formData",userId,formData)
+      evt.preventDefault();
+      updateMutation.mutate({ userId,formData })
+    }else{
     evt.preventDefault();
-    mutate(formData)
+    createMutation.mutate(formData)
+    }
   };
 
   return (
@@ -89,9 +130,7 @@ const UserDetailForm = ({userId}) => {
       <p >Fields marked with * are required</p>
       <p>{message}</p>
       <form onSubmit={handleSubmit}>
-        {!isEditing && (
-          <>
-            <div >
+      <div >
               <label>Email *: 
               <input
                 type="email"
@@ -99,11 +138,14 @@ const UserDetailForm = ({userId}) => {
                 value={email}
                 name="email"
                 onChange={handleChange}
+                disabled={isEditing? true : false}
                 required
                 />
                 <p>Please note that email is not editable after sign up.</p>
               </label>
             </div>
+        {!isEditing && (
+          <>
             <div>
               <label >Password *:
               <input
@@ -128,7 +170,7 @@ const UserDetailForm = ({userId}) => {
               />
               </label>
             </div>
-          </>
+            </>
         )}
         <div >
           <label >Display Name *:
@@ -142,7 +184,7 @@ const UserDetailForm = ({userId}) => {
           </label>
         </div>
         <div >
-          <label >Contact Number:
+          <label >Contact Number *:
           <input
             type="String"
             id="contactnumber"
@@ -152,6 +194,8 @@ const UserDetailForm = ({userId}) => {
           />
           </label>
         </div>
+        {!isEditing && (
+
         <div >
         <button type="button" onClick={() => handleRoleChange("agent")}>
         Agent
@@ -159,11 +203,11 @@ const UserDetailForm = ({userId}) => {
       <button type="button" onClick={() => handleRoleChange("buyer")}>
         Buyer
       </button>
-        </div>
+        </div>)}
         {userrole === "agent" ? 
         <>
         <div >
-          <label >License Id:
+          <label >License Id *:
           <input
             type="String"
             id="licenseid"
@@ -174,7 +218,7 @@ const UserDetailForm = ({userId}) => {
           </label>
         </div>
         <div >
-          <label >Profile Photo:
+          <label >Profile Photo *:
           <input
             type="String"
             id="profilephoto"
@@ -188,7 +232,7 @@ const UserDetailForm = ({userId}) => {
         :
         <>
         <div >
-          <label >Prefer Contact Method:
+          <label >Prefer Contact Method *:
           <input
             type="String"
             id="prefercontactmethod"
@@ -199,7 +243,7 @@ const UserDetailForm = ({userId}) => {
           </label>
         </div>
         <div >
-          <label >Prefer Location:
+          <label >Prefer Location *:
           <input
             type="String"
             id="preferlocation"
@@ -210,7 +254,7 @@ const UserDetailForm = ({userId}) => {
           </label>
         </div>
         <div >
-          <label >Prefer Budget:
+          <label >Prefer Budget *:
           <input
             type="Number"
             id="preferbudget"
@@ -221,7 +265,7 @@ const UserDetailForm = ({userId}) => {
           </label>
         </div>
         <div >
-          <label >Prefer Rooms:
+          <label >Prefer Rooms *:
           <input
             type="Number"
             id="preferrooms"

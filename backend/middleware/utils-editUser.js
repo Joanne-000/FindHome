@@ -1,5 +1,7 @@
 const editUser = async (client, req, res) => {
   console.log("start in function");
+  console.log("req", req.body);
+
   const {
     email,
     displayname,
