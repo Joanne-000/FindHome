@@ -89,7 +89,11 @@ try {
   await client.query(
     `CREATE TABLE IF NOT EXISTS images (
    id SERIAL PRIMARY KEY,
-   imageurl VARCHAR NOT NULL,
+   coverimage VARCHAR NOT NULL,
+   image1 VARCHAR NOT NULL,
+   image2 VARCHAR NOT NULL,
+   image3 VARCHAR NOT NULL,
+  image4 VARCHAR NOT NULL,
    listing_id INT REFERENCES listings(id) NOT NULL
   );
   `
@@ -237,38 +241,44 @@ try {
   console.log("inserting 4");
 
   const listingImageText1 =
-    "insert into images (listing_id, imageurl) values ($1,$2) returning id";
+    "insert into images (listing_id, coverimage,image1,image2,image3,image4) values ($1,$2,$3,$4,$5,$6) returning id";
   const listingImageValue1 = [
     propertyId1.rows[0].id,
     "https://landtransportguru.net/web/wp-content/uploads/2016/07/ewl_ew5_mar16-9.jpg",
+    "https://static.mothership.sg/1/2024/07/Screenshot-2024-07-04-at-10.03.03.jpeg",
+    "",
+    "",
+    "",
   ];
   const listingImageValue2 = [
     propertyId2.rows[0].id,
     "https://static.mothership.sg/1/2024/07/Screenshot-2024-07-04-at-10.03.03.jpeg",
+    "https://www.hdb.gov.sg/-/media/HDBContent/Images/SCEG/our-towns-jurong-east-1.png",
+    "https://landtransportguru.net/web/wp-content/uploads/2016/07/ewl_ew5_mar16-9.jpg",
+    "",
+    "",
   ];
   const listingImageValue3 = [
     propertyId3.rows[0].id,
     "https://upload.wikimedia.org/wikipedia/commons/4/4c/Jurong_East_MRT_station_230622.jpg",
+    "https://www.hdb.gov.sg/-/media/HDBContent/Images/SCEG/our-towns-jurong-east-1.png",
+    "",
+    "",
+    "",
   ];
   const listingImageValue4 = [
-    propertyId3.rows[0].id,
-    "https://www.hdb.gov.sg/-/media/HDBContent/Images/SCEG/our-towns-jurong-east-1.png",
-  ];
-  const listingImageValue5 = [
     propertyId4.rows[0].id,
     "https://static.mothership.sg/1/2024/07/Screenshot-2024-07-04-at-10.03.03.jpeg",
-  ];
-  const listingImageValue6 = [
-    propertyId2.rows[0].id,
-    "https://www.hdb.gov.sg/-/media/HDBContent/Images/SCEG/our-towns-jurong-east-1.png",
+    "",
+    "",
+    "",
+    "",
   ];
 
   await client.query(listingImageText1, listingImageValue1);
   await client.query(listingImageText1, listingImageValue2);
   await client.query(listingImageText1, listingImageValue3);
   await client.query(listingImageText1, listingImageValue4);
-  await client.query(listingImageText1, listingImageValue5);
-  await client.query(listingImageText1, listingImageValue6);
 
   console.log("inserting 5");
 

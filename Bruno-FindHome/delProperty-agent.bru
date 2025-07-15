@@ -1,17 +1,17 @@
 meta {
-  name: editProperty-agent
+  name: delProperty-agent
   type: http
-  seq: 15
+  seq: 16
 }
 
 put {
-  url: http://localhost:3000/listings/:userId/:listingId/edit
+  url: http://localhost:3000/listings/:userId/:listingId/del
   body: json
   auth: bearer
 }
 
 params:path {
-  listingId: 31
+  listingId: 33
   userId: 2
 }
 
@@ -32,7 +32,7 @@ body:json {
       "bathroom": 2,
       "typeoflease": "99-year lease",
       "description": "MOP 5 year",
-      "status":"available",
+      "status":"deleted",
       "imageurl":"https://upload.wikimedia.org/wikipedia/commons/4/4c/Jurong_East_MRT_station_230622.jpg"   
     }
   

@@ -1,0 +1,43 @@
+meta {
+  name: delProperty-agent2
+  type: http
+  seq: 17
+}
+
+put {
+  url: http://localhost:3000/listings/:userId/:listingId/del
+  body: json
+  auth: bearer
+}
+
+params:path {
+  listingId: 4
+  userId: 2
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyLCJlbWFpbCI6Implc3NpZTEyM0Bob3RtYWlsLmNvbSIsImhhc2hlZHB3IjoiJDJiJDEyJHZtZWZxOWgxMDQ5OHAvQ29MSG1xMy5jZ3p4WTA0bmh4ZHZ1VU41UDYuLktlZmw3bmdGVWlxIiwiZGlzcGxheW5hbWUiOiJKZXNzaWUiLCJjb250YWN0bnVtYmVyIjoiMjIyMjMzMzMiLCJ1c2Vycm9sZSI6ImFnZW50IiwibGljZW5zZWlkIjoiMTIzNDU2NzgiLCJpc2FjdGl2ZSI6ImFjdGl2ZSJ9LCJpYXQiOjE3NTI1NTMyNDMsImV4cCI6MTc1MjU1Njg0M30.xU7qUYVNAK96bFVEZRN9CNJcCC430DJHsL6OefvriO4
+}
+
+body:json {
+    {
+      "agent_id": 2,
+      "propertyname": "Blk 666 Bedok Street 66",
+      "address": "#06-006 Blk 666 Bedok 66, Singpore 124666",
+      "price": "666000.00",
+      "town": "Bedok",
+      "nearestmrt": "Bedok",
+      "unitsize": 89,
+      "bedroom": 3,
+      "bathroom": 2,
+      "typeoflease": "99-year lease",
+      "description": "MOP 5 year",
+      "status":"available",
+      "coverimage":"https://upload.wikimedia.org/wikipedia/commons/4/4c/Jurong_East_MRT_station_230622.jpg",
+      "image1":"https://upload.wikimedia.org/wikipedia/commons/4/4c/Jurong_East_MRT_station_230622.jpg",
+      "image2":"",
+      "image3":"",
+      "image4":"" 
+    }
+  
+}

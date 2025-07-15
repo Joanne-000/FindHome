@@ -5,28 +5,34 @@ meta {
 }
 
 post {
-  url: http://localhost:3000/listings
+  url: http://localhost:3000/listings/:userId
   body: json
   auth: bearer
 }
 
+params:path {
+  userId: 3
+}
+
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyLCJlbWFpbCI6Implc3NpZTg4OEBob3RtYWlsLmNvbSIsImhhc2hlZHB3IjoiJDJiJDEyJC9Od3FsVXdtYm0zMU5vNWNoQlczZ083TjBXeWs1ZVZHMlZIQ2JrbjBKM2dkWHZDNnpsN2VpIiwiZGlzcGxheW5hbWUiOiJKZXNzaWUiLCJjb250YWN0bnVtYmVyIjoiODg4ODg4ODgiLCJ1c2Vycm9sZSI6ImFnZW50IiwibGljZW5zZWlkIjoiODg4ODg4ODgiLCJpc2FjdGl2ZSI6ImFjdGl2ZSJ9LCJpYXQiOjE3NTI0OTY0OTQsImV4cCI6MTc1MjUwMDA5NH0.9M3EFf6H679NUOp8JdtHzfkTjl9ku14rtWthAMf7kkM
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyLCJlbWFpbCI6Implc3NpZTEyM0Bob3RtYWlsLmNvbSIsImhhc2hlZHB3IjoiJDJiJDEyJEpmM0Yxd0F3b2dvcXBBU1lYVTRNbU9RVDZrOTVCVGNiMVJtbDNPNmQwQ0lPWFJESC9LS1RxIiwiZGlzcGxheW5hbWUiOiJKZXNzaWUiLCJjb250YWN0bnVtYmVyIjoiMjIyMjMzMzMiLCJ1c2Vycm9sZSI6ImFnZW50IiwibGljZW5zZWlkIjoiMTIzNDU2NzgiLCJpc2FjdGl2ZSI6ImFjdGl2ZSJ9LCJpYXQiOjE3NTI1MTEwOTcsImV4cCI6MTc1MjUxNDY5N30.iTGWEiJJ2xj4SKI5yULpo9FpU2SVEeVvy8oUDswrD7I
 }
 
 body:json {
     {
-      "agent_id": 1,
-      "propertyname": "Blk 144 Jurong East",
-      "address": "#03-002 Blk 144 Jurong East Drive 3, Singpore 632114",
+      "agent_id": 2,
+      "propertyname": "Blk 106 Jurong NorthStreet 4",
+      "address": "#06-112 Blk 106 Jurong North Street 4, Singpore 633106",
       "price": "530000.00",
-      "town": "Jurong East",
+      "town": "Jurong North",
       "nearestmrt": "Jurong East",
       "unitsize": 89,
       "bedroom": 3,
       "bathroom": 2,
       "typeoflease": "99-year lease",
-      "description": "NA"
+      "description": "NA",
+      "status":"available",
+      "imageurl":"https://upload.wikimedia.org/wikipedia/commons/4/4c/Jurong_East_MRT_station_230622.jpg"  
     }
   
 }

@@ -1,9 +1,9 @@
 const addImages = async (client, req, listingId) => {
   console.log("start in addImages");
-  const { imageurl } = req.body;
+  const { coverimage, image1, image2, image3, image4 } = req.body;
 
-  const text = `insert into images (listing_id, imageurl) values ($1,$2) returning *`;
-  const value = [listingId, imageurl];
+  const text = `insert into images (listing_id,  coverimage,image1,image2,image3,image4) values ($1,$2,$3,$4,$5,$6) returning *`;
+  const value = [listingId, coverimage, image1, image2, image3, image4];
   await client.query(text, value);
 
   const selectPropertyImages = await client.query(

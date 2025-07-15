@@ -1,6 +1,6 @@
 const { loadUser } = require("../middleware/utils");
 const { editUser, delUser } = require("../middleware/utils-editUser");
-const express = require("express");
+
 require("dotenv").config();
 const pg = require("pg");
 const { Pool } = pg;

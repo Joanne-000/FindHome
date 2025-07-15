@@ -5,14 +5,14 @@ const {
   getOneProperty,
   createListing,
   updateListing,
+  destroyListing,
 } = require("../controllers/listingController");
 const verifyToken = require("../middleware/verify-token");
 
 router.get("/", getProperties);
 router.post("/:userId", verifyToken, createListing);
-router.put("/:userId/:listingId", verifyToken, updateListing);
+router.put("/:userId/:listingId/edit", verifyToken, updateListing);
+router.put("/:userId/:listingId/del", verifyToken, destroyListing);
 router.get("/:listingId", getOneProperty);
-
-router.get("/:listingId/edit", (req, res) => res.send("Edit 1 property"));
 
 module.exports = router;

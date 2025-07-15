@@ -5,7 +5,7 @@ meta {
 }
 
 put {
-  url: http://localhost:3000/profile/:userId/edit
+  url: http://localhost:3000/profile/:userId/edit/del
   body: json
   auth: bearer
 }
@@ -25,7 +25,7 @@ body:json {
       "displayname": "Ken",
       "contactnumber": "55555555",
       "userrole": "buyer",
-      "isactive": "active",
+      "isactive": "deleted",
       "prefercontactmethod": "whatsapp",
       "preferlocation": "jurong east",
       "preferbudget": "650000",

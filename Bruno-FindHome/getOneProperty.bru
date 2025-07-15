@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: http://localhost:3000/listings
+  url: http://localhost:3000/listings/:listingId
   body: none
-  auth: bearer
+  auth: none
 }
 
-auth:bearer {
-  token: 
+params:path {
+  listingId: 33
 }
 
 body:json {
