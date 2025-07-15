@@ -3,20 +3,19 @@ import { getUserFromToken } from "../contexts/UserContext";
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/profile`;
 
-const getUser = async (username) => {
+const getUser = async (userId) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
     console.log("get user start");
 
     const currentUser = await getUserFromToken();
-    console.log("currentUser.name", currentUser.displayname);
-    console.log("username", username);
-    if (currentUser.displayname !== username) {
+
+    if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
       console.log("get user");
-      const res = await axios.get(`${BASE_URL}/${currentUser.id}`, {
+      const res = await axios.get(`${BASE_URL}/${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       console.log("res", res);

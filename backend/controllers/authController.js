@@ -59,10 +59,11 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
   const client = await pool.connect();
   console.log("start in signin");
+
   try {
     const emailInAgentsDB = await emailInAgents(client, req.body.email);
     const emailInBuyersDB = await emailInBuyers(client, req.body.email);
-    if (emailInAgentsDB && emailInBuyersDB) {
+    if (!emailInAgentsDB && !emailInBuyersDB) {
       return res.status(404).send({ err: "Email address not found." });
     }
 

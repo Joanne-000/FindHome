@@ -31,9 +31,9 @@ const UserDetailForm = ({userId}) => {
 
   const {mutate} = useMutation({
     mutationFn:  signUp,
-    onSuccess: (newUser)=>{
-      console.log(newUser)
-      setUser(newUser);
+    onSuccess: (payload)=>{
+      console.log(payload)
+      setUser(payload);
       navigate(`/profile`)
     }})
 

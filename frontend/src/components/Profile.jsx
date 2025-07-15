@@ -7,71 +7,52 @@ import { getUser } from "../services/userService";
 // import isEmail from "validator/lib/isEmail";
 import {
   useQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
 
 const UserProfile = () => {
   const { user } = useContext(UserContext);
 
-  const queryClient = useQueryClient()
-  const query = useQuery({ queryKey: ['profile'], queryFn: getUser(user.displayname) })
+  const { isPending, isError, data, error }  = useQuery({ 
+    queryKey: ['profile'], 
+    queryFn: async () => await getUser(user.id) ,
+    placeholderData: {
+      email: user.email,
+      displayname: user.displayname,
+      contactnumber: user.contactnumber,        
+      userrole: user.userrole,
+      licenseid: user.licenseid,
+      profilephoto: user.profilephoto,
+      isactive: user.isactive,
+      prefercontactmethod: user.prefercontactmethod,
+      preferlocation: user.preferlocation,
+      preferbudget: user.preferbudget,
+      preferrooms: user.preferrooms,}
+  })
 
+  if (isPending) {
+    return <progress />
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>
+  }
+
+  console.log(data)
 
   const navigate = useNavigate();
-  const [profile, setProfile] = useState({
-    email: "",
-    displayname: "",
-    contactnumber: "",        
-    userrole: "buyer",
-    licenseid: "",
-    profilephoto: "",
-    isactive: "active",
-    prefercontactmethod: "",
-    preferlocation: "",
-    preferbudget: "",
-    preferrooms:"",
-  });
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      console.log("useeffect start")      
-      console.log("username",user)
-
-      const userProfile = await getUser(user.displayname);
-      setProfile({
-        email: userProfile.email,
-        password: userProfile.password,
-        displayname: userProfile.displayname,
-        contactnumber: userProfile.contactnumber,        
-        userrole: userProfile.userrole,
-        licenseid: userProfile.licenseid,
-       profilephoto: userProfile.profilephoto,
-        isactive: userProfile.isactive,
-        prefercontactmethod: userProfile.prefercontactmethod,
-        preferlocation: userProfile.preferlocation,
-        preferbudget: userProfile.preferbudget,
-        preferrooms: userProfile.preferrooms,
-      });
-    };
-    fetchUserProfile();
-  }, []);
-
+  
   const {
     email,
-    password,
-    passwordconf,
     displayname,
     contactnumber,
     userrole,
     licenseid,
     profilephoto,
-    isactive,
     prefercontactmethod,
     preferlocation,
     preferbudget,
     preferrooms,
-  } = profile;
-
+  } = data;
 
   return (
     <>
@@ -101,10 +82,10 @@ const UserProfile = () => {
             <button type="button">
               Edit
             </button>
-            <button type="button" onClick={() => setIsModalOpen(true)}>
+            <button type="button">
               Delete
             </button>
-            <button  type="button" onClick={() => navigate("/")}>
+            <button  type="button">
               Cancel
             </button>
           </div>

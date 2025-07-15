@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router";
 import { signIn } from "../services/authService";
 import isEmail from "validator/lib/isEmail";
+import {
+  useMutation,
+} from '@tanstack/react-query'
 
 const SignInForm = () => {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -11,6 +16,15 @@ const SignInForm = () => {
     password: "",
     userrole: ""
   });
+
+  const {mutate} = useMutation({
+    mutationFn:  signIn,
+    onSuccess: (payload)=>{
+      console.log(payload)
+      setUser(payload);
+      navigate(`/profile`)
+    }})
+
   const handleChange = (evt) => {
     setMessage("");
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
@@ -18,16 +32,7 @@ const SignInForm = () => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    try {
-        console.log("submit")
-        console.log("formData",formData)
-
-      const signedInUser = await signIn(formData);
-      navigate("/")
-    //   setUser(signedInUser);
-    } catch (err) {
-      setMessage(err.message);
-    }
+    mutate(formData)
   };
 
   const {
