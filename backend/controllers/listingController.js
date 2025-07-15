@@ -1,6 +1,8 @@
 const { loadUser } = require("../middleware/utils");
 const { addListing } = require("../middleware/utils-addListing");
 const { addImages } = require("../middleware/utils-addImages");
+const { editListing } = require("../middleware/utils-editListing");
+const { editImages } = require("../middleware/utils-editImages");
 
 require("dotenv").config();
 const pg = require("pg");
@@ -108,9 +110,6 @@ const createListing = async (req, res) => {
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       res.status(403).send("Unauthorized User");
     }
-    console.log("currentUser.id ", currentUser.id);
-    console.log("userId", userId);
-    console.log("currentUser.userrole", currentUser.userrole);
 
     try {
       console.log("start in try");
@@ -138,14 +137,22 @@ const updateListing = async (req, res) => {
   const client = await pool.connect();
 
   try {
+    const currentUser = loadUser(req);
+    const userId = Number(req.params.userId);
+    const listingId = Number(req.params.listingId);
+    if (currentUser.id !== userId || currentUser.userrole !== "agent") {
+      res.status(403).send("Unauthorized User");
+    }
     try {
       console.log("start in try");
 
       await client.query("BEGIN");
 
-      const user = await editUser(client, req, res);
+      const listing = await editListing(client, req, listingId);
+      console.log("listing", listing);
 
-      res.status(200).json(user);
+      const images = await editImages(client, req, listingId);
+      res.status(200).json({ listing, images });
 
       await client.query("COMMIT");
       client.release();
@@ -189,4 +196,9 @@ const updateListing = async (req, res) => {
 //   }
 // };
 
-module.exports = { getProperties, getOneProperty, createListing };
+module.exports = {
+  getProperties,
+  getOneProperty,
+  createListing,
+  updateListing,
+};
