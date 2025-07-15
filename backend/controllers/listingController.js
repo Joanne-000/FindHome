@@ -155,7 +155,7 @@ const destroyListing = async (req, res) => {
     const userId = Number(req.params.userId);
     const listingId = Number(req.params.listingId);
 
-    if (currentUser.id !== userId) {
+    if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       res.status(403).send("Unauthorized User");
     }
 

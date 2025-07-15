@@ -87,7 +87,7 @@ const destroyFavourite = async (req, res) => {
     const userId = Number(req.params.userId);
     const listingId = Number(req.params.listingId);
 
-    if (currentUser.id !== userId) {
+    if (currentUser.id !== userId || currentUser.userrole !== "buyer") {
       res.status(403).send("Unauthorized User");
     }
 
