@@ -1,5 +1,5 @@
 const addListing = async (client, req) => {
-  console.log("start in function");
+  console.log("start in addListing");
   const {
     agent_id,
     propertyname,
@@ -31,16 +31,13 @@ const addListing = async (client, req) => {
     status,
   ];
   const result = await client.query(text, value);
-  console.log("result", result);
 
   const listingId = result.rows[0];
-  console.log("listingId", listingId);
 
   const selectProperty = await client.query(
     `select * from listings where id = $1`,
     [listingId.id]
   );
-  console.log("selectProperty", selectProperty);
 
   const property = selectProperty.rows[0];
   return property;
