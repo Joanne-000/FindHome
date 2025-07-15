@@ -17,7 +17,7 @@ const SignInForm = () => {
     userrole: ""
   });
 
-  const {mutate} = useMutation({
+  const {mutate,isPending, isError, error } = useMutation({
     mutationFn:  signIn,
     onSuccess: (payload)=>{
       console.log(payload)
@@ -25,6 +25,14 @@ const SignInForm = () => {
       navigate(`/profile`)
     }})
 
+    if (isPending) {
+      return <progress />
+    }
+
+    if (isError) {
+      return <span> {error.message}</span>
+    }
+  
   const handleChange = (evt) => {
     setMessage("");
     setFormData({ ...formData, [evt.target.name]: evt.target.value });

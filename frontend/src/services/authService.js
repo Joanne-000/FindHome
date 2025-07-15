@@ -27,7 +27,7 @@ const signIn = async (formData) => {
   try {
     const res = await axios.post(`${BASE_URL}/signin`, formData);
     const data = res.data;
-    console.log("signin data", res.data);
+    console.log("signin data", res);
 
     if (data.err) {
       throw new Error(data.err);
@@ -42,7 +42,7 @@ const signIn = async (formData) => {
 
     throw new Error("Invalid response from server");
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error(error);
   }
 };

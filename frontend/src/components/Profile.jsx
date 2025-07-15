@@ -11,30 +11,36 @@ import {
 
 const UserProfile = () => {
   const { user } = useContext(UserContext);
+  
+  const userId = user?.id;
+
 
   const { isPending, isError, data, error }  = useQuery({ 
-    queryKey: ['profile'], 
-    queryFn: async () => await getUser(user.id) ,
+    queryKey: ['profile',userId], 
+    queryFn:  () => getUser(userId) ,  
+    enabled: !!user,
     placeholderData: {
-      email: user.email,
-      displayname: user.displayname,
-      contactnumber: user.contactnumber,        
-      userrole: user.userrole,
-      licenseid: user.licenseid,
-      profilephoto: user.profilephoto,
-      isactive: user.isactive,
-      prefercontactmethod: user.prefercontactmethod,
-      preferlocation: user.preferlocation,
-      preferbudget: user.preferbudget,
-      preferrooms: user.preferrooms,}
+      email: user?.email || "",
+      displayname: user?.displayname || "",
+      contactnumber: user?.contactnumber || "",
+      userrole: user?.userrole || "",
+      licenseid: user?.licenseid || "",
+      profilephoto: user?.profilephoto || "",
+      isactive: user?.isactive || "",
+      prefercontactmethod: user?.prefercontactmethod || "",
+      preferlocation: user?.preferlocation || "",
+      preferbudget: user?.preferbudget || "",
+      preferrooms: user?.preferrooms || "",}
   })
+  
+  if (!user) return <p>Please log in.</p>;
 
   if (isPending) {
     return <progress />
   }
 
   if (isError) {
-    return <span>Error: {error.message}</span>
+    return <span> {error.message}</span>
   }
 
   console.log(data)

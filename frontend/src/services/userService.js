@@ -22,6 +22,8 @@ const getUser = async (userId) => {
 
       // if (!res.ok) throw new Error("Failed to show user details");
       const data = await res.data;
+      console.log("data", data);
+
       if (data.err) {
         throw new Error(data.err);
       }

@@ -29,7 +29,7 @@ const UserDetailForm = ({userId}) => {
         preferrooms:"",
   });
 
-  const {mutate} = useMutation({
+  const {mutate,isPending, isError, error } = useMutation({
     mutationFn:  signUp,
     onSuccess: (payload)=>{
       console.log(payload)
@@ -37,6 +37,14 @@ const UserDetailForm = ({userId}) => {
       navigate(`/profile`)
     }})
 
+    if (isPending) {
+      return <progress />
+    }
+
+    if (isError) {
+    return <span> {error.message}</span>
+    }
+  
   const isEditing = userId ? true : false;
 
   const {
