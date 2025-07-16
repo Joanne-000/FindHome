@@ -41,6 +41,7 @@ const updateListing = async (req, res) => {
     const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     const listingId = Number(req.params.listingId);
+    const imageId = Number(req.params.imageId);
 
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       return res.status(403).send("Unauthorized User");
@@ -49,7 +50,7 @@ const updateListing = async (req, res) => {
     await client.query("BEGIN");
 
     const listing = await editListing(client, req, listingId);
-    const images = await editImages(client, req, listingId);
+    const images = await editImages(client, req, listingId, imageId);
     const listingWithImageURLs = { ...listing, images: images };
     await client.query("COMMIT");
     res.status(200).json(listingWithImageURLs);
