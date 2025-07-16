@@ -9,6 +9,7 @@ const pg = require("pg");
 const { Pool } = pg;
 const connection = process.env.PGCONNECT;
 const pool = new Pool({ connectionString: connection });
+// put this pool into a seperate file , then you inport to everywhere
 
 const createFavourite = async (req, res) => {
   const client = await pool.connect();
@@ -21,23 +22,13 @@ const createFavourite = async (req, res) => {
     if (currentUser.id !== userId || currentUser.userrole !== "buyer") {
       res.status(403).send("Unauthorized User");
     }
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
 
-      const text =
-        "insert into favourites (buyer_id, listing_id) values ($1,$2) returning *";
-      const value = [userId, listingId];
-      const favResult = await client.query(text, value);
-      const listing = favResult.rows[0];
-      res.status(200).json(listing);
-
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
+    const text =
+      "insert into favourites (buyer_id, listing_id) values ($1,$2) returning *";
+    const value = [userId, listingId];
+    const favResult = await client.query(text, value);
+    const listing = favResult.rows[0];
+    res.status(200).json(listing);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -53,12 +44,8 @@ const getFavourites = async (req, res) => {
       res.status(403).send("Unauthorized User");
     }
 
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
-
-      const result = await client.query(
-        `select favourites.id AS favourite_id,
+    const result = await client.query(
+      /* sql */ `select favourites.id AS favourite_id,
         listings.id AS listing_id,
         listings.propertyname,
         listings.address,
@@ -74,21 +61,14 @@ const getFavourites = async (req, res) => {
         listings.timestamptz,
         favourites.buyer_id
         from favourites join listings on listings.id =  favourites.listing_id where buyer_id = $1`,
-        [userId]
-      );
-      const fav = result.rows;
+      [userId]
+    );
+    const fav = result.rows;
 
-      if (fav.length === 0) {
-        res.status(200).send("No favourite listings");
-      }
-      res.status(200).json(fav);
-
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
+    if (fav.length === 0) {
+      res.status(200).send("No favourite listings");
     }
+    res.status(200).json(fav);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -106,23 +86,11 @@ const destroyFavourite = async (req, res) => {
       res.status(403).send("Unauthorized User");
     }
 
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
-
-      const result = await client.query(
-        `delete from favourites where id = $1`,
-        [favId]
-      );
-      const fav = result.rows;
-      res.status(200).send("Removed listing from favourite list");
-
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
+    const result = await client.query(`delete from favourites where id = $1`, [
+      favId,
+    ]);
+    const fav = result.rows;
+    res.status(200).send("Removed listing from favourite list");
   } catch (err) {
     res.status(500).json({ err: err.message });
   }

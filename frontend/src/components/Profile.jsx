@@ -19,7 +19,7 @@ const UserProfile = () => {
     queryKey: ['profile',userId], 
     queryFn:  () => getUser(userId) ,  
     enabled: !!user,
-    placeholderData: {
+    initialData: {
       email: user?.email || "",
       displayname: user?.displayname || "",
       contactnumber: user?.contactnumber || "",

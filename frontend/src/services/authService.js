@@ -43,7 +43,7 @@ const signIn = async (formData) => {
     throw new Error("Invalid response from server");
   } catch (error) {
     console.error(error);
-    throw new Error(error);
+    throw new Error("this is a error");
   }
 };
 

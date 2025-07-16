@@ -1,4 +1,5 @@
 import './App.css'
+import debug from "debug";
 import { Routes, Route } from "react-router";
 // import { useState } from 'react'
 
@@ -8,9 +9,10 @@ import SignInForm from "./components/SignInForm";
 import UserProfile from "./components/Profile";
 import EditProfile from './components/EditProfile';
 
+const log = debug("list:App");
 
 function App() {
-
+  log("Loading Routes");
   return (
     <>
     <Routes>

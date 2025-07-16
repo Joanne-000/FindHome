@@ -30,7 +30,7 @@ const SignInForm = () => {
     }
 
     if (isError) {
-      return <span> {error.message}</span>
+      return <pre> {JSON.stringify(error,null,2)}</pre>
     }
   
   const handleChange = (evt) => {

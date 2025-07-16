@@ -14,12 +14,8 @@ const getProperties = async (req, res) => {
   const client = await pool.connect();
 
   try {
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
-
-      const listingResult = await client.query(
-        `SELECT listings.id AS listing_id,
+    const listingResult = await client.query(
+      /* sql */ `SELECT listings.id AS listing_id,
         listings.propertyname,
         listings.address,
         listings.price,
@@ -35,17 +31,10 @@ const getProperties = async (req, res) => {
         images.id AS image_id,
         images.coverimage, images.image1,images.image2,images.image3,images.image4 
         FROM listings JOIN images ON images.listing_id = listings.id where status = $1 `,
-        ["available"]
-      );
-      const listing = listingResult.rows;
-      res.status(200).json(listing);
-
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
+      ["available"]
+    );
+    const listing = listingResult.rows;
+    res.status(200).json(listing);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -159,19 +148,11 @@ const destroyListing = async (req, res) => {
       res.status(403).send("Unauthorized User");
     }
 
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
+    const listing = await delListing(client, req, listingId);
+    res.status(200).json(listing);
 
-      const listing = await delListing(client, req, listingId);
-      res.status(200).json(listing);
-
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
+    await client.query("COMMIT");
+    client.release();
   } catch (err) {
     res.status(500).json({ err: err.message });
   }

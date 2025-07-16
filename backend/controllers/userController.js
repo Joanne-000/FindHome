@@ -16,22 +16,12 @@ const getUser = async (req, res) => {
       res.status(403).send("Unauthorized User");
     }
 
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
-
-      const role = currentUser.userrole + "s";
-      const text = `select * from ${role} where id = $1`;
-      const value = [userId];
-      const result = await client.query(text, value);
-      const user = result.rows[0];
-      res.status(200).json(user);
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
+    const role = currentUser.userrole + "s";
+    const text = `select * from ${role} where id = $1`;
+    const value = [userId];
+    const result = await client.query(text, value);
+    const user = result.rows[0];
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -46,18 +36,8 @@ const updateUser = async (req, res) => {
       res.status(403).send("Unauthorized User");
     }
 
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
-
-      const user = await editUser(client, req, res);
-      res.status(200).json(user);
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
+    const user = await editUser(client, req, res);
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -72,17 +52,8 @@ const destroyUser = async (req, res) => {
       res.status(403).send("Unauthorized User");
     }
 
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
-      const user = await delUser(client, req, res);
-      res.status(200).json(user);
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
+    const user = await delUser(client, req, res);
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }

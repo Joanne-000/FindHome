@@ -67,38 +67,31 @@ const signIn = async (req, res) => {
       return res.status(404).send({ err: "Email address not found." });
     }
 
-    try {
-      console.log("start in try");
-      await client.query("BEGIN");
+    // take the userrole from the token, not from req.body
+    // usually transaction only required when you do two SQL transaction, usually update
+    // take out the transaction
 
-      const { email, password, userrole } = req.body;
-      const role = userrole + "s";
-      const text = `select * from ${role} where email = $1`;
-      const value = [email];
+    const { email, password, userrole } = req.body;
+    const role = userrole + "s";
+    const text = `select * from ${role} where email = $1`;
+    const value = [email];
 
-      const result = await client.query(text, value);
-      const user = result.rows[0];
-      const isPasswordCorrect = await bcrypt.compare(password, user.hashedpw);
+    const result = await client.query(text, value);
+    const user = result.rows[0];
+    const isPasswordCorrect = await bcrypt.compare(password, user.hashedpw);
 
-      if (!isPasswordCorrect) {
-        return res.status(401).json({ err: "Invalid credentials." });
-      }
-
-      saveUser(req, user);
-      const payload = createPayload(user);
-
-      const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
-        expiresIn: "1hr",
-      });
-
-      res.status(200).json({ token });
-
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ err: "Invalid credentials." });
     }
+
+    saveUser(req, user);
+    const payload = createPayload(user);
+
+    const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
+      expiresIn: "1hr",
+    });
+
+    res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
