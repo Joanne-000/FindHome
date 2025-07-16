@@ -1,4 +1,4 @@
-const { loadUser } = require("../middleware/utils");
+const { loadUserFromToken } = require("../middleware/utils");
 const { addListing } = require("./addListing");
 const { addImages } = require("./addImages");
 const { editListing, delListing } = require("./editListing");
@@ -11,7 +11,7 @@ const { pool } = require("../index");
 
 const createFavourite = async (req, res) => {
   try {
-    const currentUser = loadUser(req);
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     const listingId = Number(req.params.listingId);
 
@@ -32,7 +32,7 @@ const createFavourite = async (req, res) => {
 
 const getFavourites = async (req, res) => {
   try {
-    const currentUser = loadUser(req);
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     if (currentUser.id !== userId || currentUser.userrole !== "buyer") {
       return res.status(403).send("Unauthorized User");
@@ -70,7 +70,7 @@ const getFavourites = async (req, res) => {
 
 const destroyFavourite = async (req, res) => {
   try {
-    const currentUser = loadUser(req);
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     const favId = Number(req.params.favId);
 

@@ -8,8 +8,9 @@ const {
   createPayload,
   emailInAgents,
   emailInBuyers,
-  dataValidation,
 } = require("../middleware/utils");
+const { dataValidation } = require("../middleware/utils-validation");
+
 const { userSignUp } = require("../controllers/signUp");
 
 const signUp = async (req, res) => {

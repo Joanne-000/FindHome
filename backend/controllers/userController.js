@@ -1,4 +1,5 @@
-const { loadUserFromToken, dataValidation } = require("../middleware/utils");
+const { loadUserFromToken } = require("../middleware/utils");
+const { dataValidation } = require("../middleware/utils-validation");
 const { editUser, delUser } = require("./editUser");
 
 require("dotenv").config();

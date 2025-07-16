@@ -1,4 +1,4 @@
-const { loadUser } = require("../middleware/utils");
+const { loadUserFromToken } = require("../middleware/utils");
 const { addListing } = require("./addListing");
 const { addImages } = require("./addImages");
 const { editListing, delListing } = require("./editListing");
@@ -11,7 +11,7 @@ const createListing = async (req, res) => {
   const client = await pool.connect();
 
   try {
-    const currentUser = loadUser(req);
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       return res.status(403).send("Unauthorized User");
@@ -22,8 +22,9 @@ const createListing = async (req, res) => {
 
     const listing = await addListing(client, req);
     const images = await addImages(client, req, listing.id);
+    const listingWithImageURLs = { ...listing, images: images };
     await client.query("COMMIT");
-    res.status(200).json({ listing, images });
+    res.status(200).json(listingWithImageURLs);
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("Error in createListing:", err.message);
@@ -37,7 +38,7 @@ const updateListing = async (req, res) => {
   const client = await pool.connect();
 
   try {
-    const currentUser = loadUser(req);
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     const listingId = Number(req.params.listingId);
 
@@ -49,8 +50,9 @@ const updateListing = async (req, res) => {
 
     const listing = await editListing(client, req, listingId);
     const images = await editImages(client, req, listingId);
+    const listingWithImageURLs = { ...listing, images: images };
     await client.query("COMMIT");
-    res.status(200).json({ listing, images });
+    res.status(200).json(listingWithImageURLs);
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("Error in updateListing:", err.message);
@@ -62,7 +64,7 @@ const updateListing = async (req, res) => {
 
 const destroyListing = async (req, res) => {
   try {
-    const currentUser = loadUser(req);
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     const listingId = Number(req.params.listingId);
 
