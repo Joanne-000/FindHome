@@ -1,16 +1,12 @@
-const { loadUser } = require("../middleware/utils");
+const { loadUserFromToken, dataValidation } = require("../middleware/utils");
 const { editUser, delUser } = require("./editUser");
 
 require("dotenv").config();
-const pg = require("pg");
-const { Pool } = pg;
-const connection = process.env.PGCONNECT;
-const pool = new Pool({ connectionString: connection });
+const { pool } = require("../index");
 
 const getUser = async (req, res) => {
-  const client = await pool.connect();
   try {
-    const currentUser = loadUser(req);
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     if (currentUser.id !== userId) {
       res.status(403).send("Unauthorized User");
@@ -19,7 +15,7 @@ const getUser = async (req, res) => {
     const role = currentUser.userrole + "s";
     const text = `select * from ${role} where id = $1`;
     const value = [userId];
-    const result = await client.query(text, value);
+    const result = await pool.query(text, value);
     const user = result.rows[0];
     res.status(200).json(user);
   } catch (err) {
@@ -28,15 +24,16 @@ const getUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const client = await pool.connect();
   try {
-    const currentUser = loadUser(req);
+    dataValidation(req, res);
+
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     if (currentUser.id !== userId) {
       res.status(403).send("Unauthorized User");
     }
 
-    const user = await editUser(client, req, res);
+    const user = await editUser(pool, req, res);
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ err: err.message });
@@ -44,15 +41,16 @@ const updateUser = async (req, res) => {
 };
 
 const destroyUser = async (req, res) => {
-  const client = await pool.connect();
   try {
-    const currentUser = loadUser(req);
+    dataValidation(req, res);
+
+    const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
     if (currentUser.id !== userId) {
       res.status(403).send("Unauthorized User");
     }
 
-    const user = await delUser(client, req, res);
+    const user = await delUser(pool, req, res);
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ err: err.message });

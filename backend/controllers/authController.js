@@ -1,9 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-const pg = require("pg");
-const { Pool } = pg;
-const connection = process.env.PGCONNECT;
-const pool = new Pool({ connectionString: connection });
+const { pool } = require("../index");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -11,14 +8,18 @@ const {
   createPayload,
   emailInAgents,
   emailInBuyers,
-  saveUser,
+  dataValidation,
 } = require("../middleware/utils");
-const { userSignUp } = require("./signUp");
+const { userSignUp } = require("../controllers/signUp");
 
 const signUp = async (req, res) => {
   const client = await pool.connect();
   console.log("start in signup");
   try {
+    dataValidation(req, res);
+
+    await client.query("BEGIN");
+
     const emailInAgentsDB = await emailInAgents(client, req.body.email);
     const emailInBuyersDB = await emailInBuyers(client, req.body.email);
     if (emailInAgentsDB || emailInBuyersDB) {
@@ -32,27 +33,20 @@ const signUp = async (req, res) => {
       });
     }
 
-    try {
-      console.log("start in try");
+    const user = await userSignUp(client, req, res);
+    const payload = createPayload(user);
+    const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
+      expiresIn: "1hr",
+    });
 
-      await client.query("BEGIN");
-      const user = await userSignUp(client, req, res);
-      const payload = createPayload(user);
-      saveUser(req, payload);
-      const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
-        expiresIn: "1hr",
-      });
-
-      res.status(201).json({ token });
-
-      await client.query("COMMIT");
-      client.release();
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
+    await client.query("COMMIT");
+    res.status(201).json({ token });
   } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error in signUp:", err.message);
     res.status(500).json({ err: err.message });
+  } finally {
+    client.release();
   }
 };
 
@@ -61,30 +55,26 @@ const signIn = async (req, res) => {
   console.log("start in signin");
 
   try {
-    const emailInAgentsDB = await emailInAgents(client, req.body.email);
-    const emailInBuyersDB = await emailInBuyers(client, req.body.email);
+    console.log("start in try");
+    await client.query("BEGIN");
+
+    const { email, password } = req.body;
+
+    const emailInAgentsDB = await emailInAgents(client, email);
+    const emailInBuyersDB = await emailInBuyers(client, email);
     if (!emailInAgentsDB && !emailInBuyersDB) {
       return res.status(404).send({ err: "Email address not found." });
     }
 
-    // take the userrole from the token, not from req.body
-    // usually transaction only required when you do two SQL transaction, usually update
-    // take out the transaction
+    const userInDB = emailInAgentsDB || emailInBuyersDB;
+    const user = userInDB.rows[0] || userInDB.rows[0];
 
-    const { email, password, userrole } = req.body;
-    const role = userrole + "s";
-    const text = `select * from ${role} where email = $1`;
-    const value = [email];
-
-    const result = await client.query(text, value);
-    const user = result.rows[0];
     const isPasswordCorrect = await bcrypt.compare(password, user.hashedpw);
 
     if (!isPasswordCorrect) {
       return res.status(401).json({ err: "Invalid credentials." });
     }
 
-    saveUser(req, user);
     const payload = createPayload(user);
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
@@ -94,6 +84,8 @@ const signIn = async (req, res) => {
     res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ err: err.message });
+  } finally {
+    client.release();
   }
 };
 

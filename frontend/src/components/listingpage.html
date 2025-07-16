@@ -1,0 +1,237 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>Stitch Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f4] px-10 py-3">
+          <div class="flex items-center gap-8">
+            <div class="flex items-center gap-4 text-[#111418]">
+              <div class="size-4">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor"></path>
+                </svg>
+              </div>
+              <h2 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em]">FindHome</h2>
+            </div>
+            <div class="flex items-center gap-9">
+              <a class="text-[#111418] text-sm font-medium leading-normal" href="#">Buy</a>
+              <a class="text-[#111418] text-sm font-medium leading-normal" href="#">Rent</a>
+              <a class="text-[#111418] text-sm font-medium leading-normal" href="#">Sell</a>
+              <a class="text-[#111418] text-sm font-medium leading-normal" href="#">Mortgage</a>
+              <a class="text-[#111418] text-sm font-medium leading-normal" href="#">Home Loans</a>
+            </div>
+          </div>
+          <div class="flex flex-1 justify-end gap-8">
+            <label class="flex flex-col min-w-40 !h-10 max-w-64">
+              <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                <div
+                  class="text-[#637588] flex border-none bg-[#f0f2f4] items-center justify-center pl-4 rounded-l-lg border-r-0"
+                  data-icon="MagnifyingGlass"
+                  data-size="24px"
+                  data-weight="regular"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                    <path
+                      d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  placeholder="Search"
+                  class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] focus:border-none h-full placeholder:text-[#637588] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+                  value=""
+                />
+              </div>
+            </label>
+            <button
+              class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f4] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]"
+            >
+              <span class="truncate">Sign in</span>
+            </button>
+          </div>
+        </header>
+        <div class="px-40 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="px-4 py-3">
+              <label class="flex flex-col min-w-40 h-12 w-full">
+                <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                  <div
+                    class="text-[#637588] flex border-none bg-[#f0f2f4] items-center justify-center pl-4 rounded-l-lg border-r-0"
+                    data-icon="MagnifyingGlass"
+                    data-size="24px"
+                    data-weight="regular"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                      <path
+                        d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] focus:border-none h-full placeholder:text-[#637588] px-4 rounded-r-none border-r-0 pr-2 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+                    value="San Francisco, CA"
+                  />
+                  <div class="flex items-center justify-center rounded-r-lg border-l-0 border-none bg-[#f0f2f4] pr-2 pr-4">
+                    <button
+                      class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-transparent text-[#111418] gap-2 text-base font-bold leading-normal tracking-[0.015em] h-auto min-w-0 px-0"
+                    >
+                      <div class="text-[#637588]" data-icon="XCircle" data-size="24px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                          <path
+                            d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"
+                          ></path>
+                        </svg>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </label>
+            </div>
+            <div class="flex gap-3 p-3 flex-wrap pr-4">
+              <button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f4] pl-4 pr-2">
+                <p class="text-[#111418] text-sm font-medium leading-normal">Beds</p>
+                <div class="text-[#111418]" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                  </svg>
+                </div>
+              </button>
+              <button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f4] pl-4 pr-2">
+                <p class="text-[#111418] text-sm font-medium leading-normal">Baths</p>
+                <div class="text-[#111418]" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                  </svg>
+                </div>
+              </button>
+              <button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f4] pl-4 pr-2">
+                <p class="text-[#111418] text-sm font-medium leading-normal">Home Type</p>
+                <div class="text-[#111418]" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                  </svg>
+                </div>
+              </button>
+              <button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f4] pl-4 pr-2">
+                <p class="text-[#111418] text-sm font-medium leading-normal">More</p>
+                <div class="text-[#111418]" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                  </svg>
+                </div>
+              </button>
+            </div>
+            <h2 class="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">1,234 results</h2>
+            <div class="flex gap-3 p-3 flex-wrap pr-4">
+              <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f4] pl-4 pr-4">
+                <p class="text-[#111418] text-sm font-medium leading-normal">Recommended</p>
+              </div>
+              <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f4] pl-4 pr-4">
+                <p class="text-[#111418] text-sm font-medium leading-normal">Price (high to low)</p>
+              </div>
+              <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f2f4] pl-4 pr-4">
+                <p class="text-[#111418] text-sm font-medium leading-normal">Newest</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAOwM6SCzpXhvQgMi9oKJrVnPPCUk2B1lgKeLf-Vwdl8dfRgrmrzVA0uSFQzfsiIwJ2qmnqlxemipPjxEg4j4rhfJZA28lpiuhkP32PXtv57bwsCLG2rSvMkTkh5b3EgWgGegH4NMj_tsnuYQWILoGU2cG-aG-FLue_HjSgHarUN_6mAdzB_YyxYZJCYnZUrYTsg2JF7ZYJn8_B8xm06kq0sMtfc4OkQL-DgrLH4zQzQ5Fj7952bNkYb7v02VG1hjaHD_aosbMj-9A");'
+                ></div>
+                <div>
+                  <p class="text-[#111418] text-base font-medium leading-normal">123 Oak Street, San Francisco, CA</p>
+                  <p class="text-[#637588] text-sm font-normal leading-normal">3 beds · 2 baths · 1,500 sqft</p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAusVPfRThw5aSntD0nCoXvkwzk5b2FNUj9a_aTZLUoQoeX1zXqwCtF7RF918ql_bxVlMrv0ranpFgnxoxaIwb31CIUI2saJ7H9kCBwTJzWY7fzLXCTAsawnJ0jzBkIb3YxYoCEt_MCBAkE1_doqOLOx2BBZvcB4aa5sKVDZMR5F6jUs8kZjH6Joijl44Imf5t6D8lTAVO44_qV4cvDizkqPA-qHKPLmQZEYdLFQcMYrVP0DIBk43W6I2AYuXWJ8Ku3r8cznsoxKnQ");'
+                ></div>
+                <div>
+                  <p class="text-[#111418] text-base font-medium leading-normal">456 Maple Avenue, San Francisco, CA</p>
+                  <p class="text-[#637588] text-sm font-normal leading-normal">4 beds · 3 baths · 2,200 sqft</p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuACsIW0ACMIEgwP0Yf952YU8Uwz1wEiIKl_J184ZlUZQOfLHIacPlVUlT5mdrrZawGuQcWunp5K6pfL9HX-TOFLGWWjvZ6iJx7FmNlBpIWDKTNzP2N7SYhwoic8wuo_kswFmcdjbjswA-yhWL_pVi3PgN5Mnk8LcpcVLBzdIEHmmNVyBSGJNWs1H7APyvKWTBv0OaV6pQz4SfgdjYA0gyQnAEphL7RHQCCBWvQUm-G_4I8QQdoJqKsXTic6CBMrzqdzojZeWY_gQ_s");'
+                ></div>
+                <div>
+                  <p class="text-[#111418] text-base font-medium leading-normal">789 Pine Lane, San Francisco, CA</p>
+                  <p class="text-[#637588] text-sm font-normal leading-normal">2 beds · 1 bath · 900 sqft</p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDVmx1kCnPfDaLp3WN8_-UNVoNeKfgsf6jWipvtBGE4NqCyYaCCUgUayByKgG0Jd9v_KX5gq0rqydL4V1iqdZtMIgq5JJRVxjVcYc7ernNXJSX77oNM3Jw40G7UhvR4QRb2S-r6s_CtFRv6OU0OuN3cIRsuOrPN2fmljgc5RcvvuMa9nCHs05h8E6RrDRlRF1fBcBR05ksHphHjf-iNQhkU277JX0CZ0xyH0VpZ_02uUviPQ6Xc55lflRW6fBaqV9XMNmQNJKWRTDc");'
+                ></div>
+                <div>
+                  <p class="text-[#111418] text-base font-medium leading-normal">101 Cedar Road, San Francisco, CA</p>
+                  <p class="text-[#637588] text-sm font-normal leading-normal">5 beds · 4 baths · 3,500 sqft</p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDe945t8X7pYrkOQH6nWE6z7zU50mhSnk4F1ezoZCUyB3JiIFe0JA3_A1qZ6gy4VU_ad84VoJU_INSJ0wffMYGaV3PYbM3ZhUTbvLwpGtRfPJ1n8Z9HJzhBxs9JXRW8THN9YcsdrsjWbMLZGA6h5bWX66I9DHHpPmeUZCNg-io8tfYdBtliG86OgqOAYAAZQP-UVM2zH8VYC_81aOzip8tanHG4As31BaDFeqcRaUbz6YOq54qbs2vAI8I8mKvGFi9kzFXnzDQWErI");'
+                ></div>
+                <div>
+                  <p class="text-[#111418] text-base font-medium leading-normal">222 Birch Court, San Francisco, CA</p>
+                  <p class="text-[#637588] text-sm font-normal leading-normal">3 beds · 2 baths · 1,800 sqft</p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBSYdXTrSNgj9eCnXICteyD1COKtT2I-WXvqKVLUvbPinar4SfT-gBvPUDEZuuVIIxG6RYUA3HZuobLZ6gaPq4RtFX6Ag4h_sdXrID0UGDrBNyej_mGuyvt12gaQnXSXmJzyxB2xX8ZSRszZ4mzVqqIJKO8MvAsOhlcU-K_RI0axAPensg5Zkd5pcbfXllEChtzxTrc7hBY6lgIxOdb_JE2UJV8J1ScZ2FqaVUjQp6F7Bb-piRbnypMYhzhdTcv9dtfehFQFLyi7R4");'
+                ></div>
+                <div>
+                  <p class="text-[#111418] text-base font-medium leading-normal">333 Willow Way, San Francisco, CA</p>
+                  <p class="text-[#637588] text-sm font-normal leading-normal">4 beds · 3 baths · 2,500 sqft</p>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-center p-4">
+              <a href="#" class="flex size-10 items-center justify-center">
+                <div class="text-[#111418]" data-icon="CaretLeft" data-size="18px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path>
+                  </svg>
+                </div>
+              </a>
+              <a class="text-sm font-bold leading-normal tracking-[0.015em] flex size-10 items-center justify-center text-[#111418] rounded-full bg-[#f0f2f4]" href="#">1</a>
+              <a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-[#111418] rounded-full" href="#">2</a>
+              <a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-[#111418] rounded-full" href="#">3</a>
+              <a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-[#111418] rounded-full" href="#">4</a>
+              <a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-[#111418] rounded-full" href="#">5</a>
+              <a href="#" class="flex size-10 items-center justify-center">
+                <div class="text-[#111418]" data-icon="CaretRight" data-size="18px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

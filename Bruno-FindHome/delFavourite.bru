@@ -5,13 +5,13 @@ meta {
 }
 
 delete {
-  url: http://localhost:3000/favourites/:userId/:listingId/del
+  url: http://localhost:3000/favourites/:userId/:favId/del
   body: none
   auth: bearer
 }
 
 params:path {
-  listingId: 2
+  favId: 9
   userId: 3
 }
 

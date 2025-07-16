@@ -144,6 +144,18 @@ const UserDetailForm = ({userId}) => {
                 <p>Please note that email is not editable after sign up.</p>
               </label>
             </div>
+        {isEditing && 
+            <div >
+        <label >Account Type *:
+        <input
+          type="String"
+          id="userrole"
+          value={userrole}
+          name="userrole"
+          disabled={isEditing? true : false}
+          />
+        </label>
+      </div>}
         {!isEditing && (
           <>
             <div>

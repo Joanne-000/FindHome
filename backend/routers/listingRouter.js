@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getProperties,
-  getOneProperty,
   createListing,
   updateListing,
   destroyListing,
 } = require("../controllers/listingController");
+const {
+  getProperties,
+  getOneProperty,
+} = require("../controllers/showListings");
 const verifyToken = require("../middleware/verify-token");
 
 router.get("/", getProperties);
