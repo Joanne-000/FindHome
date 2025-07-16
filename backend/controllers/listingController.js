@@ -1,8 +1,8 @@
 const { loadUser } = require("../middleware/utils");
-const { addListing } = require("../middleware/utils-addListing");
-const { addImages } = require("../middleware/utils-addImages");
-const { editListing, delListing } = require("../middleware/utils-editListing");
-const { editImages } = require("../middleware/utils-editImages");
+const { addListing } = require("./addListing");
+const { addImages } = require("./addImages");
+const { editListing, delListing } = require("./editListing");
+const { editImages } = require("./editImages");
 
 require("dotenv").config();
 const pg = require("pg");

@@ -1,5 +1,5 @@
 const { loadUser } = require("../middleware/utils");
-const { editUser, delUser } = require("../middleware/utils-editUser");
+const { editUser, delUser } = require("./editUser");
 
 require("dotenv").config();
 const pg = require("pg");

@@ -13,7 +13,7 @@ const {
   emailInBuyers,
   saveUser,
 } = require("../middleware/utils");
-const { userSignUp } = require("../middleware/utils-SignUp");
+const { userSignUp } = require("./signUp");
 
 const signUp = async (req, res) => {
   const client = await pool.connect();
