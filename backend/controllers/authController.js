@@ -15,6 +15,7 @@ const { userSignUp } = require("../controllers/signUp");
 
 const signUp = async (req, res) => {
   const client = await pool.connect();
+
   console.log("start in signup");
   try {
     dataValidation(req, res);
@@ -53,6 +54,7 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const client = await pool.connect();
+
   console.log("start in signin");
 
   try {
@@ -81,9 +83,10 @@ const signIn = async (req, res) => {
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
       expiresIn: "1hr",
     });
-
+    await client.query("COMMIT");
     res.status(200).json({ token });
   } catch (err) {
+    await client.query("ROLLBACK");
     res.status(500).json({ err: err.message });
   } finally {
     client.release();

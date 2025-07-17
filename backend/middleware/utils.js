@@ -30,10 +30,10 @@ const emailInAgents = async (pool, email) => {
   return result;
 };
 
-const emailInBuyers = async (client, email) => {
+const emailInBuyers = async (pool, email) => {
   const text = `select * from buyers where email = $1 AND isactive = $2`;
   const value = [email, "active"];
-  const result = await client.query(text, value);
+  const result = await pool.query(text, value);
 
   if (result.rows.length === 0) {
     return false;

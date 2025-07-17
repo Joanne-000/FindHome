@@ -124,6 +124,13 @@ const UserDetailForm = ({userId}) => {
     }
   };
 
+  const handleDelete = async (evt) => {
+    setFormData({
+      ...formData,
+      isactive: "deleted" // Update only status
+  })
+  };
+
   return (
     <>
     <div>
@@ -297,7 +304,7 @@ const UserDetailForm = ({userId}) => {
             <button type="submit" >
               Update Profile
             </button>
-            <button type="button" onClick={() => setIsModalOpen(true)}>
+            <button type="submit" onClick={handleDelete}>
               Delete Profile
             </button>
             <button  type="button" onClick={() => navigate("/")}>
