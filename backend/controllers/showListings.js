@@ -3,27 +3,31 @@ const { pool } = require("../index");
 
 const getProperties = async (req, res) => {
   try {
-    const listingResult = await pool.query(
-      /* sql */ `SELECT listings.id AS listing_id,
-        listings.propertyname,
-        listings.address,
-        listings.price,
-        listings.town,
-        listings.nearestmrt,
-        listings.unitsize,
-        listings.bedroom,
-        listings.bathroom,
-        listings.typeoflease,
-        listings.description,
-        listings.status,
-        listings.timestamptz,
-        images.id AS image_id,
-        images.coverimage, images.image1,images.image2,images.image3,images.image4 
-        FROM listings JOIN images ON images.listing_id = listings.id where status = $1 `,
+
+    const listingsResult = await pool.query(
+      `select * from listings where status = $1`,
       ["available"]
     );
-    const listing = listingResult.rows;
-    res.status(200).json(listing);
+    const listings = listingsResult.rows;
+
+    if (listings.length === 0) {
+      return res.status(404).send({ err: "Listing not found." });
+    }
+
+    const listingwImagesP = listings.map(async(listing) => {
+      const result = await pool.query(
+        `select * from images where listing_id = $1`,
+        [listing.id]
+      );
+      listing["images"] = result.rows;
+
+      return listing
+    })
+
+    const listingswImages = await Promise.all(listingwImagesP);
+    console.log("listingswImages",JSON.stringify(listingswImages,null,2))
+    
+    res.status(200).json(listingswImages);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -48,6 +52,8 @@ const getOneProperty = async (req, res) => {
       [listingId]
     );
     const images = imagesResult.rows;
+console.log(images)
+
     res.status(200).json({ listing, images });
   } catch (err) {
     res.status(500).json({ err: err.message });

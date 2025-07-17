@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { getUser } from "../services/userService";
 import {
   useQuery,
