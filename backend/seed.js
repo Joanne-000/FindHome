@@ -2,16 +2,15 @@ const express = require("express");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 
-const pg = require("pg");
-const { Pool } = pg;
+const { pool } = require("../index");
 
-const connection = process.env.PGCONNECT;
+const createSeed = async() =>{
 
-const pool = new Pool({ connectionString: connection });
 const client = await pool.connect();
 
 const res = await client.query("SELECT $1::text as message", ["Hello world!"]);
 console.log(res.rows[0].message);
+
 const saltRounds = 12;
 
 try {
@@ -309,8 +308,12 @@ try {
   const interests = await client.query("SELECT * FROM interests");
   console.log("interests", interests.rows[0]);
 
-  client.release();
 } catch (e) {
   await client.query("ROLLBACK");
   throw e;
+}finally{
+  client.release();
 }
+}
+
+createSeed()
