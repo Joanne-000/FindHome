@@ -2,7 +2,7 @@ import { useEffect, useState,useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router";
 import { signUp } from "../services/authService";
-import { getUser, updateUser } from "../services/userService";
+import { getUser, updateUser,deleteUser } from "../services/userService";
 // import { deleteUser } from "../services/userService";
 // import isEmail from "validator/lib/isEmail";
 import {
@@ -13,6 +13,7 @@ import {
 const UserDetailForm = ({userId}) => {
   const isEditing = userId ? true : false;
 
+  const [isDelete, setIsDelete] = useState("false");
 
   const { setUser } = useContext(UserContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,24 +57,31 @@ const UserDetailForm = ({userId}) => {
   const createMutation = useMutation({
     mutationFn: signUp,
     onSuccess: (payload)=>{
-      console.log(payload)
       setUser(payload);
       navigate(`/profile`)
     },
     onError:(error)=>{console.log(error['response'].data)}
 })
-
     
     const updateMutation = useMutation({
       mutationFn: ({ userId, formData }) => updateUser(userId, formData),
       onSuccess: (payload)=>{
-        console.log(payload)
         setUser(payload);
         navigate(`/profile`)
       },
       onError:(error)=>{console.log(error['response'].data)}})
 
-    if (createMutation.isPending || updateMutation.isPending) {
+      const deleteMutation = useMutation({
+        mutationFn: ({ userId, formData }) => deleteUser(userId, formData),
+        onSuccess: (payload)=>{
+          console.log("delMut",payload)
+          setUser("");
+          navigate(`/`)    
+        },
+        onError:(error)=>{console.log(error['response'].data)}})
+  
+
+    if (createMutation.isPending || updateMutation.isPending || deleteMutation.isPending) {
       return <progress />
     }
 
@@ -81,8 +89,11 @@ const UserDetailForm = ({userId}) => {
     return <span> {createMutation.error.message}</span>
     }
     if ( updateMutation.isError) {
-      return <span> {updateMutation.error.message}</span>
-      }
+    return <span> {updateMutation.error.message}</span>
+    }
+    if ( deleteMutation.isError) {
+    return <span> {deleteMutation.error.message}</span>
+    }
 
   const {
     email,
@@ -111,25 +122,32 @@ const UserDetailForm = ({userId}) => {
       userrole: role // Update only userRole
     });
   };
-  console.log("formData",formData)
 
-  const handleSubmit = async (evt) => {
-    if(isEditing){
-      console.log("userId,formData",userId,formData)
+  const handleSubmit = (evt) => {
+    if(isEditing && !isDelete){
       evt.preventDefault();
       updateMutation.mutate({ userId,formData })
+    }else if(isEditing && isDelete){
+      evt.preventDefault();
+      deleteMutation.mutate({ userId,formData })
     }else{
     evt.preventDefault();
     createMutation.mutate(formData)
     }
   };
 
-  const handleDelete = async (evt) => {
+  const handleDelete = (evt) => {
+    console.log("inside handle delete 1")
+    setIsDelete("true")
+    console.log("inside handle delete formData",formData)
+
     setFormData({
       ...formData,
       isactive: "deleted" // Update only status
-  })
-  };
+    })
+    console.log("inside handle delete 2")
+    };
+
 
   return (
     <>
@@ -154,18 +172,31 @@ const UserDetailForm = ({userId}) => {
                 <p>Please note that email is not editable after sign up.</p>
               </label>
             </div>
-        {isEditing && 
+        {isEditing && (
+          <>
+          <div >
+          <label >Account Type *:
+          <input
+            type="String"
+            id="userrole"
+            value={userrole}
+            name="userrole"
+            disabled={isEditing? true : false}
+            />
+          </label>
+        </div>
             <div >
-        <label >Account Type *:
+        <label >Account Status *:
         <input
           type="String"
-          id="userrole"
-          value={userrole}
-          name="userrole"
+          id="isactive"
+          value={isactive}
+          name="isactive"
           disabled={isEditing? true : false}
           />
         </label>
-      </div>}
+      </div>
+          </>)}
         {!isEditing && (
           <>
             <div>

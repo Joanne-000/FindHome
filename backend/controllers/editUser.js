@@ -1,4 +1,4 @@
-const editUser = async (pool, req, res) => {
+const editUser = async (pool, req, res, currentUser) => {
   console.log("start in function");
   console.log("req", req.body);
 
@@ -16,7 +16,8 @@ const editUser = async (pool, req, res) => {
     preferrooms,
   } = req.body;
 
-  const role = userrole + "s";
+  const role = currentUser.userrole + "s";
+
   let user;
 
   if (role === "agents") {
@@ -44,17 +45,16 @@ const editUser = async (pool, req, res) => {
   return user;
 };
 
-const delUser = async (pool, req, res) => {
+const delUser = async (pool, req, res, currentUser) => {
   console.log("start in function");
-  const { email, userrole, isactive } = req.body;
+  const { email, isactive } = req.body;
+  console.log("req.body", req.body);
 
-  const role = userrole + "s";
+  const role = currentUser.userrole + "s";
   let user;
 
-  const values = [isactive];
-
   const text = `update ${role} set isactive=$1 where email=$2 returning *`;
-  const value = [...values, email];
+  const value = [isactive, email];
   const result = await pool.query(text, value);
   user = result.rows[0];
   return user;

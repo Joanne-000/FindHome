@@ -15,7 +15,7 @@ const dataValidation = (req, res) => {
     preferrooms,
   } = req.body;
 
-  if (!displayname || !validator.isEmail(email)) {
+  if (!email || !validator.isEmail(email)) {
     return res.status(400).json({ err: "A valid email is required" });
   }
 

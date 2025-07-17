@@ -1,6 +1,7 @@
 const { loadUserFromToken } = require("../middleware/utils");
 const { dataValidation } = require("../middleware/utils-validation");
 const { editUser, delUser } = require("./editUser");
+const validator = require("validator");
 
 require("dotenv").config();
 const { pool } = require("../index");
@@ -34,7 +35,7 @@ const updateUser = async (req, res) => {
       res.status(403).send("Unauthorized User");
     }
 
-    const user = await editUser(pool, req, res);
+    const user = await editUser(pool, req, res,currentUser);
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ err: err.message });
@@ -42,8 +43,16 @@ const updateUser = async (req, res) => {
 };
 
 const destroyUser = async (req, res) => {
+  console.log(req.body)
   try {
-    dataValidation(req, res);
+    if (!req.body.email || !validator.isEmail(req.body.email)) {
+        return res.status(400).json({ err: "A valid email is required" });
+      }
+      if (req.body.isactive !== "active" && req.body.isactive !== "deleted") {
+      return res
+        .status(400)
+        .json({ err: "Status can only be active or deleted" });
+    }
 
     const currentUser = loadUserFromToken(req);
     const userId = Number(req.params.userId);
@@ -51,7 +60,7 @@ const destroyUser = async (req, res) => {
       res.status(403).send("Unauthorized User");
     }
 
-    const user = await delUser(pool, req, res);
+    const user = await delUser(pool, req, res,currentUser);
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ err: err.message });

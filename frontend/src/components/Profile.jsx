@@ -52,6 +52,7 @@ const UserProfile = () => {
     displayname,
     contactnumber,
     userrole,
+    isactive,
     licenseid,
     profilephoto,
     prefercontactmethod,
@@ -70,6 +71,8 @@ const UserProfile = () => {
          <p>Email: {email}</p>
           <p >Display Name: {displayname}</p>
           <p >Contact Number: {contactnumber}</p>
+          <p >Account Type: {userrole}</p>
+          <p >Account Statu: {isactive}</p>
         </div>
         {userrole === "agent" ? 
         <div >

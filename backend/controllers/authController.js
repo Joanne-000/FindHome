@@ -59,6 +59,10 @@ const signIn = async (req, res) => {
 
   try {
     console.log("start in try");
+    if (!email || !validator.isEmail(email)) {
+      return res.status(400).json({ err: "A valid email is required" });
+    }
+    
     await client.query("BEGIN");
 
     const { email, password } = req.body;

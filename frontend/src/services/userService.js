@@ -19,11 +19,9 @@ const getUser = async (userId) => {
       const res = await axios.get(`${BASE_URL}/${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      console.log("res", res);
 
       if (res.status !== 200) throw new Error("Failed to show user details");
       const data = await res.data;
-      console.log("data", data);
 
       if (data.err) {
         throw new Error(data.err);
@@ -39,9 +37,6 @@ const getUser = async (userId) => {
 const updateUser = async (userId, userFormData) => {
   try {
     const currentUser = getUserFromToken();
-    console.log("userId", userId);
-    console.log("currentUser.id", currentUser.id);
-    console.log("userFormData", userFormData);
 
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
@@ -66,7 +61,6 @@ const updateUser = async (userId, userFormData) => {
       if (data.err) {
         throw new Error(data.err);
       }
-      return data;
     }
   } catch (err) {
     console.log(err);
@@ -76,12 +70,14 @@ const updateUser = async (userId, userFormData) => {
 
 // if users were to delete an account, we will set it as inactive instead of deleting them
 const deleteUser = async (userId, userFormData) => {
+  console.log("userFormData in service", userFormData);
+
   try {
     const currentUser = getUserFromToken();
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      const res = await axios.put(`${BASE_URL}/${userId}/del`, {
+      const res = await axios.put(`${BASE_URL}/${userId}/del`, userFormData, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -92,10 +88,16 @@ const deleteUser = async (userId, userFormData) => {
       if (res.status !== 200) throw new Error("Failed to update user details");
 
       const data = await res.data;
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        const payload = getUserFromToken();
+        console.log(payload);
+        return payload;
+      }
+
       if (data.err) {
         throw new Error(data.err);
       }
-      return data;
     }
   } catch (err) {
     console.log(err);
