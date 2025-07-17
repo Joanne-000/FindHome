@@ -1,1 +1,14 @@
-{}
+{
+  "name":"findhome",
+  "scripts": {
+    "dev": "turbo run dev"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.5"
+  },
+  "packageManager": "bun@1.2.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}

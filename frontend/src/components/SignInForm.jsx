@@ -23,14 +23,16 @@ const SignInForm = () => {
       console.log(payload)
       setUser(payload);
       navigate(`/profile`)
-    }})
+    },
+    onError:(error)=>{console.log(error.response.data)}
+  })
 
     if (isPending) {
       return <progress />
     }
 
     if (isError) {
-      return <pre> {JSON.stringify(error,null,2)}</pre>
+      return <pre> {error.message} </pre>
     }
   
   const handleChange = (evt) => {

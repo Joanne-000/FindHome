@@ -59,7 +59,9 @@ const UserDetailForm = ({userId}) => {
       console.log(payload)
       setUser(payload);
       navigate(`/profile`)
-    }})
+    },
+    onError:(error)=>{console.log(error['response'].data)}
+})
 
     
     const updateMutation = useMutation({
@@ -68,7 +70,8 @@ const UserDetailForm = ({userId}) => {
         console.log(payload)
         setUser(payload);
         navigate(`/profile`)
-      }})
+      },
+      onError:(error)=>{console.log(error['response'].data)}})
 
     if (createMutation.isPending || updateMutation.isPending) {
       return <progress />
