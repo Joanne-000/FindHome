@@ -8,12 +8,14 @@ import { getUser, updateUser,deleteUser } from "../services/userService";
 import {
   useMutation,
 } from '@tanstack/react-query'
+import debug from "debug";
 
+const log = debug("list:UDF");
 
 const UserDetailForm = ({userId}) => {
   const isEditing = userId ? true : false;
 
-  const [isDelete, setIsDelete] = useState("false");
+  const [isDeleting , setIsDelete] = useState(false);
 
   const { setUser } = useContext(UserContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,27 +62,28 @@ const UserDetailForm = ({userId}) => {
       setUser(payload);
       navigate(`/profile`)
     },
-    onError:(error)=>{console.log(error['response'].data)}
+    onError:(error)=>{log(error.message)}
 })
     
     const updateMutation = useMutation({
       mutationFn: ({ userId, formData }) => updateUser(userId, formData),
-      onSuccess: (payload)=>{
-        setUser(payload);
+      onSuccess: (data)=>{
+        log("updMut",data)
+        setUser(data);
         navigate(`/profile`)
       },
-      onError:(error)=>{console.log(error['response'].data)}})
+      onError:(error)=>{log(error.message)}})
 
       const deleteMutation = useMutation({
         mutationFn: ({ userId, formData }) => deleteUser(userId, formData),
-        onSuccess: (payload)=>{
-          console.log("delMut",payload)
+        onSuccess: (data)=>{
+          log("delMut",data)
           setUser("");
+          localStorage.removeItem("token");
           navigate(`/`)    
         },
-        onError:(error)=>{console.log(error['response'].data)}})
+        onError:(error)=>{log(error.message)}})
   
-
     if (createMutation.isPending || updateMutation.isPending || deleteMutation.isPending) {
       return <progress />
     }
@@ -123,29 +126,32 @@ const UserDetailForm = ({userId}) => {
     });
   };
 
+  log("isDelete Out",isDeleting )
+  log("isEditing Out",isEditing)
+
   const handleSubmit = (evt) => {
-    if(isEditing && !isDelete){
-      evt.preventDefault();
-      updateMutation.mutate({ userId,formData })
-    }else if(isEditing && isDelete){
-      evt.preventDefault();
-      deleteMutation.mutate({ userId,formData })
-    }else{
     evt.preventDefault();
+    if(isEditing ){
+      updateMutation.mutate({ userId,formData })
+    } else{
     createMutation.mutate(formData)
     }
   };
 
   const handleDelete = (evt) => {
-    console.log("inside handle delete 1")
-    setIsDelete("true")
-    console.log("inside handle delete formData",formData)
+    evt.preventDefault();
+    log("inside handle delete 1")
+    setIsDelete(true)
+    log("inside handle delete formData",formData)
 
     setFormData({
       ...formData,
       isactive: "deleted" // Update only status
     })
-    console.log("inside handle delete 2")
+
+      log("inside shoulddelete", formData)
+      deleteMutation.mutate({ userId,formData })
+
     };
 
 
@@ -335,7 +341,7 @@ const UserDetailForm = ({userId}) => {
             <button type="submit" >
               Update Profile
             </button>
-            <button type="submit" onClick={handleDelete}>
+            <button type="button" onClick={handleDelete} disabled={isDeleting }>
               Delete Profile
             </button>
             <button  type="button" onClick={() => navigate("/")}>
@@ -361,35 +367,6 @@ const UserDetailForm = ({userId}) => {
         </Link>
       )}
     </div>
-    {isEditing ? (
-    <div className={`modal ${isModalOpen ? 'is-active' : ''}`}>
-      <div onClick={() => setIsModalOpen(false)}></div>
-
-      <div >
-        <header >
-          <p >Confirm Profile Deletion</p>
-          <button aria-label="close" onClick={() => setIsModalOpen(false)}></button>
-        </header>
-
-        <section >
-          <p>This action cannot be undone. Are you sure you want to continue?</p>
-        </section>
-
-        <footer >
-          <button
-            onClick={() => {
-              handleDelete()
-              setIsModalOpen(false);
-            }}
-          >
-            Confirm
-          </button>
-          <button onClick={() => setIsModalOpen(false)}>
-            Cancel
-          </button>
-        </footer>
-      </div>
-    </div>): ""}
     </>
   );
 };

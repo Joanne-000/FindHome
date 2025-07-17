@@ -25,6 +25,8 @@ const signUp = async (formData) => {
 
 const signIn = async (formData) => {
   try {
+    console.log("signin formData", formData);
+
     const res = await axios.post(`${BASE_URL}/signin`, formData);
     const data = res.data;
     console.log("signin data", res);

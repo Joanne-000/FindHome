@@ -1,7 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const { pool } = require("../index");
-
+const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
@@ -10,7 +10,6 @@ const {
   emailInBuyers,
 } = require("../middleware/utils");
 const { dataValidation } = require("../middleware/utils-validation");
-
 const { userSignUp } = require("../controllers/signUp");
 
 const signUp = async (req, res) => {
@@ -58,14 +57,14 @@ const signIn = async (req, res) => {
   console.log("start in signin");
 
   try {
+    const { email, password } = req.body;
+
     console.log("start in try");
     if (!email || !validator.isEmail(email)) {
       return res.status(400).json({ err: "A valid email is required" });
     }
-    
-    await client.query("BEGIN");
 
-    const { email, password } = req.body;
+    await client.query("BEGIN");
 
     const emailInAgentsDB = await emailInAgents(client, email);
     const emailInBuyersDB = await emailInBuyers(client, email);

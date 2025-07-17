@@ -1,22 +1,23 @@
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-
 import { Link, useNavigate } from "react-router";
 import { getUser } from "../services/userService";
-// import { deleteUser } from "../services/userService";
-// import isEmail from "validator/lib/isEmail";
 import {
   useQuery,
 } from '@tanstack/react-query'
+import debug from "debug";
+
+const log = debug("list:Profile");
 
 const UserProfile = () => {
+  const navigate = useNavigate();
   const { user } = useContext(UserContext);
   
+  log("user",user)
   const userId = user?.id;
 
-
   const { isPending, isError, data, error }  = useQuery({ 
-    queryKey: ['profile',userId], 
+    queryKey: ['profile',user], 
     queryFn:  () => getUser(userId) ,  
     enabled: !!user,
     initialData: {
@@ -33,19 +34,20 @@ const UserProfile = () => {
       preferrooms: user?.preferrooms || "",}
   })
   
-  if (!user) return <p>Please log in.</p>;
+  if (!user) {
+    setTimeout(() => navigate("/signin"),(1000*5))
+    return <p>You are not signed in. You will be directing to sign in page soon...</p>
+  }
 
   if (isPending) {
     return <progress />
   }
 
   if (isError) {
+    log("error", error.name)
     return <span> {error.message}</span>
   }
 
-  console.log(data)
-
-  const navigate = useNavigate();
   
   const {
     email,

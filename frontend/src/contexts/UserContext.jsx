@@ -1,4 +1,7 @@
 import { createContext, useState } from "react";
+import debug from "debug";
+
+const log = debug("list:user context");
 
 const UserContext = createContext();
 
@@ -13,6 +16,7 @@ const getUserFromToken = () => {
 function UserProvider({ children }) {
   const [user, setUser] = useState(getUserFromToken());
   const value = { user, setUser };
+  log("delMut",user)
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }

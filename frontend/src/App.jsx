@@ -1,3 +1,5 @@
+
+
 import './App.css'
 import debug from "debug";
 import { Routes, Route } from "react-router";
@@ -12,6 +14,11 @@ import EditProfile from './components/EditProfile';
 const log = debug("list:App");
 
 function App() {
+
+  if (process.env.NODE_ENV === "development") {
+    localStorage.debug = "list:*";
+  }
+  
   log("Loading Routes");
   return (
     <>

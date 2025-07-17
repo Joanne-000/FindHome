@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getUserFromToken } from "../contexts/UserContext";
-import { redirect } from "react-router";
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/profile`;
 
@@ -11,7 +10,12 @@ const getUser = async (userId) => {
     console.log("get user start");
 
     const currentUser = await getUserFromToken();
+    console.log("currentUser", currentUser);
+    console.log("userId", userId);
 
+    if (!userId) {
+      throw new Error("Please log in");
+    }
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
@@ -89,10 +93,7 @@ const deleteUser = async (userId, userFormData) => {
 
       const data = await res.data;
       if (data.token) {
-        localStorage.setItem("token", data.token);
-        const payload = getUserFromToken();
-        console.log(payload);
-        return payload;
+        return;
       }
 
       if (data.err) {

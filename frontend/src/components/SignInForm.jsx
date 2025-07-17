@@ -6,6 +6,9 @@ import isEmail from "validator/lib/isEmail";
 import {
   useMutation,
 } from '@tanstack/react-query'
+import debug from "debug";
+
+const log = debug("list:SIF");
 
 const SignInForm = () => {
   const { setUser } = useContext(UserContext);
@@ -20,11 +23,11 @@ const SignInForm = () => {
   const {mutate,isPending, isError, error } = useMutation({
     mutationFn:  signIn,
     onSuccess: (payload)=>{
-      console.log(payload)
+      log(payload)
       setUser(payload);
       navigate(`/profile`)
     },
-    onError:(error)=>{console.log(error.response.data)}
+    onError:(error)=>{log(error.response.data)}
   })
 
     if (isPending) {
@@ -40,16 +43,17 @@ const SignInForm = () => {
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
   };
 
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
-    mutate(formData)
-  };
-
   const {
     email,
     password,
     userrole
   } = formData;
+
+  
+  const handleSubmit = async (evt) => {
+    evt.preventDefault();
+    mutate(formData)
+  };
 
   const isFormInvalid = () => {
         const result = isEmail(email) && password.length >2 && password && userrole
