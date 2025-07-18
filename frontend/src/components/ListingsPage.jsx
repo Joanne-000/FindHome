@@ -9,7 +9,7 @@ import debug from "debug";
 
 const log = debug("list:Listings Page");
 
-const ListingPage = () =>{
+const ListingsPage = () =>{
   const { user } = useContext(UserContext);
 
     const navigate = useNavigate();
@@ -33,9 +33,10 @@ const ListingPage = () =>{
      
     return(
 <>
-      {data.map((item,index)=>(
-          <div>
-            <div>{item.images[0].imageurl}</div>
+      {data.map((item)=>(
+          <div key={item.id}>
+            <div>
+              <img width="200px" height="200px" src={item.images[0].imageurl} alt={item.propertyname}></img></div>
             <div>
             {item.propertyname}
             </div>
@@ -55,11 +56,11 @@ const ListingPage = () =>{
             </div>
             <div>
             <div>
-            <button name="detBtn" id={item.id} onClick={navigate(`/listings/${item.id}`)}>See details</button>
+            <button name="detBtn" type="button" id={item.id} onClick={() => navigate(`/listings/${item.id}`)}>See details</button>
             </div>
             {user && 
             <div>
-            <button name="favBtn" id={item.id}>Fav</button>
+            <button name="favBtn" type="button" id={item.id}>Fav</button>
             </div>}
             </div>
           </div>
@@ -68,4 +69,4 @@ const ListingPage = () =>{
     )
 }
 
-export default ListingPage
+export default ListingsPage

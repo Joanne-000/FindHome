@@ -41,7 +41,10 @@ const getOneProperty = async (req, res) => {
       `select * from listings where id = $1 AND status  = $2`,
       [listingId, "available"]
     );
-    const listing = listingResult.rows;
+    const listing = listingResult.rows[0];
+    console.log(listing)
+
+    const agentId = listing.agent_id
 
     if (listing.length === 0) {
       return res.status(404).send({ err: "Listing not found." });
@@ -52,9 +55,15 @@ const getOneProperty = async (req, res) => {
       [listingId]
     );
     const images = imagesResult.rows;
-console.log(images)
 
-    res.status(200).json({ listing, images });
+    const agentResult = await pool.query(
+      `select * from agents where id = $1`,
+      [agentId]
+    );
+    const agent = agentResult.rows;
+    console.log(agent)
+
+    res.status(200).json({ listing, images, agent });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }

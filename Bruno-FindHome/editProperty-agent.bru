@@ -5,13 +5,14 @@ meta {
 }
 
 put {
-  url: http://localhost:3000/listings/:userId/:listingId/edit
+  url: http://localhost:3000/listings/:userId/:listingId/:imageId/edit
   body: json
   auth: bearer
 }
 
 params:path {
-  listingId: 4
+  imageId: 9
+  listingId: 5
   userId: 2
 }
 
