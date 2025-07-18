@@ -82,7 +82,6 @@ const deleteUser = async (userId, userFormData) => {
       throw new Error("Unauthorized");
     } else {
       const res = await axios.put(`${BASE_URL}/${userId}/del`, userFormData, {
-        method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",

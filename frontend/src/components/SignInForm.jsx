@@ -21,7 +21,7 @@ const SignInForm = () => {
   });
 
   const {mutate,isPending, isError, error } = useMutation({
-    mutationFn:  signIn,
+    mutationFn:  () => signIn(formData),
     onSuccess: (payload)=>{
       log(payload)
       setUser(payload);

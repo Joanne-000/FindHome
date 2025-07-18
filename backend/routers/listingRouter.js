@@ -12,7 +12,7 @@ const {
 const verifyToken = require("../middleware/verify-token");
 
 router.get("/", getProperties);
-router.post("/:userId", verifyToken, createListing);
+router.post("/:userId/new", verifyToken, createListing);
 router.put("/:userId/:listingId/edit", verifyToken, updateListing);
 router.put("/:userId/:listingId/:imageId/edit", verifyToken, updateListing);
 

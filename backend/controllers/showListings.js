@@ -3,7 +3,6 @@ const { pool } = require("../index");
 
 const getProperties = async (req, res) => {
   try {
-
     const listingsResult = await pool.query(
       `select * from listings where status = $1`,
       ["available"]
@@ -11,22 +10,22 @@ const getProperties = async (req, res) => {
     const listings = listingsResult.rows;
 
     if (listings.length === 0) {
-      return res.status(404).send({ err: "Listing not found." });
+      throw new Error("Listing not found.");
     }
 
-    const listingwImagesP = listings.map(async(listing) => {
+    const listingwImagesP = listings.map(async (listing) => {
       const result = await pool.query(
         `select * from images where listing_id = $1`,
         [listing.id]
       );
       listing["images"] = result.rows;
 
-      return listing
-    })
+      return listing;
+    });
 
     const listingswImages = await Promise.all(listingwImagesP);
-    console.log("listingswImages",JSON.stringify(listingswImages,null,2))
-    
+    console.log("listingswImages", JSON.stringify(listingswImages, null, 2));
+
     res.status(200).json(listingswImages);
   } catch (err) {
     res.status(500).json({ err: err.message });
@@ -42,12 +41,12 @@ const getOneProperty = async (req, res) => {
       [listingId, "available"]
     );
     const listing = listingResult.rows[0];
-    console.log(listing)
+    console.log(listing);
 
-    const agentId = listing.agent_id
+    const agentId = listing.agent_id;
 
     if (listing.length === 0) {
-      return res.status(404).send({ err: "Listing not found." });
+      throw new Error("Listing not found.");
     }
 
     const imagesResult = await pool.query(
@@ -56,12 +55,11 @@ const getOneProperty = async (req, res) => {
     );
     const images = imagesResult.rows;
 
-    const agentResult = await pool.query(
-      `select * from agents where id = $1`,
-      [agentId]
-    );
+    const agentResult = await pool.query(`select * from agents where id = $1`, [
+      agentId,
+    ]);
     const agent = agentResult.rows;
-    console.log(agent)
+    console.log(agent);
 
     res.status(200).json({ listing, images, agent });
   } catch (err) {

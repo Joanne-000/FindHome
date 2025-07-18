@@ -44,15 +44,15 @@ const getOneListing = async (listingId) => {
     throw new Error(err);
   }
 };
-
-const updateUser = async (userId, userFormData) => {
+const createListing = async (userId, userFormData) => {
   try {
     const currentUser = getUserFromToken();
+    console.log(userFormData);
 
-    if (currentUser.id !== userId) {
+    if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       throw new Error("Unauthorized");
     } else {
-      const res = await axios.put(`${BASE_URL}/${userId}/edit`, userFormData, {
+      const res = await axios.post(`${BASE_URL}/${userId}/new`, userFormData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
@@ -79,8 +79,45 @@ const updateUser = async (userId, userFormData) => {
   }
 };
 
-// if users were to delete an account, we will set it as inactive instead of deleting them
-const deleteUser = async (userId, userFormData) => {
+const updateListing = async (userId, listingId, userFormData) => {
+  try {
+    const currentUser = getUserFromToken();
+
+    if (currentUser.id !== userId) {
+      throw new Error("Unauthorized");
+    } else {
+      const res = await axios.put(
+        `${BASE_URL}/${userId}/${listingId}/edit`,
+        userFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res.status !== 200) throw new Error("Failed to update user details");
+
+      const data = await res.data;
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        const payload = getUserFromToken();
+        return payload;
+      }
+
+      if (data.err) {
+        throw new Error(data.err);
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
+
+const deleteListing = async (userId, listingId, userFormData) => {
   console.log("userFormData in service", userFormData);
 
   try {
@@ -88,13 +125,16 @@ const deleteUser = async (userId, userFormData) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      const res = await axios.put(`${BASE_URL}/${userId}/del`, userFormData, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await axios.delete(
+        `${BASE_URL}/${userId}/${listingId}/del`,
+        userFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (res.status !== 200) throw new Error("Failed to update user details");
 
@@ -113,4 +153,10 @@ const deleteUser = async (userId, userFormData) => {
   }
 };
 
-export { getAllListings, getOneListing };
+export {
+  getAllListings,
+  getOneListing,
+  createListing,
+  updateListing,
+  deleteListing,
+};

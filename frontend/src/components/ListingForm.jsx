@@ -1,86 +1,154 @@
 import { useEffect, useState,useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router";
-import { signUp } from "../services/authService";
-import { getUser, updateUser,deleteUser } from "../services/userService";
-// import { deleteUser } from "../services/userService";
-// import isEmail from "validator/lib/isEmail";
+import { getOneListing, createListing ,updateListing,deleteListing} from "../services/listingService";
+
 import {
   useMutation,
 } from '@tanstack/react-query'
 import debug from "debug";
 
-const log = debug("list:UDF");
+const log = debug("list:Listing form")
 
-const UserDetailForm = ({userId}) => {
-  const isEditing = userId ? true : false;
+const ListingForm = ({listingId}) => {
+  const { user } = useContext(UserContext);
+  const userId = user.id;
+  const isEditing = listingId ? true : false;
 
   const [isDeleting , setIsDelete] = useState(false);
-
-  const { setUser } = useContext(UserContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
+  const [images, setImages] = useState({imageurl1: "https://sg1-cdn.pgimgs.com/projectnet-project/218526/ZPPHO.153261118.R800X800.jpg"},
+    {imageurl2: ""},
+    {imageurl3: ""},
+    {imageurl4: ""},
+    {imageurl5: ""})
+
   const [formData, setFormData] = useState({
-    email: "",
-        password:"",
-        displayname: "",
-        contactnumber: "",        
-        userrole: "buyer",
-        licenseid: "",
-        profilephoto: "",
-        isactive: "active",
-        prefercontactmethod: "",
-        preferlocation: "",
-        preferbudget: "",
-        preferrooms:"",
-  });
+    agent_id: userId, 
+    propertyname: "Blk 234 Andrew Road", 
+    address: "Blk 234 Andrew Road Singapore 334234", 
+    price: "650000", 
+    town: "Novena", 
+    nearestmrt: "Novena", 
+    unitsize: "89",
+    bedroom: "3",
+    bathroom: "2", 
+    typeoflease: "99-year lease", 
+    description: "mid level floor", 
+    status: "available",
+    imageurls: Object.values(images),
+    });
+  
+  const SGtown = [
+    "Ang Mo Kio",
+    "Bedok",
+    "Bishan",
+    "Bukit Batok",
+    "Bukit Merah",
+    "Bukit Panjang",
+    "Bukit Timah",
+    "Central Area",
+    "Choa Chu Kang",
+    "Clementi",
+    "Geylang",
+    "Hougang",
+    "Jurong East",
+    "Jurong West",
+    "Kallang",
+    "Lim Chu Kang",
+    "Mandai",
+    "Marine Parade",
+    "Novena",
+    "Pasir Ris",
+    "Punggol",
+    "Queenstown",
+    "Sembawang",
+    "Sengkang",
+    "Serangoon",
+    "Tampines",
+    "Tanglin",
+    "Toa Payoh",
+    "Tuas",
+    "Woodlands",
+    "Yishun",
+  ];
+
+  const {
+    agent_id, 
+    propertyname, 
+    address, 
+    price, 
+    town, 
+    nearestmrt, 
+    unitsize,
+    bedroom,
+    bathroom, 
+    typeoflease, 
+    description, 
+    status,
+  }=formData
+
+  const {
+    imageurl1,imageurl2,imageurl3,imageurl4,imageurl5
+  }= images
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const userProfile = await getUser(userId);
+    const fetchListingDetails = async () => {
+      const listingDet = await getOneListing(listingId);
       setFormData({
-        email: userProfile?.email || "",
-      displayname: userProfile?.displayname || "",
-      contactnumber: userProfile?.contactnumber || "",
-      userrole: userProfile?.userrole || "",
-      licenseid: userProfile?.licenseid || "",
-      profilephoto: userProfile?.profilephoto || "",
-      isactive: userProfile?.isactive || "",
-      prefercontactmethod: userProfile?.prefercontactmethod || "",
-      preferlocation: userProfile?.preferlocation || "",
-      preferbudget: userProfile?.preferbudget || "",
-      preferrooms: userProfile?.preferrooms || "",
+        agent_id: listingDet?.agent_id || "",
+        propertyname: listingDet?.propertyname || "",
+        address: listingDet?.address || "",
+        price: listingDet?.price || "",
+        town: listingDet?.town || "",
+        nearestmrt: listingDet?.nearestmrt || "",
+        unitsize: listingDet?.unitsize || "",
+        bedroom: listingDet?.bedroom || "",
+        bathroom: listingDet?.bathroom || "",
+        typeoflease: listingDet?.typeoflease || "",
+        description: listingDet?.description || "",
+        status: listingDet?.status || "",
+        imageurl: listingDet?.imageurl || "",
       });
+      setImages(
+        {imageurl1: listingDet?.imageurl[0]},
+        {imageurl2: listingDet?.imageurl[1]},
+        {imageurl3:listingDet?.imageurl[2]},
+        {imageurl4:listingDet?.imageurl[3]},
+        {imageurl5: listingDet?.imageurl[4]})
     };
-    fetchUserProfile();
-  }, [userId]);
+    fetchListingDetails();
+  }, [listingId]);
 
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      imageurls: Object.values(images),
+    }));
+  }, [images]);
+  
   const createMutation = useMutation({
-    mutationFn: signUp,
-    onSuccess: (payload)=>{
-      setUser(payload);
-      navigate(`/profile`)
+    mutationFn: ({ userId, formData })=>createListing(userId, formData),
+    onSuccess: (data)=>{
+      log("createMut",data)
+      navigate(`/listings`)
     },
     onError:(error)=>{log(error.message)}
 })
     
     const updateMutation = useMutation({
-      mutationFn: ({ userId, formData }) => updateUser(userId, formData),
+      mutationFn: ({ userId, listingId, formData }) => updateListing(userId, listingId, formData),
       onSuccess: (data)=>{
         log("updMut",data)
-        setUser(data);
-        navigate(`/profile`)
+        navigate(`/listings`)
       },
       onError:(error)=>{log(error.message)}})
 
       const deleteMutation = useMutation({
-        mutationFn: ({ userId, formData }) => deleteUser(userId, formData),
-        onSuccess: (data)=>{
-          log("delMut",data)
-          setUser("");
-          localStorage.removeItem("token");
-          navigate(`/`)    
+        mutationFn: ({ userId, listingId }) => deleteListing(userId, listingId),
+        onSuccess: ()=>{
+          navigate(`/listings`)    
         },
         onError:(error)=>{log(error.message)}})
   
@@ -98,43 +166,25 @@ const UserDetailForm = ({userId}) => {
     return <span> {deleteMutation.error.message}</span>
     }
 
-  const {
-    email,
-    password,
-    passwordconf,
-    displayname,
-    contactnumber,
-    userrole,
-    licenseid,
-    profilephoto,
-    isactive,
-    prefercontactmethod,
-    preferlocation,
-    preferbudget,
-    preferrooms,
-  } = formData;
-
+    const handleAddImage = () =>{
+      setImages(images.push(""))
+      
+    }
   const handleChange = (evt) => {
     setMessage("");
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
   };
-
-  const handleRoleChange = (role) => {
-    setFormData({
-        ...formData,
-      userrole: role // Update only userRole
-    });
+  const handleChangeImg = (evt) => {
+    setMessage("");
+    setImages({ ...images, [evt.target.name]: evt.target.value });
   };
-
-  log("isDelete Out",isDeleting )
-  log("isEditing Out",isEditing)
-
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if(isEditing ){
-      updateMutation.mutate({ userId,formData })
+      updateMutation.mutate({ userId, listingId,formData })
     } else{
-    createMutation.mutate(formData)
+      log("userId formData",userId,formData)
+    createMutation.mutate({userId, formData})
     }
   };
 
@@ -142,207 +192,223 @@ const UserDetailForm = ({userId}) => {
     evt.preventDefault();
     log("inside handle delete 1")
     setIsDelete(true)
-    log("inside handle delete formData",formData)
-
-    setFormData({
-      ...formData,
-      isactive: "deleted" // Update only status
-    })
-
-      log("inside shoulddelete", formData)
-      deleteMutation.mutate({ userId,formData })
-
+      deleteMutation.mutate({ userId, listingId })
     };
+
+  // const handleNA = (evt) => {
+  //   evt.preventDefault();
+  //   log("inside handle delete 1")
+  //   setIsDelete(true)
+  //   log("inside handle delete formData",formData)
+  //   setFormData({
+  //     ...formData,
+  //     status: "not available" // Update only status
+  //   })
+  //     log("inside should delete", formData)
+  //     deleteMutation.mutate({ listingId,formData })
+  //   };
 
 
   return (
     <>
     <div>
       <h1>
-        {isEditing ? "Edit your Profile" : "Sign Up as a New User"}
+        {isEditing ? "Edit listing" : "Create a new listing"}
       </h1>
       <p >Fields marked with * are required</p>
       <p>{message}</p>
       <form onSubmit={handleSubmit}>
       <div >
-              <label>Email *: 
+              <label>Property Name *: 
               <input
-                type="email"
-                id="email"
-                value={email}
-                name="email"
+                type="text"
+                id="propertyname"
+                value={propertyname}
+                name="propertyname"
                 onChange={handleChange}
-                disabled={isEditing? true : false}
                 required
                 />
-                <p>Please note that email is not editable after sign up.</p>
               </label>
             </div>
-        {isEditing && (
-          <>
           <div >
-          <label >Account Type *:
-          <input
-            type="String"
-            id="userrole"
-            value={userrole}
-            name="userrole"
-            disabled={isEditing? true : false}
+          <label >Address *:
+          <textarea
+            type="text"
+            id="address"
+            value={address}
+            name="address"
+            onChange={handleChange}
+            required
             />
           </label>
         </div>
             <div >
-        <label >Account Status *:
+        <label >Price *: $ 
         <input
-          type="String"
-          id="isactive"
-          value={isactive}
-          name="isactive"
-          disabled={isEditing? true : false}
+          type="number"
+          id="price"
+          value={price}
+          name="price"
+          onChange={handleChange}
+          required
           />
         </label>
       </div>
-          </>)}
-        {!isEditing && (
-          <>
             <div>
-              <label >Password *:
-              <input
-                type="password"
-                id="password"
-                value={password}
-                name="password"
+              <label >Town *:
+                <select value={town} type="text"
+                id="town" 
+                name="town"
                 onChange={handleChange}
-                required
-              />
+                required>
+                  {SGtown.map((item,index)=>(
+                    <option name={item} key={index}>{item}</option>
+                  ))}
+                </select>
             </label>
             </div>              
             <div >
-              <label >Confirm Password *:
+              <label >Nearest MRT *:
               <input
-                type="password"
-                id="passwordconf"
-                value={passwordconf}
-                name="passwordconf"
+                type="text"
+                id="nearestmrt"
+                value={nearestmrt}
+                name="nearestmrt"
                 onChange={handleChange}
                 required
               />
               </label>
             </div>
-            </>
-        )}
         <div >
-          <label >Display Name *:
+          <label >Unit Size *:
+          <input
+            type="number"
+            id="unitsize"
+            value={unitsize}
+            name="unitsize"
+            onChange={handleChange}
+          />m2
+          </label>
+        </div>
+        <div >
+          <label >Bedroom *:
+          <input
+            type="number"
+            id="bedroom"
+            value={bedroom}
+            name="bedroom"
+            onChange={handleChange}
+          />
+          </label>
+        </div>
+        <div >
+        <label >Bathroom *:
+          <input
+            type="number"
+            id="bathroom"
+            value={bathroom}
+            name="bathroom"
+            onChange={handleChange}
+          />
+          </label>
+        </div>
+        <div >
+        <label >Type of Lease *:
           <input
             type="text"
-            id="displayname"
-            value={displayname}
-            name="displayname"
+            id="typeoflease"
+            value={typeoflease}
+            name="typeoflease"
             onChange={handleChange}
           />
           </label>
         </div>
         <div >
-          <label >Contact Number *:
-          <input
-            type="String"
-            id="contactnumber"
-            value={contactnumber}
-            name="contactnumber"
+        <label >Description *:
+        <textarea
+            type="text"
+            id="description"
+            value={description}
+            name="description"
             onChange={handleChange}
           />
           </label>
         </div>
-        {!isEditing && (
-
         <div >
-        <button type="button" onClick={() => handleRoleChange("agent")}>
-        Agent
-      </button>
-      <button type="button" onClick={() => handleRoleChange("buyer")}>
-        Buyer
-      </button>
-        </div>)}
-        {userrole === "agent" ? 
-        <>
-        <div >
-          <label >License Id *:
+        <label >Status *:
           <input
-            type="String"
-            id="licenseid"
-            value={licenseid}
-            name="licenseid"
+            type="text"
+            id="status"
+            value={status}
+            name="status"
             onChange={handleChange}
-            />
+          />
           </label>
         </div>
         <div >
-          <label >Profile Photo *:
-          <input
-            type="String"
-            id="profilephoto"
-            value={profilephoto}
-            name="profilephoto"
-            onChange={handleChange}
-            />
-          </label>
-        </div>
-        </>
-        :
-        <>
-        <div >
-          <label >Prefer Contact Method *:
-          <input
-            type="String"
-            id="prefercontactmethod"
-            value={prefercontactmethod}
-            name="prefercontactmethod"
-            onChange={handleChange}
-            />
-          </label>
-        </div>
-        <div >
-          <label >Prefer Location *:
-          <input
-            type="String"
-            id="preferlocation"
-            value={preferlocation}
-            name="preferlocation"
-            onChange={handleChange}
-            />
-          </label>
-        </div>
-        <div >
-          <label >Prefer Budget *:
-          <input
-            type="Number"
-            id="preferbudget"
-            value={preferbudget}
-            name="preferbudget"
-            onChange={handleChange}
-            />
-          </label>
-        </div>
-        <div >
-          <label >Prefer Rooms *:
-          <input
-            type="Number"
-            id="preferrooms"
-            value={preferrooms}
-            name="preferrooms"
-            onChange={handleChange}
-            />
-          </label>
-        </div>
-        </>
-        }
+            <button type="button" onClick={()=>handleAddImage()}>
+              Add more images
+            </button>
+            </div>
+            <div >
+  <label >
+    Image URL :
+    <textarea
+      type="url"
+      id={`imageurl1`}
+      value={imageurl1}
+      name={`imageurl1`}
+      onChange={handleChangeImg}
+    />
+  </label><br/>
+  <label >
+    Image URL :
+    <textarea
+      type="url"
+      id={`imageurl2`}
+      value={imageurl2}
+      name={`imageurl2`}
+      onChange={handleChangeImg}
+    />
+  </label><br/>
+  <label >
+    Image URL :
+    <textarea
+      type="url"
+      id={`imageurl3`}
+      value={imageurl3}
+      name={`imageurl3`}
+      onChange={handleChangeImg}
+    />
+  </label><br/>
+  <label >
+    Image URL :
+    <textarea
+      type="url"
+      id={`imageurl4`}
+      value={imageurl4}
+      name={`imageurl4`}
+      onChange={handleChangeImg}
+    />
+  </label><br/>
+  <label >
+    Image URL :
+    <textarea
+      type="url"
+      id={`imageurl5`}
+      value={imageurl5}
+      name={`imageurl5`}
+      onChange={handleChangeImg}
+    />
+  </label>
+</div>
         {isEditing ? (
           <div >
             <button type="submit" >
-              Update Profile
+              Update Listing
             </button>
             <button type="button" onClick={handleDelete} disabled={isDeleting }>
-              Delete Profile
+              Delete Listing
             </button>
             <button  type="button" onClick={() => navigate("/")}>
               Cancel
@@ -353,7 +419,7 @@ const UserDetailForm = ({userId}) => {
             <button
               type="submit"
             >
-              Sign Up
+              Create Listing
             </button>
             <button type="button" onClick={() => navigate("/")}>
               Cancel
@@ -371,4 +437,4 @@ const UserDetailForm = ({userId}) => {
   );
 };
 
-export default UserDetailForm;
+export default ListingForm;

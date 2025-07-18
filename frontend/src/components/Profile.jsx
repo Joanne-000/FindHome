@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router";
 import { getUser } from "../services/userService";
@@ -12,7 +12,6 @@ const log = debug("list:Profile");
 const UserProfile = () => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  
   log("user",user)
   const userId = user?.id;
 
@@ -35,8 +34,9 @@ const UserProfile = () => {
   })
   
   if (!user) {
-    setTimeout(() => navigate("/signin"),(1000*5))
-    return <p>You are not signed in. You will be directing to sign in page soon...</p>
+    const timeout = setTimeout(() => navigate("/signin"),(1000*5))
+    const clearTimeOut = () => clearTimeout(timeout)
+    return clearTimeOut, <p>You are not signed in. You will be directing to sign in page soon...</p>
   }
 
   if (isPending) {
@@ -45,7 +45,9 @@ const UserProfile = () => {
 
   if (isError) {
     log("error", error.name)
-    return <span> {error.message}</span>
+    const timeout = setTimeout(() => navigate("/signin"),(1000*5))
+    const clearTimeOut = () => clearTimeout(timeout)
+    return clearTimeOut, <span>{error.message}</span>;
   }
 
   

@@ -8,13 +8,15 @@ require("dotenv").config();
 const { pool } = require("../index");
 
 const createListing = async (req, res) => {
+  console.log("start in create listing", req);
   const client = await pool.connect();
+  console.log("after in create listing", req);
 
   try {
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
-      return res.status(403).send("Unauthorized User");
+      throw new Error("Unauthorized User");
     }
 
     console.log("start in try");
@@ -39,12 +41,12 @@ const updateListing = async (req, res) => {
 
   try {
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     const listingId = Number(req.params.listingId);
     const imageId = Number(req.params.imageId);
 
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
-      return res.status(403).send("Unauthorized User");
+      throw new Error("Unauthorized User");
     }
     console.log("start in try");
     await client.query("BEGIN");
@@ -66,11 +68,11 @@ const updateListing = async (req, res) => {
 const destroyListing = async (req, res) => {
   try {
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     const listingId = Number(req.params.listingId);
 
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
-      return res.status(403).send("Unauthorized User");
+      throw new Error("Unauthorized User");
     }
 
     await client.query("BEGIN");

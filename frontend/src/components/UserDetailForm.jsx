@@ -28,7 +28,7 @@ const UserDetailForm = ({userId}) => {
         contactnumber: "",        
         userrole: "buyer",
         licenseid: "",
-        profilephoto: "",
+        profilephoto: "https://img.iproperty.com.my/angel-legacy/1110x624-crop/static/2019/10/all-about-prop-agents-mainimage.jpg",
         isactive: "active",
         prefercontactmethod: "",
         preferlocation: "",
@@ -183,7 +183,7 @@ const UserDetailForm = ({userId}) => {
           <div >
           <label >Account Type *:
           <input
-            type="String"
+            type="text"
             id="userrole"
             value={userrole}
             name="userrole"
@@ -194,7 +194,7 @@ const UserDetailForm = ({userId}) => {
             <div >
         <label >Account Status *:
         <input
-          type="String"
+          type="text"
           id="isactive"
           value={isactive}
           name="isactive"
@@ -245,7 +245,7 @@ const UserDetailForm = ({userId}) => {
         <div >
           <label >Contact Number *:
           <input
-            type="String"
+            type="text"
             id="contactnumber"
             value={contactnumber}
             name="contactnumber"
@@ -268,7 +268,7 @@ const UserDetailForm = ({userId}) => {
         <div >
           <label >License Id *:
           <input
-            type="String"
+            type="text"
             id="licenseid"
             value={licenseid}
             name="licenseid"
@@ -278,8 +278,8 @@ const UserDetailForm = ({userId}) => {
         </div>
         <div >
           <label >Profile Photo *:
-          <input
-            type="String"
+          <textarea
+            type="url"
             id="profilephoto"
             value={profilephoto}
             name="profilephoto"
@@ -293,7 +293,7 @@ const UserDetailForm = ({userId}) => {
         <div >
           <label >Prefer Contact Method *:
           <input
-            type="String"
+            type="text"
             id="prefercontactmethod"
             value={prefercontactmethod}
             name="prefercontactmethod"
@@ -304,7 +304,7 @@ const UserDetailForm = ({userId}) => {
         <div >
           <label >Prefer Location *:
           <input
-            type="String"
+            type="text"
             id="preferlocation"
             value={preferlocation}
             name="preferlocation"
@@ -315,7 +315,7 @@ const UserDetailForm = ({userId}) => {
         <div >
           <label >Prefer Budget *:
           <input
-            type="Number"
+            type="number"
             id="preferbudget"
             value={preferbudget}
             name="preferbudget"
@@ -326,7 +326,7 @@ const UserDetailForm = ({userId}) => {
         <div >
           <label >Prefer Rooms *:
           <input
-            type="Number"
+            type="number"
             id="preferrooms"
             value={preferrooms}
             name="preferrooms"

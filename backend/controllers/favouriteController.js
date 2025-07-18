@@ -12,19 +12,16 @@ const { pool } = require("../index");
 const createFavourite = async (req, res) => {
   try {
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     const listingId = Number(req.params.listingId);
 
-    if (currentUser.id !== userId ) {
-      return res.status(403).send("Unauthorized User");
+    if (currentUser.id !== userId) {
+      throw new Error("Unauthorized User");
     }
-    let text;
 
-    if (currentUser.userrole !== "buyer"){
-    text =
-      "insert into favourites (buyer_id, listing_id) values ($1,$2) returning *";
-    }
-      const value = [userId, listingId];
+    const text =
+      "insert into favourites (userid, listing_id) values ($1,$2) returning *";
+    const value = [userId, listingId];
     const favResult = await pool.query(text, value);
     const listing = favResult.rows[0];
     res.status(200).json(listing);
@@ -36,9 +33,9 @@ const createFavourite = async (req, res) => {
 const getFavourites = async (req, res) => {
   try {
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     if (currentUser.id !== userId || currentUser.userrole !== "buyer") {
-      return res.status(403).send("Unauthorized User");
+      throw new Error("Unauthorized User");
     }
 
     const result = await pool.query(
@@ -74,11 +71,11 @@ const getFavourites = async (req, res) => {
 const destroyFavourite = async (req, res) => {
   try {
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     const favId = Number(req.params.favId);
 
     if (currentUser.id !== userId || currentUser.userrole !== "buyer") {
-      return res.status(403).send("Unauthorized User");
+      throw new Error("Unauthorized User");
     }
 
     const result = await pool.query(`delete from favourites where id = $1`, [

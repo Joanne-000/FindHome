@@ -1,4 +1,4 @@
-const { loadUserFromToken , createPayload} = require("../middleware/utils");
+const { loadUserFromToken, createPayload } = require("../middleware/utils");
 const { dataValidation } = require("../middleware/utils-validation");
 const { editUser, delUser } = require("./editUser");
 const validator = require("validator");
@@ -10,9 +10,9 @@ const { pool } = require("../index");
 const getUser = async (req, res) => {
   try {
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     if (currentUser.id !== userId) {
-      res.status(403).send("Unauthorized User");
+      throw new Error("Unauthorized User");
     }
 
     const role = currentUser.userrole + "s";
@@ -31,43 +31,34 @@ const updateUser = async (req, res) => {
     dataValidation(req, res);
 
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     if (currentUser.id !== userId) {
-      res.status(403).send("Unauthorized User");
+      throw new Error("Unauthorized User");
     }
 
-    const user = await editUser(pool, req, res,currentUser);
+    const user = await editUser(pool, req, res, currentUser);
     const payload = createPayload(user);
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
       expiresIn: "1hr",
     });
 
-    res.status(200).json({token});
+    res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
 };
 
 const destroyUser = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
-    if (!req.body.email || !validator.isEmail(req.body.email)) {
-        return res.status(400).json({ err: "A valid email is required" });
-      }
-      if (req.body.isactive !== "active" && req.body.isactive !== "deleted") {
-      return res
-        .status(400)
-        .json({ err: "Status can only be active or deleted" });
-    }
-
     const currentUser = loadUserFromToken(req);
-    const userId = Number(req.params.userId);
+    const userId = req.params.userId;
     if (currentUser.id !== userId) {
       res.status(403).send("Unauthorized User");
     }
 
-    await delUser(pool, req, res,currentUser);
+    await delUser(pool, req, res, currentUser);
 
     res.status(200).send("Account deleted");
   } catch (err) {

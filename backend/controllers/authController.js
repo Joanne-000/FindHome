@@ -9,7 +9,10 @@ const {
   emailInAgents,
   emailInBuyers,
 } = require("../middleware/utils");
-const { dataValidation } = require("../middleware/utils-validation");
+const {
+  dataValidation,
+  signinValidation,
+} = require("../middleware/utils-validation");
 const { userSignUp } = require("../controllers/signUp");
 
 const signUp = async (req, res) => {
@@ -17,21 +20,18 @@ const signUp = async (req, res) => {
 
   console.log("start in signup");
   try {
-    dataValidation(req, res);
-
     await client.query("BEGIN");
+    dataValidation(req);
 
     const emailInAgentsDB = await emailInAgents(client, req.body.email);
     const emailInBuyersDB = await emailInBuyers(client, req.body.email);
     if (emailInAgentsDB || emailInBuyersDB) {
-      return res
-        .status(409)
-        .send({ err: "This Email has already been taken." });
+      throw new Error("This Email has already been taken.");
     }
     if (req.body.password !== req.body.passwordconf) {
-      return res.status(409).send({
-        err: "Password and Confirm Password are not the same. Please re-type.",
-      });
+      throw new Error(
+        "Password and Confirm Password are not the same. Please re-type."
+      );
     }
 
     const user = await userSignUp(client, req, res);
@@ -58,18 +58,14 @@ const signIn = async (req, res) => {
 
   try {
     const { email, password } = req.body;
-
     console.log("start in try");
-    if (!email || !validator.isEmail(email)) {
-      return res.status(400).json({ err: "A valid email is required" });
-    }
-
     await client.query("BEGIN");
+    signinValidation(req);
 
     const emailInAgentsDB = await emailInAgents(client, email);
     const emailInBuyersDB = await emailInBuyers(client, email);
     if (!emailInAgentsDB && !emailInBuyersDB) {
-      return res.status(404).send({ err: "Email address not found." });
+      throw new Error("Email address not found.");
     }
 
     const userInDB = emailInAgentsDB || emailInBuyersDB;
@@ -78,7 +74,7 @@ const signIn = async (req, res) => {
     const isPasswordCorrect = await bcrypt.compare(password, user.hashedpw);
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({ err: "Invalid credentials." });
+      throw new Error("Invalid credentials.");
     }
 
     const payload = createPayload(user);
