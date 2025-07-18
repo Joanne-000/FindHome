@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import {  useParams } from "react-router";
 import { getOneListing } from "../services/listingService";
@@ -6,13 +6,20 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 import debug from "debug";
+import { faker } from '@faker-js/faker';
 
 const log = debug("list:One Listing Page");
 
 const OneListingPage = () =>{
   const { user } = useContext(UserContext);
 const {listingId} = useParams()
+log("user",user)
 
+const [isAgent, setAgent] = useState(false)
+
+if(user && user.userrole === "agent"){
+  setAgent(true)
+}
     log("listingId",listingId)
 
       const { isPending, isError, data, error }  = useQuery({ 
@@ -20,6 +27,7 @@ const {listingId} = useParams()
         queryFn:  () => getOneListing(listingId)
       })
   
+
       log(data)
 
       if (isPending) {
@@ -38,6 +46,7 @@ const {listingId} = useParams()
           <div key={id}>
             <div>
               <img width="200px" height="200px" src={data.images[0].imageurl} alt={propertyname}></img>
+              <img width="200px" height="200px" src={faker.image.url()} alt={data.agent[0].displayname}></img>
               </div>
               <div>
             <p>
@@ -78,8 +87,16 @@ const {listingId} = useParams()
             <button name="favBtn" type="button" id={id}>Fav</button>
             </div>}
             </div>
-          <img width="150px" height="150px" src={data.agent[0].profilephoto} alt={data.agent[0].displayname}></img>
+            <div>
+            {isAgent && 
+            <div>
+            <button name="editBtn" type="button" id={id}>Edit Listing</button>
+            </div>}
             </div>
+          <img width="150px" height="150px" src={data.agent[0].profilephoto} alt={data.agent[0].displayname}></img>
+            
+          <img width="150px" height="150px" src={faker.image.personPortrait()} alt={data.agent[0].displayname}></img>
+          </div>
             <div>
             <p>{data.agent[0].displayname}</p>
             <p>Agent License ID: {data.agent[0].licenseid}</p>

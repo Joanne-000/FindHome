@@ -15,13 +15,16 @@ const createFavourite = async (req, res) => {
     const userId = Number(req.params.userId);
     const listingId = Number(req.params.listingId);
 
-    if (currentUser.id !== userId || currentUser.userrole !== "buyer") {
+    if (currentUser.id !== userId ) {
       return res.status(403).send("Unauthorized User");
     }
+    let text;
 
-    const text =
+    if (currentUser.userrole !== "buyer"){
+    text =
       "insert into favourites (buyer_id, listing_id) values ($1,$2) returning *";
-    const value = [userId, listingId];
+    }
+      const value = [userId, listingId];
     const favResult = await pool.query(text, value);
     const listing = favResult.rows[0];
     res.status(200).json(listing);

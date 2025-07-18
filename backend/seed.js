@@ -1,8 +1,8 @@
 const express = require("express");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-
-const { pool } = require("../index");
+const { pool } = require("./index");
+const {faker} = require("@faker-js/faker")
 
 const createSeed = async() =>{
 
@@ -23,8 +23,11 @@ try {
   console.log("creating");
 
   await client.query(
+  `CREATE EXTENSION IF NOT EXISTS pgcrypto`);
+
+  await client.query(
     `CREATE TABLE IF NOT EXISTS agents (
-    id SERIAL PRIMARY KEY,
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR NOT NULL,  
     hashedpw VARCHAR NOT NULL,
     displayname VARCHAR NOT NULL,
@@ -40,7 +43,7 @@ try {
 
   await client.query(
     `CREATE TABLE  IF NOT EXISTS buyers (
-   id SERIAL PRIMARY KEY,
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR NOT NULL,  
    hashedpw VARCHAR NOT NULL,
    displayname VARCHAR NOT NULL,
@@ -59,7 +62,7 @@ try {
   await client.query(
     `CREATE TABLE IF NOT EXISTS listings (
    id SERIAL PRIMARY KEY,
- 	agent_id INT REFERENCES agents(id) NOT NULL,  
+ 	agent_id uuid REFERENCES agents(id) NOT NULL,  
    propertyname VARCHAR NOT NULL,
    address VARCHAR NOT NULL,
    price Numeric(12,2) NOT NULL,
@@ -79,7 +82,7 @@ try {
   await client.query(
     `CREATE TABLE IF NOT EXISTS favourites (
    id SERIAL PRIMARY KEY,
-   buyer_id INT REFERENCES buyers(id) NOT NULL,
+   user_id uuid NOT NULL,
    listing_id INT REFERENCES listings(id) NOT NULL
   );
   `
@@ -97,8 +100,8 @@ try {
   await client.query(
     `CREATE TABLE IF NOT EXISTS interests (
    id SERIAL PRIMARY KEY,
-   buyer_id INT REFERENCES buyers(id) NOT NULL,
- 	agent_id INT REFERENCES agents(id) NOT NULL    ,
+   buyer_id uuid REFERENCES buyers(id) NOT NULL,
+ 	agent_id uuid REFERENCES agents(id) NOT NULL    ,
     timestamptz TIMESTAMPTZ DEFAULT now()
   );
   `
@@ -116,7 +119,7 @@ try {
     "22223333",
     "agent",
     "12345678",
-    "https://sbr.com.sg/sites/default/files/users/user3327/rsz_my-passport-photo_2.jpg",
+    faker.image.personPortrait(),
     "active",
   ];
   const agentValue2 = [
@@ -126,13 +129,11 @@ try {
     "22223333",
     "agent",
     "12345678",
-    "https://sbr.com.sg/sites/default/files/users/user3327/rsz_my-passport-photo_1.jpg",
+    faker.image.personPortrait(),
     "active",
   ];
   const agentId1 = await client.query(agentText1, agentValue1);
   const agentId2 = await client.query(agentText1, agentValue2);
-
-  console.log("agentId", agentId1.rows[0].id);
 
   console.log("inserting 2");
   const hashedPWBuyer1 = await bcrypt.hash("222", saltRounds);
@@ -279,11 +280,15 @@ try {
   console.log("inserting 5");
 
   const favouriteText1 =
-    "insert into favourites (buyer_id, listing_id) values ($1,$2) returning id";
+    "insert into favourites (user_id, listing_id) values ($1,$2) returning id";
   const favouriteValue1 = [buyerId1.rows[0].id, propertyId1.rows[0].id];
   const favouriteValue2 = [buyerId1.rows[0].id, propertyId3.rows[0].id];
+  const favouriteValue3 = [agentId2.rows[0].id, propertyId1.rows[0].id];
+  const favouriteValue4 = [agentId2.rows[0].id, propertyId3.rows[0].id];
   await client.query(favouriteText1, favouriteValue1);
   await client.query(favouriteText1, favouriteValue2);
+  await client.query(favouriteText1, favouriteValue3);
+  await client.query(favouriteText1, favouriteValue4);
 
   const interestText1 =
     "insert into interests (buyer_id, agent_id) values ($1,$2) returning id";
