@@ -14,6 +14,7 @@ const ListingForm = ({listingId}) => {
   const { user } = useContext(UserContext);
   const userId = user.id;
   const isEditing = listingId ? true : false;
+  log("listingId",listingId)
 
   const [isDeleting , setIsDelete] = useState(false);
   const navigate = useNavigate();
@@ -96,27 +97,27 @@ const ListingForm = ({listingId}) => {
   useEffect(() => {
     const fetchListingDetails = async () => {
       const listingDet = await getOneListing(listingId);
+      log("in useeffect",listingDet)
       setFormData({
-        agent_id: listingDet?.agent_id || "",
-        propertyname: listingDet?.propertyname || "",
-        address: listingDet?.address || "",
-        price: listingDet?.price || "",
-        town: listingDet?.town || "",
-        nearestmrt: listingDet?.nearestmrt || "",
-        unitsize: listingDet?.unitsize || "",
-        bedroom: listingDet?.bedroom || "",
-        bathroom: listingDet?.bathroom || "",
-        typeoflease: listingDet?.typeoflease || "",
-        description: listingDet?.description || "",
-        status: listingDet?.status || "",
-        imageurl: listingDet?.imageurl || "",
+        agent_id: listingDet?.agent[0].id || "",
+        propertyname: listingDet?.listing.propertyname || "",
+        address: listingDet?.listing.address || "",
+        price: listingDet?.listing.price || "",
+        town: listingDet?.listing.town || "",
+        nearestmrt: listingDet?.listing.nearestmrt || "",
+        unitsize: listingDet?.listing.unitsize || "",
+        bedroom: listingDet?.listing.bedroom || "",
+        bathroom: listingDet?.listing.bathroom || "",
+        typeoflease: listingDet?.listing.typeoflease || "",
+        description: listingDet?.listing.description || "",
+        status: listingDet?.listing.status || "",
       });
       setImages(
-        {imageurl1: listingDet?.imageurl[0]},
-        {imageurl2: listingDet?.imageurl[1]},
-        {imageurl3:listingDet?.imageurl[2]},
-        {imageurl4:listingDet?.imageurl[3]},
-        {imageurl5: listingDet?.imageurl[4]})
+        {imageurl1: listingDet?.images[0].imageurl},
+        {imageurl2: listingDet?.images[1].imageurl},
+        {imageurl3:listingDet?.images[2].imageurl},
+        {imageurl4:listingDet?.images[3].imageurl},
+        {imageurl5: listingDet?.images[4].imageurl})
     };
     fetchListingDetails();
   }, [listingId]);
@@ -127,7 +128,7 @@ const ListingForm = ({listingId}) => {
       imageurls: Object.values(images),
     }));
   }, [images]);
-  
+
   const createMutation = useMutation({
     mutationFn: ({ userId, formData })=>createListing(userId, formData),
     onSuccess: (data)=>{
@@ -157,14 +158,32 @@ const ListingForm = ({listingId}) => {
     }
 
     if (createMutation.isError) {
-    return <span> {createMutation.error.message}</span>
+      log("error", createMutation.error.name)
+      return <span>{createMutation.error.message}</span>
     }
     if ( updateMutation.isError) {
-    return <span> {updateMutation.error.message}</span>
+      return <span>{updateMutation.error.message}</span>
     }
     if ( deleteMutation.isError) {
-    return <span> {deleteMutation.error.message}</span>
+      return <span>{deleteMutation.error.message}</span>
     }
+
+    // if (createMutation.isError) {
+    //   log("error", createMutation.error.name)
+    //   const timeout = setTimeout(() => navigate("/signin"),(1000*5))
+    //   const clearTimeOut = () => clearTimeout(timeout)
+    //   return clearTimeOut, <span>{createMutation.error.message}</span>
+    // }
+    // if ( updateMutation.isError) {
+    //   const timeout = setTimeout(() => navigate("/signin"),(1000*5))
+    //   const clearTimeOut = () => clearTimeout(timeout)
+    //   return clearTimeOut, <span>{updateMutation.error.message}</span>
+    // }
+    // if ( deleteMutation.isError) {
+    //   const timeout = setTimeout(() => navigate("/signin"),(1000*5))
+    //   const clearTimeOut = () => clearTimeout(timeout)
+    //   return clearTimeOut, <span>{deleteMutation.error.message}</span>
+    // }
 
     const handleAddImage = () =>{
       setImages(images.push(""))
@@ -181,13 +200,16 @@ const ListingForm = ({listingId}) => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if(isEditing ){
+      log("userId formData listingId",userId,listingId,formData)
+      log("updateMutation",updateMutation.mutate({ userId, listingId,formData }))
+
       updateMutation.mutate({ userId, listingId,formData })
     } else{
       log("userId formData",userId,formData)
     createMutation.mutate({userId, formData})
     }
   };
-
+ 
   const handleDelete = (evt) => {
     evt.preventDefault();
     log("inside handle delete 1")

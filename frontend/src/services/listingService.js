@@ -29,6 +29,7 @@ const getOneListing = async (listingId) => {
   // currentUser is get from token when we save suring signin.
   try {
     console.log("get user start");
+    console.log("listingId", listingId);
 
     const res = await axios.get(`${BASE_URL}/${listingId}`);
 
@@ -82,7 +83,6 @@ const createListing = async (userId, userFormData) => {
 const updateListing = async (userId, listingId, userFormData) => {
   try {
     const currentUser = getUserFromToken();
-
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {

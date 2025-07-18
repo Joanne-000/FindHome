@@ -12,23 +12,19 @@ const EditListing = () =>{
     const navigate = useNavigate();
 
     const { user } = useContext(UserContext);
-    const listingId = useParams();
+    const {listingId} = useParams();
 
-    log("user", user);
     if (!user) {
         const timeout = setTimeout(() => navigate("/signin"),(1000*5))
     const clearTimeOut = () => clearTimeout(timeout)
     return clearTimeOut, <div>You are not signed in. You will be redirecting to Sign In page soon...</div>; // or redirect to signin
     }
-    const userId = user.id
-    log("userId Usercontext", userId);
 
     if (!listingId) {
         const timeout = setTimeout(() => navigate("/signin"),(1000*5))
     const clearTimeOut = () => clearTimeout(timeout)
     return clearTimeOut, <div>Listing ID not found. You will be redirecting to listings page soon...</div>; // or redirect to signin
     }
-    log("listingId Usercontext", listingId);
 
     return <ListingForm listingId={listingId} />;
   }

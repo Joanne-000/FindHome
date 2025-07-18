@@ -1,34 +1,33 @@
-import { useContext, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import {  useParams } from "react-router";
+import {  useNavigate, useParams } from "react-router";
 import { getOneListing } from "../services/listingService";
 import {
   useQuery,
 } from '@tanstack/react-query'
 import debug from "debug";
 import { faker } from '@faker-js/faker';
+import { Navigate } from "react-router";
 
 const log = debug("list:One Listing Page");
 
 const OneListingPage = () =>{
-  const { user } = useContext(UserContext);
-const {listingId} = useParams()
-log("user",user)
+    const { user } = useContext(UserContext);
+    const {listingId} = useParams()
+    const navigate = useNavigate()
 
-const [isAgent, setAgent] = useState(false)
+    const [isAgent, setAgent] = useState(false)
 
-if(user && user.userrole === "agent"){
-  setAgent(true)
-}
-    log("listingId",listingId)
-
+    useEffect(() => {
+      if (user?.userrole === "agent") {
+        setAgent(true);
+      }
+    }, [user]);
+    
       const { isPending, isError, data, error }  = useQuery({ 
-        queryKey: ['listings',listingId], 
-        queryFn:  () => getOneListing(listingId)
+        queryKey: ['listings', listingId], 
+        queryFn: () => getOneListing(listingId),
       })
-  
-
-      log(data)
 
       if (isPending) {
         return <progress />
@@ -90,7 +89,7 @@ if(user && user.userrole === "agent"){
             <div>
             {isAgent && 
             <div>
-            <button name="editBtn" type="button" id={id}>Edit Listing</button>
+            <button name="editBtn" type="button" id={id} onClick={() => navigate(`/listings/${listingId}/edit`)}>Edit Listing</button>
             </div>}
             </div>
           <img width="150px" height="150px" src={data.agent[0].profilephoto} alt={data.agent[0].displayname}></img>
