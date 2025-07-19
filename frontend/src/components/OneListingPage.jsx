@@ -44,8 +44,10 @@ const OneListingPage = () =>{
 <>
           <div key={id}>
             <div>
-              <img width="200px" height="200px" src={data.images[0].imageurl} alt={propertyname}></img>
-              <img width="200px" height="200px" src={faker.image.url()} alt={data.agent[0].displayname}></img>
+              {data.images.map((image)=>(
+              <img key={image.id} width="200px" height="200px" src={image.imageurl} alt={propertyname}></img>
+            ))}
+            <img width="200px" height="200px" src={faker.image.url()} alt={propertyname}></img>
               </div>
               <div>
             <p>

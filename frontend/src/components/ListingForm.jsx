@@ -97,7 +97,7 @@ const ListingForm = ({listingId}) => {
   useEffect(() => {
     const fetchListingDetails = async () => {
       const listingDet = await getOneListing(listingId);
-      log("in useeffect",listingDet)
+      log("in useeffect")
       setFormData({
         agent_id: listingDet?.agent[0].id || "",
         propertyname: listingDet?.listing.propertyname || "",
@@ -113,11 +113,11 @@ const ListingForm = ({listingId}) => {
         status: listingDet?.listing.status || "",
       });
       setImages(
-        {imageurl1: listingDet?.images[0].imageurl},
-        {imageurl2: listingDet?.images[1].imageurl},
-        {imageurl3:listingDet?.images[2].imageurl},
-        {imageurl4:listingDet?.images[3].imageurl},
-        {imageurl5: listingDet?.images[4].imageurl})
+        {imageurl1: listingDet?.images[0]?.imageurl || "",
+        imageurl2: listingDet?.images[1]?.imageurl || "",
+        imageurl3:listingDet?.images[2]?.imageurl || "",
+        imageurl4:listingDet?.images[3]?.imageurl || "",
+        imageurl5: listingDet?.images[4]?.imageurl || ""})
     };
     fetchListingDetails();
   }, [listingId]);
@@ -125,7 +125,7 @@ const ListingForm = ({listingId}) => {
   useEffect(() => {
     setFormData(prev => ({
       ...prev,
-      imageurls: Object.values(images),
+      imageurls: Object.values(images).filter(url => url.trim() !== ""),
     }));
   }, [images]);
 
@@ -142,7 +142,7 @@ const ListingForm = ({listingId}) => {
       mutationFn: ({ userId, listingId, formData }) => updateListing(userId, listingId, formData),
       onSuccess: (data)=>{
         log("updMut",data)
-        navigate(`/listings`)
+        navigate(`/listings/${listingId}`)
       },
       onError:(error)=>{log(error.message)}})
 
@@ -189,6 +189,7 @@ const ListingForm = ({listingId}) => {
       setImages(images.push(""))
       
     }
+
   const handleChange = (evt) => {
     setMessage("");
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
@@ -197,12 +198,17 @@ const ListingForm = ({listingId}) => {
     setMessage("");
     setImages({ ...images, [evt.target.name]: evt.target.value });
   };
+
+  // const handleImageChange = (e, index) => {
+  //   const newImages = [...images];
+  //   newImages[index] = e.target.value;
+  //   setImages(newImages);
+  // };
+  
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if(isEditing ){
-      log("userId formData listingId",userId,listingId,formData)
-      log("updateMutation",updateMutation.mutate({ userId, listingId,formData }))
-
+      log("formData",formData)
       updateMutation.mutate({ userId, listingId,formData })
     } else{
       log("userId formData",userId,formData)
@@ -382,6 +388,7 @@ const ListingForm = ({listingId}) => {
       name={`imageurl1`}
       onChange={handleChangeImg}
     />
+
   </label><br/>
   <label >
     Image URL :
@@ -392,6 +399,7 @@ const ListingForm = ({listingId}) => {
       name={`imageurl2`}
       onChange={handleChangeImg}
     />
+
   </label><br/>
   <label >
     Image URL :
@@ -402,6 +410,7 @@ const ListingForm = ({listingId}) => {
       name={`imageurl3`}
       onChange={handleChangeImg}
     />
+
   </label><br/>
   <label >
     Image URL :
@@ -412,6 +421,7 @@ const ListingForm = ({listingId}) => {
       name={`imageurl4`}
       onChange={handleChangeImg}
     />
+
   </label><br/>
   <label >
     Image URL :
@@ -422,6 +432,7 @@ const ListingForm = ({listingId}) => {
       name={`imageurl5`}
       onChange={handleChangeImg}
     />
+
   </label>
 </div>
         {isEditing ? (

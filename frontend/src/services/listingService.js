@@ -125,7 +125,7 @@ const deleteListing = async (userId, listingId, userFormData) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      const res = await axios.delete(
+      const res = await axios.put(
         `${BASE_URL}/${userId}/${listingId}/del`,
         userFormData,
         {

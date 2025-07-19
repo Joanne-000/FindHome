@@ -19,8 +19,6 @@ const ListingsPage = () =>{
         queryFn:  () => getAllListings()
       })
   
-      log(data)
-
       if (isPending) {
         return <progress />
       }

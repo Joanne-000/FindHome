@@ -1,19 +1,19 @@
 const { addImages } = require("./addImages");
 
-const editImages = async (client, req, listingId, imageId) => {
-  const imageurls = req.body.images;
+const editImages = async (client, req, listingId) => {
+  try {
+    await client.query("BEGIN");
+    const { imageurls } = req.body;
+    console.log("imageurls", imageurls);
+    console.log("req.body", req.body);
 
-  const imageurl = imageurls.find((img) => img.id === imageId);
-  console.log(req.body);
-  const text = `UPDATE images SET imageurl = $1 WHERE listing_id = $2 AND id = $3 RETURNING *`;
-  const values = [imageurl, listingId, imageId];
-  await client.query(text, values);
-
-  const selectAllImages = await client.query(
-    `select * from images where listing_id = $1`,
-    [listingId]
-  );
-  return selectAllImages.rows;
+    await client.query(`delete from images where listing_id = $1`, [listingId]);
+    addImages(client, req, listingId);
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error in updateListing:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 module.exports = {

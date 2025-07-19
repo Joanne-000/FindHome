@@ -15,6 +15,7 @@ const createListing = async (req, res) => {
   try {
     const currentUser = loadUserFromToken(req);
     const userId = req.params.userId;
+
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       throw new Error("Unauthorized User");
     }
@@ -43,16 +44,25 @@ const updateListing = async (req, res) => {
     const currentUser = loadUserFromToken(req);
     const userId = req.params.userId;
     const listingId = Number(req.params.listingId);
-    const imageId = Number(req.params.imageId);
+    console.log("start in try");
+    await client.query("BEGIN");
 
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       throw new Error("Unauthorized User");
     }
-    console.log("start in try");
-    await client.query("BEGIN");
 
+    const listingResult = await pool.query(
+      `select * from listings where id = $1 AND status  = $2`,
+      [listingId, "available"]
+    );
+    const listing_owner = listingResult.rows[0].agent_id;
+    console.log("listing_owner", listing_owner);
+
+    if (currentUser.id !== listing_owner) {
+      throw new Error("Unauthorized User");
+    }
     const listing = await editListing(client, req, listingId);
-    const images = await editImages(client, req, listingId, imageId);
+    const images = await editImages(client, req, listingId);
     const listingWithImageURLs = { ...listing, images: images };
     await client.query("COMMIT");
     res.status(200).json(listingWithImageURLs);
