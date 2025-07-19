@@ -6,6 +6,11 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 import debug from "debug";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import { Pagination, Navigation } from 'swiper/modules';
 
 const log = debug("list:Listings Page");
 
@@ -34,7 +39,22 @@ const ListingsPage = () =>{
       {data.map((item)=>(
           <div key={item.id}>
             <div>
-              <img width="200px" height="200px" src={item.images[0].imageurl} alt={item.propertyname}></img></div>
+            <Swiper
+              slidesPerView={1}
+              spaceBetween={30}
+              loop={true}
+              pagination={{
+                clickable: true,
+              }}
+              navigation={true}
+              modules={[Pagination, Navigation]}
+              className="mySwiper"
+              >
+              {(item.images).map((image)=>(
+              <SwiperSlide ><img width="500px" height="500px" key={image.id} src={image.imageurl} alt={item.propertyname}></img></SwiperSlide>
+            ))}
+            </Swiper>
+            </div>
             <div>
             {item.propertyname}
             </div>
