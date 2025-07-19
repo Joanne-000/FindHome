@@ -12,6 +12,7 @@ const log = debug("list:Profile");
 const UserProfile = () => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+
   log("user",user)
   const userId = user?.id;
 

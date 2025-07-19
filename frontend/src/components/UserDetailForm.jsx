@@ -63,7 +63,13 @@ const UserDetailForm = ({userId}) => {
       setUser(payload);
       navigate(`/profile`)
     },
-    onError:(error)=>{log(error.message)}
+    onError:(error)=>{
+      if (error instanceof AxiosError) {
+      setMessage(error.response?.data?.err);
+    } else {
+      // Fallback for unexpected error types
+      setMessage("An unknown error occurred.");
+    }}
 })
     
     const updateMutation = useMutation({
@@ -73,7 +79,13 @@ const UserDetailForm = ({userId}) => {
         setUser(data);
         navigate(`/profile`)
       },
-      onError:(error)=>{log(error.message)}})
+      onError:(error)=>{
+        if (error instanceof AxiosError) {
+        setMessage(error.response?.data?.err);
+      } else {
+        // Fallback for unexpected error types
+        setMessage("An unknown error occurred.");
+      }}})
 
       const deleteMutation = useMutation({
         mutationFn: ({ userId, formData }) => deleteUser(userId, formData),
@@ -83,20 +95,16 @@ const UserDetailForm = ({userId}) => {
           localStorage.removeItem("token");
           navigate(`/`)    
         },
-        onError:(error)=>{log(error.message)}})
+        onError:(error)=>{
+          if (error instanceof AxiosError) {
+          setMessage(error.response?.data?.err);
+        } else {
+          // Fallback for unexpected error types
+          setMessage("An unknown error occurred.");
+        }}})
   
     if (createMutation.isPending || updateMutation.isPending || deleteMutation.isPending) {
       return <progress />
-    }
-
-    if (createMutation.isError) {
-    return <span> {createMutation.error.message}</span>
-    }
-    if ( updateMutation.isError) {
-    return <span> {updateMutation.error.message}</span>
-    }
-    if ( deleteMutation.isError) {
-    return <span> {deleteMutation.error.message}</span>
     }
 
   const {

@@ -180,61 +180,10 @@ const ListingForm = ({listingId}) => {
       // Fallback for unexpected error types
       setMessage("An unknown error occurred.");
     }}})
-
-  // useEffect(() => {
-  //   const mutations = [createMutation, updateMutation, deleteMutation];
-  //   const errorMutation = mutations.find(m => m.isError);
-
-  //   if (errorMutation) {
-  //     log(errorMutation.error.response); 
-  //     if (errorMutation?.error instanceof AxiosError) {
-  //       setMessage(errorMutation.error.response?.data?.err);
-  //     } else {
-  //       // Fallback for unexpected error types
-  //       setMessage("An unknown error occurred.");
-  //     }
-  //   }
-  // }, [createMutation.isError, updateMutation.isError, deleteMutation.isError]);
-
     
     if (createMutation.isPending || updateMutation.isPending || deleteMutation.isPending) {
       return <progress />
     }
-
-    
-    // if (createMutation.isError) {
-    //   log("error", createMutation.error.name)
-    //   setMessage(createMutation.error.message)
-    //   return
-    //   // return <span>{createMutation.error.message}</span>
-    // }
-    // if ( updateMutation.isError) {
-    //   setMessage(updateMutation.error.message)
-    //   return
-    //   // return <span>{updateMutation.error.message}</span>
-    // }
-    // if ( deleteMutation.isError) {
-    //   setMessage(deleteMutation.error.message)
-    //   return
-    //   // return <span>{deleteMutation.error.message}</span>
-    // }
-
-    // if (createMutation.isError) {
-    //   log("error", createMutation.error.name)
-    //   const timeout = setTimeout(() => navigate("/signin"),(1000*5))
-    //   const clearTimeOut = () => clearTimeout(timeout)
-    //   return clearTimeOut, <span>{createMutation.error.message}</span>
-    // }
-    // if ( updateMutation.isError) {
-    //   const timeout = setTimeout(() => navigate("/signin"),(1000*5))
-    //   const clearTimeOut = () => clearTimeout(timeout)
-    //   return clearTimeOut, <span>{updateMutation.error.message}</span>
-    // }
-    // if ( deleteMutation.isError) {
-    //   const timeout = setTimeout(() => navigate("/signin"),(1000*5))
-    //   const clearTimeOut = () => clearTimeout(timeout)
-    //   return clearTimeOut, <span>{deleteMutation.error.message}</span>
-    // }
 
     const handleAddImage = () =>{
       setImages(prev => ({

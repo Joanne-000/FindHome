@@ -7,6 +7,7 @@ import {
   useMutation,
 } from '@tanstack/react-query'
 import debug from "debug";
+import { AxiosError } from "axios";
 
 const log = debug("list:SIF");
 
@@ -20,24 +21,26 @@ const SignInForm = () => {
     userrole: ""
   });
 
-  const {mutate,isPending, isError, error } = useMutation({
+  const signInMutation = useMutation({
     mutationFn:  () => signIn(formData),
     onSuccess: (payload)=>{
       log(payload)
       setUser(payload);
       navigate(`/profile`)
     },
-    onError:(error)=>{log(error.response.data)}
+    onError:(error)=>{
+            if (error instanceof AxiosError) {
+            setMessage(error.response?.data?.err);
+          } else {
+            // Fallback for unexpected error types
+            setMessage("An unknown error occurred.");
+          }}
   })
 
-    if (isPending) {
+    if (signInMutation.isPending) {
       return <progress />
     }
 
-    if (isError) {
-      return <pre> {error.message} </pre>
-    }
-  
   const handleChange = (evt) => {
     setMessage("");
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
@@ -52,7 +55,7 @@ const SignInForm = () => {
   
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    mutate(formData)
+    signInMutation.mutate(formData)
   };
 
   const isFormInvalid = () => {
