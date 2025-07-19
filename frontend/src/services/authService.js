@@ -17,9 +17,9 @@ const signUp = async (formData) => {
       const payload = JSON.parse(atob(data.token.split(".")[1])).payload;
       return payload;
     }
-  } catch (error) {
-    console.error(error.response.data.err);
-    throw new Error(error);
+  } catch (err) {
+    console.error(err.response.data.err);
+    throw err;
   }
 };
 
@@ -43,9 +43,9 @@ const signIn = async (formData) => {
     }
 
     throw new Error("Invalid response from server");
-  } catch (error) {
-    console.error(error);
-    throw new Error(error);
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 };
 

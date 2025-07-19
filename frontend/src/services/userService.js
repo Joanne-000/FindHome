@@ -34,7 +34,7 @@ const getUser = async (userId) => {
     }
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    throw err;
   }
 };
 
@@ -68,7 +68,7 @@ const updateUser = async (userId, userFormData) => {
     }
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    throw err;
   }
 };
 
@@ -101,7 +101,7 @@ const deleteUser = async (userId, userFormData) => {
     }
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    throw err;
   }
 };
 

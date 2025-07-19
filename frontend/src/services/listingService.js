@@ -20,7 +20,7 @@ const getAllListings = async () => {
     return data;
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    throw err;
   }
 };
 
@@ -42,7 +42,7 @@ const getOneListing = async (listingId) => {
     return data;
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    throw err;
   }
 };
 const createListing = async (userId, userFormData) => {
@@ -76,7 +76,7 @@ const createListing = async (userId, userFormData) => {
     }
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    throw err;
   }
 };
 
@@ -113,7 +113,7 @@ const updateListing = async (userId, listingId, userFormData) => {
     }
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    throw err;
   }
 };
 
@@ -149,7 +149,7 @@ const deleteListing = async (userId, listingId, userFormData) => {
     }
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    throw err;
   }
 };
 
