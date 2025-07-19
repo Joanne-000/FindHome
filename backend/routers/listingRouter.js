@@ -14,7 +14,6 @@ const verifyToken = require("../middleware/verify-token");
 router.get("/", getProperties);
 router.post("/:userId/new", verifyToken, createListing);
 router.put("/:userId/:listingId/edit", verifyToken, updateListing);
-// router.put("/:userId/:listingId/:imageId/edit", verifyToken, updateListing);
 
 router.put("/:userId/:listingId/del", verifyToken, destroyListing);
 router.get("/:listingId", getOneProperty);

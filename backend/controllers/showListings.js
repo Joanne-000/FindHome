@@ -34,7 +34,6 @@ const getProperties = async (req, res) => {
 
 const getOneProperty = async (req, res) => {
   const listingId = Number(req.params.listingId);
-  console.log(listingId);
 
   try {
     const listingResult = await pool.query(
