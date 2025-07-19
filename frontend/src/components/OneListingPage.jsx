@@ -8,6 +8,11 @@ import {
 import debug from "debug";
 import { faker } from '@faker-js/faker';
 import { Navigate } from "react-router";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import { Pagination, Navigation } from 'swiper/modules';
 
 const log = debug("list:One Listing Page");
 
@@ -41,14 +46,25 @@ const OneListingPage = () =>{
       const {address,agent_id,bathroom,bedroom,description,id,nearestmrt,price,propertyname,status,timestamptz,town,typeoflease,unitsize} = data.listing
 
     return(
-<>
+        <>
           <div key={id}>
             <div>
+            <Swiper
+              slidesPerView={1}
+              spaceBetween={30}
+              loop={true}
+              pagination={{
+                clickable: true,
+              }}
+              navigation={true}
+              modules={[Pagination, Navigation]}
+              className="mySwiper"
+              >
               {data.images.map((image)=>(
-              <img key={image.id} width="200px" height="200px" src={image.imageurl} alt={propertyname}></img>
+              <SwiperSlide ><img width="500px" height="500px" key={image.id} src={image.imageurl} alt={propertyname}></img></SwiperSlide>
             ))}
-            <img width="200px" height="200px" src={faker.image.url()} alt={propertyname}></img>
-              </div>
+            </Swiper>
+            </div>
               <div>
             <p>
             {propertyname}

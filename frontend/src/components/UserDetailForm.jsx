@@ -24,17 +24,17 @@ const UserDetailForm = ({userId}) => {
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     email: "",
-        password:"",
-        displayname: "",
-        contactnumber: "",        
-        userrole: "buyer",
-        licenseid: "",
-        profilephoto: "https://img.iproperty.com.my/angel-legacy/1110x624-crop/static/2019/10/all-about-prop-agents-mainimage.jpg",
-        isactive: "active",
-        prefercontactmethod: "",
-        preferlocation: "",
-        preferbudget: "",
-        preferrooms:"",
+    password:"",
+    displayname: "",
+    contactnumber: "",        
+    userrole: "buyer",
+    licenseid: "",
+    profilephoto: "https://img.iproperty.com.my/angel-legacy/1110x624-crop/static/2019/10/all-about-prop-agents-mainimage.jpg",
+    isactive: "active",
+    prefercontactmethod: "",
+    preferlocation: "",
+    preferbudget: "",
+    preferrooms:"",
   });
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const UserDetailForm = ({userId}) => {
     } else {
       // Fallback for unexpected error types
       setMessage("An unknown error occurred.");
-    }}
+    }},
 })
     
     const updateMutation = useMutation({

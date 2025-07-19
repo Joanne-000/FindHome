@@ -192,14 +192,14 @@ const ListingForm = ({listingId}) => {
       }));
     }
 
-  const handleChange = (evt) => {
-    setMessage("");
-    setFormData({ ...formData, [evt.target.name]: evt.target.value });
-  };
-  const handleChangeImg = (evt) => {
-    setMessage("");
-    setImages({ ...images, [evt.target.name]: evt.target.value });
-  };
+    const handleChange = (evt) => {
+      setMessage("");
+      setFormData({ ...formData, [evt.target.name]: evt.target.value });
+    };
+    const handleChangeImg = (evt) => {
+      setMessage("");
+      setImages({ ...images, [evt.target.name]: evt.target.value });
+    };
 
   // const handleImageChange = (e, index) => {
   //   const newImages = [...images];
