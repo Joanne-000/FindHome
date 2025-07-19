@@ -3,6 +3,7 @@ const { addListing } = require("./addListing");
 const { addImages } = require("./addImages");
 const { editListing, delListing } = require("./editListing");
 const { editImages } = require("./editImages");
+const { dataValidation } = require("../middleware/utils-listingValidation");
 
 require("dotenv").config();
 const { pool } = require("../index");
@@ -13,6 +14,8 @@ const createListing = async (req, res) => {
   console.log("after in create listing", req);
 
   try {
+    console.log("start in try");
+    await client.query("BEGIN");
     const currentUser = loadUserFromToken(req);
     const userId = req.params.userId;
 
@@ -20,8 +23,7 @@ const createListing = async (req, res) => {
       throw new Error("Unauthorized User");
     }
 
-    console.log("start in try");
-    await client.query("BEGIN");
+    dataValidation(req);
 
     const listing = await addListing(client, req);
     const images = await addImages(client, req, listing.id);
@@ -31,7 +33,7 @@ const createListing = async (req, res) => {
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("Error in createListing:", err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ err: err.message });
   } finally {
     client.release();
   }
@@ -41,15 +43,16 @@ const updateListing = async (req, res) => {
   const client = await pool.connect();
 
   try {
+    console.log("start in try");
+    await client.query("BEGIN");
     const currentUser = loadUserFromToken(req);
     const userId = req.params.userId;
     const listingId = Number(req.params.listingId);
-    console.log("start in try");
-    await client.query("BEGIN");
 
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       throw new Error("Unauthorized User");
     }
+    dataValidation(req);
 
     const listingResult = await pool.query(
       `select * from listings where id = $1 AND status  = $2`,
@@ -69,14 +72,17 @@ const updateListing = async (req, res) => {
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("Error in updateListing:", err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ err: err.message });
   } finally {
     client.release();
   }
 };
 
 const destroyListing = async (req, res) => {
+  const client = await pool.connect();
+
   try {
+    await client.query("BEGIN");
     const currentUser = loadUserFromToken(req);
     const userId = req.params.userId;
     const listingId = Number(req.params.listingId);
@@ -85,7 +91,6 @@ const destroyListing = async (req, res) => {
       throw new Error("Unauthorized User");
     }
 
-    await client.query("BEGIN");
     const listing = await delListing(client, req, listingId);
     await client.query("COMMIT");
 

@@ -2,6 +2,7 @@ import { useEffect, useState,useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router";
 import { getOneListing, createListing ,updateListing,deleteListing} from "../services/listingService";
+import { AxiosError } from "axios";
 
 import {
   useMutation,
@@ -135,38 +136,88 @@ const ListingForm = ({listingId}) => {
       log("createMut",data)
       navigate(`/listings`)
     },
-    onError:(error)=>{log(error.message)}
-})
+    onError:(error)=>{  
+      console.log("Full error object:", error);
+    console.log("Is AxiosError:", error instanceof AxiosError);
+    console.log("response:", error?.response);
+    console.log("response.data:", error?.response?.data);
     
-    const updateMutation = useMutation({
-      mutationFn: ({ userId, listingId, formData }) => updateListing(userId, listingId, formData),
-      onSuccess: (data)=>{
-        log("updMut",data)
-        navigate(`/listings/${listingId}`)
-      },
-      onError:(error)=>{log(error.message)}})
+    if (error instanceof AxiosError) {
+      const msg =
+    error.response?.data?.err ||
+    error.response?.data?.error ||
+    error.message || 
+    "An unknown error occurred.";
+    setMessage(msg);
+    } else {
+      // Fallback for unexpected error types
+      setMessage("er");
+    }}
+})
 
-      const deleteMutation = useMutation({
-        mutationFn: ({ userId, listingId }) => deleteListing(userId, listingId),
-        onSuccess: ()=>{
-          navigate(`/listings`)    
-        },
-        onError:(error)=>{log(error.message)}})
-  
+  const updateMutation = useMutation({
+    mutationFn: ({ userId, listingId, formData }) => updateListing(userId, listingId, formData),
+    onSuccess: (data)=>{
+      log("updMut",data)
+      navigate(`/listings/${listingId}`)
+    },
+    onError:(error)=>{
+      if (error instanceof AxiosError) {
+      setMessage(error.response?.data?.err);
+    } else {
+      // Fallback for unexpected error types
+      setMessage("An unknown error occurred.");
+    }}})
+
+  const deleteMutation = useMutation({
+    mutationFn: ({ userId, listingId }) => deleteListing(userId, listingId),
+    onSuccess: ()=>{
+      navigate(`/listings`)    
+    },
+    onError:(error)=>{  if (error instanceof AxiosError) {
+      setMessage(error.response?.data?.err);
+    } else {
+      // Fallback for unexpected error types
+      setMessage("An unknown error occurred.");
+    }}})
+
+  // useEffect(() => {
+  //   const mutations = [createMutation, updateMutation, deleteMutation];
+  //   const errorMutation = mutations.find(m => m.isError);
+
+  //   if (errorMutation) {
+  //     log(errorMutation.error.response); 
+  //     if (errorMutation?.error instanceof AxiosError) {
+  //       setMessage(errorMutation.error.response?.data?.err);
+  //     } else {
+  //       // Fallback for unexpected error types
+  //       setMessage("An unknown error occurred.");
+  //     }
+  //   }
+  // }, [createMutation.isError, updateMutation.isError, deleteMutation.isError]);
+
+    
     if (createMutation.isPending || updateMutation.isPending || deleteMutation.isPending) {
       return <progress />
     }
 
-    if (createMutation.isError) {
-      log("error", createMutation.error.name)
-      return <span>{createMutation.error.message}</span>
-    }
-    if ( updateMutation.isError) {
-      return <span>{updateMutation.error.message}</span>
-    }
-    if ( deleteMutation.isError) {
-      return <span>{deleteMutation.error.message}</span>
-    }
+    
+    // if (createMutation.isError) {
+    //   log("error", createMutation.error.name)
+    //   setMessage(createMutation.error.message)
+    //   return
+    //   // return <span>{createMutation.error.message}</span>
+    // }
+    // if ( updateMutation.isError) {
+    //   setMessage(updateMutation.error.message)
+    //   return
+    //   // return <span>{updateMutation.error.message}</span>
+    // }
+    // if ( deleteMutation.isError) {
+    //   setMessage(deleteMutation.error.message)
+    //   return
+    //   // return <span>{deleteMutation.error.message}</span>
+    // }
 
     // if (createMutation.isError) {
     //   log("error", createMutation.error.name)
@@ -186,8 +237,10 @@ const ListingForm = ({listingId}) => {
     // }
 
     const handleAddImage = () =>{
-      setImages(images.push(""))
-      
+      setImages(prev => ({
+        ...prev,
+        [`imageurl${Object.keys(prev).length + 1}`]: ""
+      }));
     }
 
   const handleChange = (evt) => {
@@ -222,20 +275,6 @@ const ListingForm = ({listingId}) => {
     setIsDelete(true)
       deleteMutation.mutate({ userId, listingId })
     };
-
-  // const handleNA = (evt) => {
-  //   evt.preventDefault();
-  //   log("inside handle delete 1")
-  //   setIsDelete(true)
-  //   log("inside handle delete formData",formData)
-  //   setFormData({
-  //     ...formData,
-  //     status: "not available" // Update only status
-  //   })
-  //     log("inside should delete", formData)
-  //     deleteMutation.mutate({ listingId,formData })
-  //   };
-
 
   return (
     <>

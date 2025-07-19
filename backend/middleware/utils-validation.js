@@ -106,7 +106,7 @@ const dataValidation = (req) => {
     const budgetNum = Number(preferbudget);
     if (!preferbudget || isNaN(budgetNum) || budgetNum < 50000) {
       throw new Error(
-        "Preferred budget must be a valid number greater than 50000"
+        "Preferred budget must be a valid number greater than $50,000.00"
       );
     }
 
@@ -121,3 +121,4 @@ module.exports = {
   signinValidation,
   dataValidation,
 };
+``;

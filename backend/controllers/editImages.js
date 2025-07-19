@@ -12,7 +12,7 @@ const editImages = async (client, req, listingId) => {
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("Error in updateListing:", err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ err: err.message });
   }
 };
 
