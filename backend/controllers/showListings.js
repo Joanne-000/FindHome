@@ -24,7 +24,6 @@ const getProperties = async (req, res) => {
     });
 
     const listingswImages = await Promise.all(listingwImagesP);
-    console.log("listingswImages", JSON.stringify(listingswImages, null, 2));
 
     res.status(200).json(listingswImages);
   } catch (err) {

@@ -14,6 +14,7 @@ import ListingsPage from './components/ListingsPage';
 import OneListingPage from './components/OneListingPage';
 import ListingForm from './components/ListingForm';
 import EditListing from './components/EditListing';
+import FavPage from './components/FavPage';
 
 const log = debug("list:App");
 
@@ -27,7 +28,7 @@ function App() {
         <Route path="/signup" element={<UserDetailForm/>} />
         <Route path="/signin" element={<SignInForm/>} />
         <Route path="/listings" element={<ListingsPage/>} />
-        <Route path="/favourites" element={<h1>All favourites</h1>} />
+        <Route path="/favourites" element={<FavPage/>} />
         <Route path="/listings/new" element={<ListingForm/>} />
         <Route path="/listings/:listingId/edit" element={<EditListing/>} />
         <Route path="/listings/:listingId" element={<OneListingPage/>} />

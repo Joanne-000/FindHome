@@ -7,7 +7,7 @@ const getAllListings = async () => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
-    console.log("get user start");
+    console.log("get listings start");
 
     const res = await axios.get(`${BASE_URL}`);
 
@@ -28,7 +28,7 @@ const getOneListing = async (listingId) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
-    console.log("get user start");
+    console.log("get 1 listing start");
     console.log("listingId", listingId);
 
     const res = await axios.get(`${BASE_URL}/${listingId}`);
@@ -64,15 +64,10 @@ const createListing = async (userId, userFormData) => {
 
       const data = await res.data;
 
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        const payload = getUserFromToken();
-        return payload;
-      }
-
       if (data.err) {
         throw new Error(data.err);
       }
+      return data;
     }
   } catch (err) {
     console.log(err);
@@ -101,15 +96,11 @@ const updateListing = async (userId, listingId, userFormData) => {
 
       const data = await res.data;
 
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        const payload = getUserFromToken();
-        return payload;
-      }
-
       if (data.err) {
         throw new Error(data.err);
       }
+
+      return data;
     }
   } catch (err) {
     console.log(err);
@@ -139,13 +130,11 @@ const deleteListing = async (userId, listingId, userFormData) => {
       if (res.status !== 200) throw new Error("Failed to update user details");
 
       const data = await res.data;
-      if (data.token) {
-        return;
-      }
 
       if (data.err) {
         throw new Error(data.err);
       }
+      return data;
     }
   } catch (err) {
     console.log(err);

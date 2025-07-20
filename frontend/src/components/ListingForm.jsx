@@ -137,21 +137,11 @@ const ListingForm = ({listingId}) => {
       navigate(`/listings`)
     },
     onError:(error)=>{  
-      console.log("Full error object:", error);
-    console.log("Is AxiosError:", error instanceof AxiosError);
-    console.log("response:", error?.response);
-    console.log("response.data:", error?.response?.data);
-    
     if (error instanceof AxiosError) {
-      const msg =
-    error.response?.data?.err ||
-    error.response?.data?.error ||
-    error.message || 
-    "An unknown error occurred.";
-    setMessage(msg);
+    setMessage(error.response?.data?.err);
     } else {
       // Fallback for unexpected error types
-      setMessage("er");
+      setMessage("An unknown error occurred.");
     }}
 })
 

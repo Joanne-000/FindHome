@@ -1,0 +1,139 @@
+import axios from "axios";
+import { getUserFromToken } from "../contexts/UserContext";
+import { use } from "react";
+
+const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/favourites`;
+
+const getAllFavourites = async (userId) => {
+  // userId is from userContext where we setUser during signin.
+  // currentUser is get from token when we save suring signin.
+  try {
+    const currentUser = getUserFromToken();
+
+    if (currentUser.id !== userId) {
+      throw new Error("Unauthorized");
+    } else {
+      console.log("get fav start");
+      console.log("userId", userId);
+
+      const res = await axios.get(`${BASE_URL}/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.status !== 200) throw new Error("Failed to show favourite list");
+      const data = await res.data;
+
+      if (data.err) {
+        throw new Error(data.err);
+      }
+      return data;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const checkFavourite = async (userId, listingId) => {
+  try {
+    const currentUser = getUserFromToken();
+    console.log(`userId`, userId);
+    console.log(`listingId`, listingId);
+
+    if (currentUser.id !== userId) {
+      throw new Error("Unauthorized");
+    } else {
+      const res = await axios.put(
+        `${BASE_URL}/${userId}/${listingId}/fav`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res.status !== 200) throw new Error("Failed to favourite listing");
+
+      const data = await res.data;
+
+      if (data.err) {
+        throw new Error(data.err);
+      }
+      return data;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const createFav = async (userId, listingId) => {
+  try {
+    const currentUser = getUserFromToken();
+    console.log(`userId`, userId);
+    console.log(`listingId`, listingId);
+
+    console.log(`Bearer ${localStorage.getItem("token")}`);
+    if (currentUser.id !== userId) {
+      throw new Error("Unauthorized");
+    } else {
+      const res = await axios.post(
+        `${BASE_URL}/${userId}/${listingId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res.status !== 200) throw new Error("Failed to favourite listing");
+
+      const data = await res.data;
+
+      if (data.err) {
+        throw new Error(data.err);
+      }
+      return data;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const deleteFav = async (userId, favId) => {
+  try {
+    const currentUser = getUserFromToken();
+    if (currentUser.id !== userId) {
+      throw new Error("Unauthorized");
+    } else {
+      const res = await axios.delete(`${BASE_URL}/${userId}/${favId}/del`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.status !== 200) throw new Error("Failed to unfavourite listing");
+
+      const data = await res.data;
+
+      if (data.err) {
+        throw new Error(data.err);
+      }
+      return data;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export { getAllFavourites, checkFavourite, createFav, deleteFav };
