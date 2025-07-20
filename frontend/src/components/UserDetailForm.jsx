@@ -7,6 +7,7 @@ import { getUser, updateUser,deleteUser } from "../services/userService";
 // import isEmail from "validator/lib/isEmail";
 import {
   useMutation,
+  useQueryClient,
 } from '@tanstack/react-query'
 import debug from "debug";
 import { AxiosError } from "axios";
@@ -14,6 +15,7 @@ import { AxiosError } from "axios";
 const log = debug("list:UDF");
 
 const UserDetailForm = ({userId}) => {
+  const queryClient = useQueryClient()
   const isEditing = userId ? true : false;
 
   const [isDeleting , setIsDelete] = useState(false);
@@ -62,6 +64,7 @@ const UserDetailForm = ({userId}) => {
     onSuccess: (payload)=>{
       setUser(payload);
       navigate(`/profile`)
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
     },
     onError:(error)=>{
       if (error instanceof AxiosError) {
@@ -78,6 +81,7 @@ const UserDetailForm = ({userId}) => {
         log("updMut",data)
         setUser(data);
         navigate(`/profile`)
+        queryClient.invalidateQueries({ queryKey: ['profile'] })
       },
       onError:(error)=>{
         if (error instanceof AxiosError) {
@@ -94,6 +98,7 @@ const UserDetailForm = ({userId}) => {
           setUser("");
           localStorage.removeItem("token");
           navigate(`/`)    
+          queryClient.invalidateQueries({ queryKey: ['profile'] })
         },
         onError:(error)=>{
           if (error instanceof AxiosError) {

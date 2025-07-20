@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 
 import {
   useMutation,
+  useQueryClient,
 } from '@tanstack/react-query'
 import debug from "debug";
 
@@ -16,6 +17,7 @@ const ListingForm = ({listingId}) => {
   const userId = user.id;
   const isEditing = listingId ? true : false;
   log("listingId",listingId)
+  const queryClient = useQueryClient()
 
   const [isDeleting , setIsDelete] = useState(false);
   const navigate = useNavigate();
@@ -135,6 +137,8 @@ const ListingForm = ({listingId}) => {
     onSuccess: (data)=>{
       log("createMut",data)
       navigate(`/listings`)
+      queryClient.invalidateQueries({ queryKey: ['listings'] })
+
     },
     onError:(error)=>{  
     if (error instanceof AxiosError) {
@@ -150,6 +154,7 @@ const ListingForm = ({listingId}) => {
     onSuccess: (data)=>{
       log("updMut",data)
       navigate(`/listings/${listingId}`)
+      queryClient.invalidateQueries({ queryKey: ['listings'] })
     },
     onError:(error)=>{
       if (error instanceof AxiosError) {
@@ -163,6 +168,7 @@ const ListingForm = ({listingId}) => {
     mutationFn: ({ userId, listingId }) => deleteListing(userId, listingId),
     onSuccess: ()=>{
       navigate(`/listings`)    
+      queryClient.invalidateQueries({ queryKey: ['listings'] })
     },
     onError:(error)=>{  if (error instanceof AxiosError) {
       setMessage(error.response?.data?.err);

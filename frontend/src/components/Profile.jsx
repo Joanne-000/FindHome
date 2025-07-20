@@ -17,7 +17,7 @@ const UserProfile = () => {
   const userId = user?.id;
 
   const { isPending, isError, data, error }  = useQuery({ 
-    queryKey: ['profile',user], 
+    queryKey: ['profile'], 
     queryFn:  () => getUser(userId) ,  
     enabled: !!user,
     initialData: {
