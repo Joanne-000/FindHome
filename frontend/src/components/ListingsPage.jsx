@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router";
 import { getAllListings} from "../services/listingService";
@@ -6,6 +6,7 @@ import { createFav,checkFavourite } from "../services/favouriteService";
 import {
   useQuery,
   useMutation,
+  useQueryClient ,
 } from '@tanstack/react-query'
 import debug from "debug";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -19,10 +20,12 @@ const log = debug("list:Listings Page");
 
 const ListingsPage = () =>{
   const { user } = useContext(UserContext);
+  const [message, setMessage] = useState("")
   const userId = user.id
 
     const navigate = useNavigate();
-    
+    const queryClient = useQueryClient()
+
       const { isPending, isError, data, error }  = useQuery({ 
         queryKey: ['listings'], 
         queryFn:  () => getAllListings()
@@ -32,13 +35,14 @@ const ListingsPage = () =>{
         mutationFn: ({ userId, listingId })=>checkFavourite(userId, listingId),
         onSuccess: (data)=>{
           log("createFavMut",data)
+          queryClient.invalidateQueries({ queryKey: ['favourites'] })
         },
         onError:(error)=>{  
         if (error instanceof AxiosError) {
-        log(error.response?.data?.err);
+          setMessage(error.response?.data?.err);
         } else {
           // Fallback for unexpected error types
-          log("An unknown error occurred.");
+          setMessage("An unknown error occurred.");
         }}
     })
 
@@ -48,8 +52,8 @@ const ListingsPage = () =>{
       }
     
       if (isError) {
-        log("error", error.name)
-        return <span> {error.message}</span>
+        log("error", error.response?.data?.err)
+        return <span> {error.response?.data?.err}</span>
       }
       const handleFav = (e) =>{
         log(e.target.id)
@@ -59,6 +63,7 @@ const ListingsPage = () =>{
      
     return(
 <>
+<p>{message}</p>
       {data.map((item)=>(
           <div key={item.id}>
             <div>

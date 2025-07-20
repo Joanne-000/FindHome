@@ -1,10 +1,11 @@
-import { useContext } from "react";
+import { useContext ,useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router";
 import { getAllFavourites,createFav ,checkFavourite} from "../services/favouriteService";
 import {
   useQuery,
   useMutation,
+  useQueryClient ,
 } from '@tanstack/react-query'
 import debug from "debug";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -19,47 +20,50 @@ const log = debug("list:Fav Page");
 
 const FavPage = () =>{
   const { user } = useContext(UserContext);
+  const [message, setMessage] = useState("")
   const userId = user.id
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient()
     
       const { isPending, isError, data, error }  = useQuery({ 
         queryKey: ['favourites'], 
         queryFn:  () => getAllFavourites(userId)
       })
   
-      const FavMutation = useMutation({
+      const favMutation = useMutation({
               mutationFn: ({ userId, listingId })=>checkFavourite(userId, listingId),
               onSuccess: (data)=>{
                 log("createFavMut",data)
+                queryClient.invalidateQueries({ queryKey: ['favourites'] })
               },
               onError:(error)=>{  
               if (error instanceof AxiosError) {
-              log(error.response?.data?.err);
+                setMessage(error.response?.data?.err);
               } else {
                 // Fallback for unexpected error types
-                log("An unknown error occurred.");
+                setMessage("An unknown error occurred.");
               }}
           })
 
       if (isPending) {
         return <progress />
       }
-    
       if (isError) {
-        log("error", error.name)
-        return <span> {error.message}</span>
+        log("error", error.response?.data?.err)
+        return <span> {error.response?.data?.err}</span>
       }
        const handleFav = (e) =>{
           log(e.target.id)
           const listingId = e.target.id
-          FavMutation.mutate({userId,listingId})
+          favMutation.mutate({userId,listingId})
        }
      
-       log(data)
+      //  log(data)
        
     return(
-<>
-      {data.map((item)=>(
+    <>
+      <p>{message}</p>
+      {data && data.map((item)=>(
           <div key={item.id}>
             <div>
             <Swiper
@@ -101,7 +105,7 @@ const FavPage = () =>{
             </div>
             {user && 
             <div>
-            <button name="favBtn" type="button" id={item.id} onClick={() =>handleFav()}>Fav</button>
+            <button name="favBtn" type="button" id={item.id} onClick={handleFav}>Fav</button>
             </div>}
             </div>
           </div>

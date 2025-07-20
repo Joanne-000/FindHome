@@ -120,8 +120,8 @@ const createFavourite = async (req, res) => {
 
     const checkFavId = async () => {
       const result = await client.query(
-        `select * from favourites where listing_id = $1`,
-        [listingId]
+        /* SQL */ `select * from favourites where listing_id = $1 AND user_id = $2`,
+        [listingId, currentUser.id]
       );
 
       if (result.rows.length === 0) {
