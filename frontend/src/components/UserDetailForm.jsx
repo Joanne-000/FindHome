@@ -109,7 +109,7 @@ const UserDetailForm = ({userId}) => {
         }}})
   
     if (createMutation.isPending || updateMutation.isPending || deleteMutation.isPending) {
-      return <progress />
+      return <span className="loading loading-spinner text-warning"></span>
     }
 
   const {

@@ -178,7 +178,7 @@ const ListingForm = ({listingId}) => {
     }}})
     
     if (createMutation.isPending || updateMutation.isPending || deleteMutation.isPending) {
-      return <progress />
+      return <span className="loading loading-spinner text-warning loading-xl" ></span>
     }
 
     const handleAddImage = () =>{

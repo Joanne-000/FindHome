@@ -38,7 +38,7 @@ const SignInForm = () => {
   })
 
     if (signInMutation.isPending) {
-      return <progress />
+      return <span className="loading loading-spinner text-warning loading-xl" ></span>
     }
 
   const handleChange = (evt) => {
