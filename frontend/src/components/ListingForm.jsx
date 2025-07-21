@@ -91,6 +91,7 @@ const ListingForm = ({listingId}) => {
     typeoflease, 
     description, 
     status,
+    imageurls,
   }=formData
 
   const {
@@ -221,237 +222,222 @@ const ListingForm = ({listingId}) => {
       deleteMutation.mutate({ userId, listingId })
     };
 
-  return (
-    <>
-    <div>
-      <h1>
-        {isEditing ? "Edit listing" : "Create a new listing"}
-      </h1>
-      <p >Fields marked with * are required</p>
-      <p>{message}</p>
-      <form onSubmit={handleSubmit}>
-      <div >
-              <label>Property Name *: 
-              <input
-                type="text"
-                id="propertyname"
-                value={propertyname}
-                name="propertyname"
-                onChange={handleChange}
-                required
-                />
-              </label>
-            </div>
-          <div >
-          <label >Address *:
-          <textarea
+    return (
+      <div className="min-h-screen bg-base-100 p-6">
+  <div className="max-w-5xl mx-auto bg-base-200 rounded-xl shadow p-8 space-y-6">
+    <h1 className="text-3xl font-bold">
+      {isEditing ? "Edit Listing" : "Create a New Listing"}
+    </h1>
+    <p className="text-sm text-gray-500">Fields marked with * are required.</p>
+    <p>{message}</p>
+
+    <form onSubmit={handleSubmit} className="space-y-8">
+
+      {/* Row 1: Property Name + Address */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <label className="form-control w-full">
+          <span className="label-text font-semibold">Property Name *</span>
+          <input
             type="text"
-            id="address"
-            value={address}
-            name="address"
+            name="propertyname"
+            value={propertyname}
             onChange={handleChange}
+            className="input input-bordered w-full"
             required
-            />
-          </label>
-        </div>
-            <div >
-        <label >Price *: $ 
-        <input
-          type="number"
-          id="price"
-          value={price}
-          name="price"
-          onChange={handleChange}
-          required
+          />
+        </label>
+
+        <label className="form-control w-full">
+          <span className="label-text font-semibold">Address *</span>
+          <textarea
+            name="address"
+            value={address}
+            onChange={handleChange}
+            className="textarea textarea-bordered w-full"
+            required
           />
         </label>
       </div>
-            <div>
-              <label >Town *:
-                <select value={town} type="text"
-                id="town" 
-                name="town"
-                onChange={handleChange}
-                required>
-                  {SGtown.map((item,index)=>(
-                    <option name={item} key={index}>{item}</option>
-                  ))}
-                </select>
-            </label>
-            </div>              
-            <div >
-              <label >Nearest MRT *:
-              <input
-                type="text"
-                id="nearestmrt"
-                value={nearestmrt}
-                name="nearestmrt"
-                onChange={handleChange}
-                required
-              />
-              </label>
-            </div>
-        <div >
-          <label >Unit Size *:
+
+      {/* Row 2: Price + Town + MRT */}
+      <div className="grid md:grid-cols-3 gap-6">
+        <label className="form-control">
+          <span className="label-text font-semibold">Price *</span>
           <input
             type="number"
-            id="unitsize"
-            value={unitsize}
+            name="price"
+            value={price}
+            onChange={handleChange}
+            className="input input-bordered"
+            required
+          />
+        </label>
+
+        <label className="form-control">
+          <span className="label-text font-semibold">Town *</span>
+          <select
+            name="town"
+            value={town}
+            onChange={handleChange}
+            className="select select-bordered"
+            required
+          >
+            {SGtown.map((item, index) => (
+              <option key={index}>{item}</option>
+            ))}
+          </select>
+        </label>
+
+        <label className="form-control">
+          <span className="label-text font-semibold">Nearest MRT *</span>
+          <input
+            type="text"
+            name="nearestmrt"
+            value={nearestmrt}
+            onChange={handleChange}
+            className="input input-bordered"
+            required
+          />
+        </label>
+      </div>
+
+      {/* Row 3: Unit Size, Bedrooms, Bathrooms */}
+      <div className="grid md:grid-cols-3 gap-6">
+        <label className="form-control">
+          <span className="label-text font-semibold">Unit Size (m²) *</span>
+          <input
+            type="number"
             name="unitsize"
+            value={unitsize}
             onChange={handleChange}
-          />m2
-          </label>
-        </div>
-        <div >
-          <label >Bedroom *:
+            className="input input-bordered"
+            required
+          />
+        </label>
+
+        <label className="form-control">
+          <span className="label-text font-semibold">Bedrooms *</span>
           <input
             type="number"
-            id="bedroom"
-            value={bedroom}
             name="bedroom"
+            value={bedroom}
             onChange={handleChange}
+            className="input input-bordered"
+            required
           />
-          </label>
-        </div>
-        <div >
-        <label >Bathroom *:
+        </label>
+
+        <label className="form-control">
+          <span className="label-text font-semibold">Bathrooms *</span>
           <input
             type="number"
-            id="bathroom"
-            value={bathroom}
             name="bathroom"
+            value={bathroom}
             onChange={handleChange}
+            className="input input-bordered"
+            required
           />
-          </label>
-        </div>
-        <div >
-        <label >Type of Lease *:
+        </label>
+      </div>
+
+      {/* Row 4: Lease Type + Status */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <label className="form-control">
+          <span className="label-text font-semibold">Type of Lease *</span>
           <input
             type="text"
-            id="typeoflease"
-            value={typeoflease}
             name="typeoflease"
+            value={typeoflease}
             onChange={handleChange}
+            className="input input-bordered"
+            required
           />
-          </label>
-        </div>
-        <div >
-        <label >Description *:
-        <textarea
-            type="text"
-            id="description"
-            value={description}
-            name="description"
-            onChange={handleChange}
-          />
-          </label>
-        </div>
-        <div >
-        <label >Status *:
+        </label>
+
+        <label className="form-control">
+          <span className="label-text font-semibold">Status *</span>
           <input
             type="text"
-            id="status"
-            value={status}
             name="status"
+            value={status}
             onChange={handleChange}
+            className="input input-bordered"
+            required
           />
+        </label>
+      </div>
+
+      {/* Row 5: Description */}
+      <div>
+        <label className="form-control">
+          <span className="label-text font-semibold">Description *</span>
+          <textarea
+            name="description"
+            value={description}
+            onChange={handleChange}
+            className="textarea textarea-bordered w-full"
+            required
+          />
+        </label>
+      </div>
+
+      {/* Row 6: Image URLs */}
+      <div className="space-y-4">
+        <p className="font-semibold">Image URL</p>
+
+        {Object.values(images).map((url,index) => (
+          <div>
+          <label key={index+1} className="form-control">
+            <span className="label-text">Image URL {index+1}:</span>
+            <textarea
+              type="url"
+              name={`imageurl${index+1}`}
+              value={url}
+              onChange={handleChangeImg}
+              className="textarea textarea-bordered  w-full"
+            />
           </label>
-        </div>
-        <div >
-            <button type="button" onClick={()=>handleAddImage()}>
-              Add more images
-            </button>
-            </div>
-            <div >
-  <label >
-    Image URL :
-    <textarea
-      type="url"
-      id={`imageurl1`}
-      value={imageurl1}
-      name={`imageurl1`}
-      onChange={handleChangeImg}
-    />
-
-  </label><br/>
-  <label >
-    Image URL :
-    <textarea
-      type="url"
-      id={`imageurl2`}
-      value={imageurl2}
-      name={`imageurl2`}
-      onChange={handleChangeImg}
-    />
-
-  </label><br/>
-  <label >
-    Image URL :
-    <textarea
-      type="url"
-      id={`imageurl3`}
-      value={imageurl3}
-      name={`imageurl3`}
-      onChange={handleChangeImg}
-    />
-
-  </label><br/>
-  <label >
-    Image URL :
-    <textarea
-      type="url"
-      id={`imageurl4`}
-      value={imageurl4}
-      name={`imageurl4`}
-      onChange={handleChangeImg}
-    />
-
-  </label><br/>
-  <label >
-    Image URL :
-    <textarea
-      type="url"
-      id={`imageurl5`}
-      value={imageurl5}
-      name={`imageurl5`}
-      onChange={handleChangeImg}
-    />
-
-  </label>
-</div>
-        {isEditing ? (
-          <div >
-            <button type="submit" >
-              Update Listing
-            </button>
-            <button type="button" onClick={handleDelete} disabled={isDeleting }>
-              Delete Listing
-            </button>
-            <button  type="button" onClick={() => navigate("/")}>
-              Cancel
-            </button>
           </div>
-        ) : (
-          <div >
-            <button
-              type="submit"
-            >
-              Create Listing
-            </button>
-            <button type="button" onClick={() => navigate("/")}>
-              Cancel
-            </button>
-          </div>
+        ))}
+
+        <button
+          type="button"
+          className="btn btn-outline"
+          onClick={handleAddImage}
+        >
+          ➕ Add More Images
+        </button>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-4">
+        <button type="submit" className="btn btn-primary">
+          {isEditing ? "Update Listing" : "Create Listing"}
+        </button>
+        <button
+          type="button"
+          className="btn btn-outline"
+          onClick={() => navigate("/")}
+        >
+          Cancel
+        </button>
+        {isEditing && (
+          <button
+            type="button"
+            className="btn btn-error"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            Delete Listing
+          </button>
         )}
-      </form>
-      {!isEditing && (
-        <Link to="/login">
-          Already have an account? Login Here
-        </Link>
-      )}
-    </div>
-    </>
-  );
+      </div>
+    </form>
+  </div>
+</div>
+
+    );
+    
 };
 
 export default ListingForm;

@@ -35,7 +35,7 @@ const OneListingPage = () =>{
     }, [user]);
     
       const { isPending, isError, data, error }  = useQuery({ 
-        queryKey: ['listings', listingId], 
+        queryKey: ['listings'], 
         queryFn: () => getOneListing(listingId),
       })
 
@@ -54,11 +54,19 @@ const OneListingPage = () =>{
         }}
     })
 
- const handleFav = (e) =>{
-    log(e.target.id)
-    const listingId = e.target.id
-    favMutation.mutate({userId,listingId})
- }
+    const handleFav = (e) =>{
+        log(e.target.id)
+        const listingId = e.target.id
+        favMutation.mutate({userId,listingId})
+    }
+
+    if (isPending) {
+      return (
+        <div className="flex justify-center">
+          <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
+        </div>
+      );
+    }
 
       const {address,agent_id,bathroom,bedroom,description,id,nearestmrt,price,propertyname,status,timestamptz,town,typeoflease,unitsize} = data.listing
 
@@ -70,8 +78,8 @@ const OneListingPage = () =>{
           <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
           </div>
           :""}
-          {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
-
+        {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
+        {data &&
         <div className="min-h-screen bg-base-100 p-6">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:gap-6">
       
@@ -186,6 +194,7 @@ const OneListingPage = () =>{
           </div>
         </div>
       </div>
+      }
       </>
       );
       
