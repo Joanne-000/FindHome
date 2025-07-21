@@ -1,6 +1,5 @@
 {
   "name": "backend",
-  "private": true,
   "type": "commonjs",
   "main": "server.js",
   "devDependencies": {
