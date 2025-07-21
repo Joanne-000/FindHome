@@ -16,6 +16,7 @@ import ListingForm from './components/ListingForm';
 import EditListing from './components/EditListing';
 import FavPage from './components/FavPage';
 import NavBar from './components/Navbar';
+import HomePage from './components/HomePage';
 
 const log = debug("list:App");
 
@@ -26,7 +27,7 @@ function App() {
     <>
     <NavBar/>
     <Routes>
-    <Route path="/" element={<h1>Home Page</h1>} />
+    <Route path="/" element={<HomePage/>} />
         <Route path="/signup" element={<UserDetailForm/>} />
         <Route path="/signin" element={<SignInForm/>} />
         <Route path="/listings" element={<ListingsPage/>} />

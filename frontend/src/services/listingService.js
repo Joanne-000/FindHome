@@ -24,27 +24,6 @@ const getAllListings = async () => {
   }
 };
 
-const get5Listings = async () => {
-  // userId is from userContext where we setUser during signin.
-  // currentUser is get from token when we save suring signin.
-  try {
-    console.log("get listings start");
-
-    const res = await axios.get(`${BASE_URL}`);
-
-    if (res.status !== 200) throw new Error("Failed to show listings");
-    const data = await res.data;
-
-    if (data.err) {
-      throw new Error(data.err);
-    }
-    return data;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-};
-
 const getOneListing = async (listingId) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.

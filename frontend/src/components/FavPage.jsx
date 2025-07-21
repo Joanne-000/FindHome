@@ -25,7 +25,7 @@ const FavPage = () =>{
   const navigate = useNavigate();
   const queryClient = useQueryClient()
     
-      const { isPending, isError, data, error }  = useQuery({ 
+      const { isLoading, isError, data, error }  = useQuery({ 
         queryKey: ['favourites'], 
         queryFn:  () => getAllFavourites(userId)
       })
@@ -57,7 +57,7 @@ const FavPage = () =>{
     <>
       <h1 className="text-3xl p-3 font-bold text-center text-warning mb-4">Favourite List</h1>
       <p>{message}</p>
-      {isPending?
+      {isLoading?
       <div className="flex justify-center">
       <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
       </div>

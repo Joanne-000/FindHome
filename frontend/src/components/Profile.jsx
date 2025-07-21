@@ -16,7 +16,7 @@ const UserProfile = () => {
   log("user",user)
   const userId = user?.id;
 
-  const { isPending, isError, data, error }  = useQuery({ 
+  const { isLoading, isError, data, error }  = useQuery({ 
     queryKey: ['profile'], 
     queryFn:  () => getUser(userId) ,  
     enabled: !!user,
@@ -40,7 +40,7 @@ const UserProfile = () => {
     return clearTimeOut, <p>You are not signed in. You will be directing to sign in page soon...</p>
   }
 
-  if (isPending) {
+  if (isLoading) {
     return <span className="loading loading-spinner text-warning loading-xl" ></span>
   }
 

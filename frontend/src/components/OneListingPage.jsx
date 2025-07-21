@@ -26,7 +26,7 @@ const OneListingPage = () =>{
     const navigate = useNavigate()
     const [message, setMessage] = useState("")
     const [isAgent, setAgent] = useState(false)
-    const userId = user.id
+    const userId = user?.id;
 
     useEffect(() => {
       if (user?.userrole === "agent") {
@@ -34,8 +34,8 @@ const OneListingPage = () =>{
       }
     }, [user]);
     
-      const { isPending, isError, data, error }  = useQuery({ 
-        queryKey: ['listings'], 
+      const { isLoading, isError, data, error }  = useQuery({ 
+        queryKey: ['listings', listingId], 
         queryFn: () => getOneListing(listingId),
       })
 
@@ -55,12 +55,12 @@ const OneListingPage = () =>{
     })
 
     const handleFav = (e) =>{
-        log(e.target.id)
-        const listingId = e.target.id
+        log(e.currentTarget.id)
+        const listingId = e.currentTarget.id
         favMutation.mutate({userId,listingId})
     }
 
-    if (isPending) {
+    if (isLoading) {
       return (
         <div className="flex justify-center">
           <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
@@ -68,12 +68,14 @@ const OneListingPage = () =>{
       );
     }
 
+    // if (!data) return null;
+
       const {address,agent_id,bathroom,bedroom,description,id,nearestmrt,price,propertyname,status,timestamptz,town,typeoflease,unitsize} = data.listing
 
       return (
         <>
         <p>{message}</p>
-        {isPending?
+        {isLoading?
           <div className="flex justify-center">
           <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
           </div>

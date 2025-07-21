@@ -26,7 +26,7 @@ const ListingsPage = () =>{
     const navigate = useNavigate();
     const queryClient = useQueryClient()
 
-      const { isPending, isError, data, error }  = useQuery({ 
+      const { isLoading, isError, data, error }  = useQuery({ 
         queryKey: ['listings'], 
         queryFn:  () => getAllListings()
       })
@@ -47,7 +47,7 @@ const ListingsPage = () =>{
     })
 
 
-      if (isPending) {
+      if (isLoading) {
         return <span className="loading loading-spinner text-warning"></span>
       }
     
