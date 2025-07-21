@@ -1,12 +1,13 @@
 {
   "name":"findhome",
+  "private": true,
   "scripts": {
     "dev": "turbo run dev"
   },
   "devDependencies": {
     "turbo": "^2.5.5"
   },
-  "packageManager": "bun@1.2.0",
+"packageManager": "yarn@1.22.22",
   "workspaces": [
     "frontend",
     "backend"

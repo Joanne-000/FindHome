@@ -71,10 +71,10 @@ const HomePage = () =>{
     <p className="text-sm text-gray-600">{message}</p>
    {isLoading?
       <div className="flex justify-center">
-      <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
+      <p className="loading loading-spinner items-center text-warning loading-xl" ></p>
       </div>
       :""}
-   {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
+   {isError? <p className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</p> : ""}
    {data && 
     <div className="card bg-base-300 rounded-box grid h-full w-full lg:h-3/4 place-items-center">
     <div className="flex flex-wrap justify-center gap-4 p-4">
