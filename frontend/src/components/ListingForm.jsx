@@ -14,7 +14,7 @@ const log = debug("list:Listing form")
 
 const ListingForm = ({listingId}) => {
   const { user } = useContext(UserContext);
-  const userId = user.id;
+  const userId = user?.id;
   const isEditing = listingId ? true : false;
   log("listingId",listingId)
   const queryClient = useQueryClient()

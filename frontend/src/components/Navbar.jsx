@@ -26,8 +26,12 @@ const NavBar = () => {
       <div className="navbar-center lg:flex">
         <ul className="menu menu-horizontal text-xl ">
           <li><Link to="/listings" className="hover:bg-yellow-300">Listings</Link></li>
+          {user ? (
+            <>
           <li><Link to="/favourites" className="hover:bg-yellow-300">Favourites</Link></li>
           <li><Link to="/enquiries" className="hover:bg-yellow-300">Enquiries</Link></li>
+            </>
+        ) : ""}
         </ul>
       </div>
 
@@ -35,8 +39,11 @@ const NavBar = () => {
       <div className="navbar-end hidden lg:flex text-lg">
       <ul className="menu menu-horizontal text-xl ">
         {user ? (
+          <>
             <li><Link to="/profile" className="hover:bg-yellow-300 text-xl">Profile</Link></li>
-        ) : (
+            <li><Link to="/" className="hover:bg-yellow-300 text-xl" onClick={handleSignOut}>Sign Out</Link></li>
+          </>
+          ) : (
           <>
             <li><Link to="/signup" className="hover:bg-yellow-300 text-xl">Sign Up</Link></li>
             <li><Link to="/signin" className="hover:bg-yellow-300 text-xl">Sign In</Link></li>

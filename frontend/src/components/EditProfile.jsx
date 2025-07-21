@@ -17,7 +17,7 @@ const EditProfile = () =>{
       setTimeout(() => navigate("/signin"),(1000*5))
       return <div>You are not signed in. You will be redirecting to Sign In page soon...</div>; // or redirect to signin
     }
-    const userId = user.id
+    const userId = user?.id
     log("userId Usercontect", userId);
 
     return <UserDetailForm userId={userId} />;

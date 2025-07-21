@@ -26,7 +26,7 @@ const SignInForm = () => {
     onSuccess: (payload)=>{
       log(payload)
       setUser(payload);
-      navigate(`/profile`)
+      navigate(`/listings`)
     },
     onError:(error)=>{
             if (error instanceof AxiosError) {
@@ -72,58 +72,92 @@ const SignInForm = () => {
 
   return (
     <>
-    <div>
-      <h1 >Sign In</h1>
-      <p >{message}</p>
-      <section>
-        <form autoComplete="off" onSubmit={handleSubmit}>
-        <div>
-            <button onClick={() =>handleRoleChange("agent")} type="button">
-              Agent
-            </button>
-            <button onClick={()=>handleRoleChange("buyer")} type="button">
-              Buyer
-            </button>
+  <div className="flex items-center justify-center min-h-screen bg-base-200 px-4">
+    <div className="card w-full max-w-md bg-base-100 shadow-xl">
+      <div className="card-body">
+        <h2 className="text-3xl font-bold text-center mb-2">Sign In</h2>
+        <p className="text-center text-error mb-4">{message}</p>
+
+        {/* Role Selector */}
+        <div className="flex justify-center gap-4 mb-6">
+          <button
+            type="button"
+            onClick={() => handleRoleChange("agent")}
+            className={`btn ${formData.userrole === "agent" ? "btn-primary" : "btn-outline"}`}
+          >
+            Agent
+          </button>
+          <button
+            type="button"
+            onClick={() => handleRoleChange("buyer")}
+            className={`btn ${formData.userrole === "buyer" ? "btn-primary" : "btn-outline"}`}
+          >
+            Buyer
+          </button>
+        </div>
+
+        <form autoComplete="off" onSubmit={handleSubmit} className="space-y-4">
+          {/* Email Field */}
+          <div>
+
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text font-medium">Email</span>
             </div>
-          <div className="field">
-            <label >Email:</label>
             <input
-              className="input validator"  
-              placeholder="mail@site.com" 
               type="email"
-              autoComplete="off"
-              id="email"
-              value={formData.email}
               name="email"
+              id="email"
+              placeholder="mail@site.com"
+              className="input input-bordered w-full"
+              value={formData.email}
               onChange={handleChange}
               required
-            />
-            <div className="validator-hint">Enter valid email address</div>
-          </div>
-          <div >
-            <label >Password:</label>
-            <input
-              type="password"
-              autoComplete="off"
-              id="password"
-              value={formData.password}
-              name="password"
-              onChange={handleChange}
-              required
-            />
+              />
+          </label>
           </div>
           <div>
-            <button disabled={isFormInvalid()}  type="submit">
+          
+          {/* Password Field */}
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text font-medium">Password</span>
+            </div>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="********"
+              className="input input-bordered w-full"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          </div>
+          {/* Buttons */}
+          <div className="flex justify-between items-center mt-4">
+            <button
+              type="submit"
+              className="btn btn-warning w-1/2"
+              disabled={isFormInvalid()}
+            >
               Sign In
             </button>
-            <button onClick={() => navigate("/")}>
+            <button
+              type="button"
+              className="btn btn-outline w-1/3"
+              onClick={() => navigate("/")}
+            >
               Cancel
             </button>
           </div>
         </form>
-      </section>
+      </div>
     </div>
-    </>
+  </div>
+</>
+
   );
 };
 

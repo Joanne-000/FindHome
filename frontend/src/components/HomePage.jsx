@@ -22,7 +22,7 @@ const log = debug("list:Listings Page");
 const HomePage = () =>{
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("")
-  const userId = user.id
+  const userId = user?.id
 
     const navigate = useNavigate();
     const queryClient = useQueryClient()
