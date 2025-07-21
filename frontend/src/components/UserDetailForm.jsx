@@ -20,8 +20,7 @@ const UserDetailForm = ({userId}) => {
 
   const [isDeleting , setIsDelete] = useState(false);
 
-  const { setUser } = useContext(UserContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -43,21 +42,21 @@ const UserDetailForm = ({userId}) => {
     const fetchUserProfile = async () => {
       const userProfile = await getUser(userId);
       setFormData({
-        email: userProfile?.email || "",
-      displayname: userProfile?.displayname || "",
-      contactnumber: userProfile?.contactnumber || "",
-      userrole: userProfile?.userrole || "",
-      licenseid: userProfile?.licenseid || "",
-      profilephoto: userProfile?.profilephoto || "",
-      isactive: userProfile?.isactive || "",
-      prefercontactmethod: userProfile?.prefercontactmethod || "",
-      preferlocation: userProfile?.preferlocation || "",
-      preferbudget: userProfile?.preferbudget || "",
-      preferrooms: userProfile?.preferrooms || "",
+        email: userProfile?.email || user?.email || "",
+      displayname: userProfile?.displayname || user?.displayname ||"",
+      contactnumber: userProfile?.contactnumber || user?.contactnumber ||"",
+      userrole: userProfile?.userrole ||user?.userrole || "",
+      licenseid: userProfile?.licenseid ||user?.licenseid || "",
+      profilephoto: userProfile?.profilephoto || user?.profilephoto ||"",
+      isactive: userProfile?.isactive || user?.isactive ||"",
+      prefercontactmethod: userProfile?.prefercontactmethod ||user?.prefercontactmethod || "",
+      preferlocation: userProfile?.preferlocation || user?.preferlocation ||"",
+      preferbudget: userProfile?.preferbudget || user?.preferbudget ||"",
+      preferrooms: userProfile?.preferrooms ||user?.preferrooms || "",
       });
     };
     fetchUserProfile();
-  }, [userId]);
+  }, [userId,user]);
 
   const createMutation = useMutation({
     mutationFn: signUp,

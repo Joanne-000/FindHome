@@ -1,7 +1,7 @@
-import { useContext ,useState } from "react";
+import { useContext ,useState,useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router";
-import { getAllFavourites,createFav ,checkFavourite} from "../services/favouriteService";
+import { getAllFavourites ,checkFavourite} from "../services/favouriteService";
 import {
   useQuery,
   useMutation,
@@ -45,13 +45,6 @@ const FavPage = () =>{
               }}
           })
 
-      if (isPending) {
-        return <span className="loading loading-spinner text-warning loading-xl" ></span>
-      }
-      if (isError) {
-        log("error", error.response?.data?.err)
-        return <span> {error.response?.data?.err}</span>
-      }
        const handleFav = (e) =>{
           log(e.target.id)
           const listingId = e.target.id
@@ -62,7 +55,15 @@ const FavPage = () =>{
        
     return(
     <>
+      <h1 className="text-3xl p-3 font-bold text-center text-warning mb-4">Favourite List</h1>
       <p>{message}</p>
+      {isPending?
+      <div className="flex justify-center">
+      <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
+      </div>
+      :""}
+      {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
+      {data && 
       <div className="flex w-full flex-col lg:flex-row">
 <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">content</div>
 <div className="divider lg:divider-horizontal"></div>
@@ -111,7 +112,7 @@ const FavPage = () =>{
             </div>
             {user && 
             <div>
-            <button className="btn btn-warning" name="favBtn" type="button" id={item.id} onClick={handleFav}>Fav</button>
+            <button className="btn btn-warning btn-sm" name="favBtn" type="button" id={item.id} onClick={handleFav}>❤️ Fav</button>
             </div>}
             </div>
             </div>
@@ -120,7 +121,7 @@ const FavPage = () =>{
       </div>
       </div>
       </div>
-
+}
       </>
     )
 }

@@ -2,26 +2,31 @@ import { useEffect, useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import {  useNavigate, useParams } from "react-router";
 import { getOneListing } from "../services/listingService";
+import {checkFavourite} from "../services/favouriteService";
 import {
   useQuery,
+  useMutation,
+  useQueryClient,
 } from '@tanstack/react-query'
 import debug from "debug";
-import { faker } from '@faker-js/faker';
 import { Navigate } from "react-router";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper/modules';
+import { AxiosError } from "axios";
 
 const log = debug("list:One Listing Page");
 
 const OneListingPage = () =>{
     const { user } = useContext(UserContext);
+    const queryClient = useQueryClient()
     const {listingId} = useParams()
     const navigate = useNavigate()
-
+    const [message, setMessage] = useState("")
     const [isAgent, setAgent] = useState(false)
+    const userId = user.id
 
     useEffect(() => {
       if (user?.userrole === "agent") {
@@ -34,95 +39,156 @@ const OneListingPage = () =>{
         queryFn: () => getOneListing(listingId),
       })
 
-      if (isPending) {
-        return <span className="loading loading-spinner text-warning loading-xl" ></span>
-      }
-    
-      if (isError) {
-        log("error", error.name)
-        return <span> {error.message}</span>
-      }
+      const favMutation = useMutation({
+        mutationFn: ({ userId, listingId })=>checkFavourite(userId, listingId),
+        onSuccess: (data)=>{
+          log("createFavMut",data)
+          queryClient.invalidateQueries({ queryKey: ['favourites'] })
+        },
+        onError:(error)=>{  
+        if (error instanceof AxiosError) {
+          setMessage(error.response?.data?.err);
+        } else {
+          // Fallback for unexpected error types
+          setMessage("An unknown error occurred.");
+        }}
+    })
+
+ const handleFav = (e) =>{
+    log(e.target.id)
+    const listingId = e.target.id
+    favMutation.mutate({userId,listingId})
+ }
 
       const {address,agent_id,bathroom,bedroom,description,id,nearestmrt,price,propertyname,status,timestamptz,town,typeoflease,unitsize} = data.listing
 
-    return(
+      return (
         <>
-          <div key={id}>
+        <p>{message}</p>
+        {isPending?
+          <div className="flex justify-center">
+          <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
+          </div>
+          :""}
+          {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
+
+        <div className="min-h-screen bg-base-100 p-6">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:gap-6">
+      
+          {/* Listing Details Card - 70% */}
+          <div className="w-full lg:w-[70%] bg-base-200 rounded-xl shadow-lg p-6 space-y-6">
+
+          {/* Top Row: Title + Buttons */}
+          <div className="flex justify-between items-start">
+            {/* Property Name & Address */}
             <div>
+              <h1 className="text-4xl font-bold">{propertyname}</h1>
+              <p className="text-lg text-gray-700 mt-1">{address}</p>
+            </div>
+
+            {/* Buttons (top-right) */}
+            <div className="flex gap-2">
+              {user && (
+                <button className="btn btn-warning btn-sm" name="favBtn" type="button" id={id} onClick={handleFav}>❤️ Fav</button>
+              )}
+              {isAgent && (
+                <button
+                  className="btn btn-outline btn-sm"
+                  onClick={() => navigate(`/listings/${listingId}/edit`)}
+                >
+                  ✏️ Edit
+                </button>
+              )}
+            </div>
+          </div>
+      
+            {/* Swiper Carousel */}
             <Swiper
               slidesPerView={1}
               spaceBetween={30}
               loop={true}
-              pagination={{
-                clickable: true,
-              }}
+              pagination={{ clickable: true }}
               navigation={true}
               modules={[Pagination, Navigation]}
-              className="mySwiper"
-              >
-              {data.images.map((image)=>(
-              <SwiperSlide ><img width="500px" height="500px" key={image.id} src={image.imageurl} alt={propertyname}></img></SwiperSlide>
-            ))}
+              className="rounded-xl overflow-hidden"
+            >
+              {data.images.map((image) => (
+                <SwiperSlide key={image.id}>
+                  <img
+                    src={image.imageurl}
+                    alt={propertyname}
+                    className="w-full h-[400px] object-cover"
+                  />
+                </SwiperSlide>
+              ))}
             </Swiper>
+      
+            {/* Price */}
+            <div className="bg-base-100 p-4 rounded-lg shadow-sm text-lg font-semibold">
+              💰 Price: ${price}
             </div>
-              <div>
-            <p>
-            {propertyname}
-            </p>
-            <p>
-            Address: {address}
-            </p>
+      
+            {/* Town & MRT */}
+            <div className="flex flex-wrap gap-4">
+              <div className="bg-base-100 p-4 rounded-lg shadow-sm flex-1 min-w-[150px]">
+                📍 <span className="font-semibold">Town:</span> {town}
+              </div>
+              <div className="bg-base-100 p-4 rounded-lg shadow-sm flex-1 min-w-[150px]">
+                🚇 <span className="font-semibold">Nearest MRT:</span> {nearestmrt}
+              </div>
             </div>
-            <div>
-            <p>
-            Unit Size: {unitsize}m2
-            </p>
-            <p>
-            {bedroom} bed
-            </p>
-            <p>
-            {bathroom} bath
-            </p>
+      
+            {/* Unit Size, Bed, Bath */}
+            <div className="flex flex-wrap gap-4">
+              <div className="bg-base-100 p-4 rounded-lg shadow-sm flex-1 min-w-[150px]">
+                🏠 <span className="font-semibold">Unit Size:</span> {unitsize} m²
+              </div>
+              <div className="bg-base-100 p-4 rounded-lg shadow-sm flex-1 min-w-[150px]">
+                🛏️ <span className="font-semibold">Bedrooms:</span> {bedroom}
+              </div>
+              <div className="bg-base-100 p-4 rounded-lg shadow-sm flex-1 min-w-[150px]">
+                🛁 <span className="font-semibold">Bathrooms:</span> {bathroom}
+              </div>
             </div>
-            <div>
-            {price}
+      
+            {/* Lease Type */}
+            <div className="bg-base-100 p-4 rounded-lg shadow-sm text-lg font-semibold">
+              📄 Type of Lease: {typeoflease}
+            </div>
+      
+            {/* Description */}
+            <div className="bg-base-100 p-4 rounded-lg shadow-sm">
+              <p className="text-lg"><span className="font-semibold">Description:</span> {description}</p>
+            </div>
+      
+            {/* Posted On */}
+            <div className="text-sm text-gray-500 italic">
+              📅 Posted on: {new Date(timestamptz).toLocaleDateString()}
             </div>
           </div>
-          <div>
-          <p>
-            Town: {town}
-            </p>
-            <p>
-            Nearest MRT: {nearestmrt}
-            </p>
+      
+          {/* Spacer - 5% (only on large screens) */}
+          <div className="hidden lg:block lg:w-[5%]"></div>
+      
+          {/* Agent Info Card - 25% */}
+          <div className="w-full lg:w-[25%] bg-base-200 rounded-xl shadow-lg p-6 flex flex-col items-center text-center space-y-6">
+            <img
+              src={data.agent[0].profilephoto}
+              alt={data.agent[0].displayname}
+              className="w-32 h-32 object-cover rounded-full border"
+            />
+            <p className="text-2xl font-bold">{data.agent[0].displayname}</p>
+            <div className="space-y-2 text-sm text-left w-full text-gray-700">
+              <p>📇 <span className="font-semibold">License ID:</span> {data.agent[0].licenseid}</p>
+              <p>📞 <span className="font-semibold">Contact:</span> {data.agent[0].contactnumber}</p>
+              <p>🗓️ <span className="font-semibold">Joined on:</span> {new Date(data.agent[0].timestamptz).toLocaleDateString()}</p>
             </div>
-          <div>
-          <div>
-          <div>
-            {user && 
-            <div>
-            <button name="favBtn" type="button" id={id}>Fav</button>
-            </div>}
-            </div>
-            <div>
-            {isAgent && 
-            <div>
-            <button name="editBtn" type="button" id={id} onClick={() => navigate(`/listings/${listingId}/edit`)}>Edit Listing</button>
-            </div>}
-            </div>
-          <img width="150px" height="150px" src={data.agent[0].profilephoto} alt={data.agent[0].displayname}></img>
-            
-          <img width="150px" height="150px" src={faker.image.personPortrait()} alt={data.agent[0].displayname}></img>
           </div>
-            <div>
-            <p>{data.agent[0].displayname}</p>
-            <p>Agent License ID: {data.agent[0].licenseid}</p>
-            <p>Contact Number: {data.agent[0].contactnumber}</p>
-            <p>Join on {data.agent[0].timestamptz}</p>
-            </div>
-            </div>
+        </div>
+      </div>
       </>
-    )
+      );
+      
 }
 
 export default OneListingPage

@@ -64,15 +64,22 @@ const ListingsPage = () =>{
     return(
 <>
 <p>{message}</p>
-<div className="flex w-full flex-col lg:flex-row">
-<div className="card bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">content</div>
-<div className="divider lg:divider-horizontal"></div>
-<div className="card bg-base-300 rounded-box grid h-full w-full lg:w-3/4 place-items-center">
-<div className="flex flex-wrap justify-center gap-4 p-4">
+  {isPending?
+      <div className="flex justify-center">
+      <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
+      </div>
+      :""}
+  {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
+  {data && 
+    <div className="flex w-full flex-col lg:flex-row">
+    <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">content</div>
+    <div className="divider lg:divider-horizontal"></div>
+    <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-3/4 place-items-center">
+    <div className="flex flex-wrap justify-center gap-4 p-4">
       {data.map((item)=>(
           <div key={item.id}  className="card bg-base-200 w-96 m-3 shadow-sm">
-  <div className="h-48 w-full overflow-hidden rounded-t-md">
-  <Swiper
+    <div className="h-48 w-full overflow-hidden rounded-t-md">
+    <Swiper
               slidesPerView={1}
               spaceBetween={30}
               loop={true}
@@ -112,16 +119,16 @@ const ListingsPage = () =>{
             </div>
             {user && 
             <div>
-            <button className="btn btn-warning" name="favBtn" type="button" id={item.id} onClick={handleFav}>Fav</button>
+            <button className="btn btn-warning btn-sm" name="favBtn" type="button" id={item.id} onClick={handleFav}>❤️ Fav</button>
             </div>}
             </div>
             </div>
           </div>
       ))}
       </div>
-
-</div>
-</div>
+    </div>
+    </div>
+}
       </>
     )
 }
