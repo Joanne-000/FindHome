@@ -18,7 +18,7 @@ const NavBar = () => {
       {/* Left: Logo */}
       <div className="navbar-start ">
         <Link to="/" className=" text-xl">
-          <img src={FindHome} alt="Logo" className="h-12 w-13 mr-2" />
+          <img src={FindHome} alt="Logo" className="h-20 w-25 mr-2" />
         </Link>
       </div>
 

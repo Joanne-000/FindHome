@@ -22,6 +22,7 @@ const ListingsPage = () =>{
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("")
   const userId = user?.id
+  const [input, setInput] = useState("")
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState("")
 
@@ -61,13 +62,14 @@ const ListingsPage = () =>{
      
      const handleSearchChange = (e) =>{
       log(e.target.value)
-      setSearch(e.target.value);
+      setInput(e.target.value)
     }
 
-    const handleSearch = (e) => {
+    const handleSearch = () => {
       log("inside handle delete 1")
-      
+      setSearch(input);
       };
+
     return(
     <>
     <p>{message}</p>
@@ -85,12 +87,12 @@ const ListingsPage = () =>{
             <span className="font-semibold">Search: </span>
             <input
               name="search"
-              value={search}
+              value={input}
               onChange={handleSearchChange}
               className="input input-bordered w-60%"
               required
             />
-            <button type="button" onClick={handleSearch}>Search</button>
+            <button type="button" className="flex btn justify-end" onClick={handleSearch}>Search</button>
           </label>
         </div>
         </div>
