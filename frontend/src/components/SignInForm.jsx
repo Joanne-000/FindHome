@@ -127,7 +127,7 @@ const SignInForm = () => {
               type="password"
               name="password"
               id="password"
-              placeholder="********"
+              placeholder="***"
               className="input input-bordered w-full"
               value={formData.password}
               onChange={handleChange}

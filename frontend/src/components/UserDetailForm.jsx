@@ -173,7 +173,7 @@ const UserDetailForm = ({userId}) => {
       <div className="flex justify-center items-center min-h-screen">
       <fieldset className="bg-base-200 border-base-300 rounded-box border p-6 w-full max-w-md mx-auto">
       <legend className="fieldset-legend text-3xl text-center">
-        {isEditing ? "Edit your Profile" : "Sign Up as a New User"}
+        <h1>{isEditing ? "Edit your Profile" : "Sign Up as a New User"}</h1>
       </legend>
       <div>
       <p className="pb-4 text-xl text-center text-red-500">{message?<span className="font-bold">Warning: </span>:""}{message}</p>
@@ -284,11 +284,12 @@ const UserDetailForm = ({userId}) => {
         <div className="pt-2 pb-4 flex flex-row justify-between">
         <label className="label font-semibold" >Account Type *:
         </label>
-        <div className="flex flex-row justify-between">
-          <button type="button" className="btn btn-lg" onClick={() => handleRoleChange("agent")}>
+        <div className="flex justify-center gap-4 mb-6">
+          <button type="button" className={`btn ${formData.userrole === "agent" ? "btn-primary" : "btn-outline"}`}  onClick={() => handleRoleChange("agent")}>
             Agent
           </button>
-          <button type="button" className="btn btn-lg" onClick={() => handleRoleChange("buyer")}>
+   
+          <button type="button" className={`btn ${formData.userrole === "buyer" ? "btn-primary" : "btn-outline"}`} onClick={() => handleRoleChange("buyer")}>
             Buyer
           </button>
           </div>
