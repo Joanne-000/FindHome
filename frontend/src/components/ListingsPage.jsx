@@ -22,13 +22,15 @@ const ListingsPage = () =>{
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("")
   const userId = user?.id
+  const [search, setSearch] = useState("")
+  const [filter, setFilter] = useState("")
 
     const navigate = useNavigate();
     const queryClient = useQueryClient()
 
       const { isLoading, isError, data, error }  = useQuery({ 
-        queryKey: ['listings'], 
-        queryFn:  () => getAllListings()
+        queryKey: ['listings',search], 
+        queryFn:  () => getAllListings(search)
       })
   
       const favMutation = useMutation({
@@ -57,6 +59,15 @@ const ListingsPage = () =>{
         favMutation.mutate({userId,listingId})
      }
      
+     const handleSearchChange = (e) =>{
+      log(e.target.value)
+      setSearch(e.target.value);
+    }
+
+    const handleSearch = (e) => {
+      log("inside handle delete 1")
+      
+      };
     return(
     <>
     <p>{message}</p>
@@ -68,7 +79,21 @@ const ListingsPage = () =>{
       {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
       {data && 
         <div className="flex w-full flex-col lg:flex-row">
-        <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">content</div>
+        <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">
+        <div className="flex flex-row justify-center">
+        <label>
+            <span className="font-semibold">Search: </span>
+            <input
+              name="search"
+              value={search}
+              onChange={handleSearchChange}
+              className="input input-bordered w-60%"
+              required
+            />
+            <button type="button" onClick={handleSearch}>Search</button>
+          </label>
+        </div>
+        </div>
         <div className="divider lg:divider-horizontal"></div>
         <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-3/4 place-items-center">
         <div className="flex flex-wrap justify-center gap-4 p-4">

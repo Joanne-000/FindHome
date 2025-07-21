@@ -3,10 +3,18 @@ const { pool } = require("../index");
 
 const getProperties = async (req, res) => {
   try {
-    const listingsResult = await pool.query(
-      `select * from listings where status = $1`,
-      ["available"]
-    );
+    const { keywords } = req.query;
+
+    let text = `select * from listings where status = $1`;
+    const value = ["available"];
+
+    if (keywords) {
+      text += ` AND (propertyname ILIKE $2 OR address ILIKE $2 OR description ILIKE $2 OR town ILIKE $2 OR nearestmrt ILIKE $2)`;
+      value.push(`%${keywords}%`);
+    }
+    text += ` order by timestamptz desc`;
+    const listingsResult = await pool.query(text, value);
+
     const listings = listingsResult.rows;
 
     if (listings.length === 0) {

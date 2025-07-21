@@ -3,13 +3,15 @@ import { getUserFromToken } from "../contexts/UserContext";
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/listings`;
 
-const getAllListings = async () => {
+const getAllListings = async (search) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
     console.log("get listings start");
+    const params = new URLSearchParams();
+    if (search) params.append("keywords", search);
 
-    const res = await axios.get(`${BASE_URL}`);
+    const res = await axios.get(`${BASE_URL}?${params.toString()}`);
 
     if (res.status !== 200) throw new Error("Failed to show listings");
     const data = await res.data;
