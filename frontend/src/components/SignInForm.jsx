@@ -88,6 +88,8 @@ const SignInForm = () => {
           <div className="field">
             <label >Email:</label>
             <input
+              className="input validator"  
+              placeholder="mail@site.com" 
               type="email"
               autoComplete="off"
               id="email"
@@ -96,6 +98,7 @@ const SignInForm = () => {
               onChange={handleChange}
               required
             />
+            <div className="validator-hint">Enter valid email address</div>
           </div>
           <div >
             <label >Password:</label>

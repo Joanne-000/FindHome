@@ -171,16 +171,23 @@ const UserDetailForm = ({userId}) => {
 
   return (
     <>
-    <div>
-      <h1>
+      <div className="flex justify-center items-center min-h-screen">
+      <fieldset className="bg-base-200 border-base-300 rounded-box border p-6 w-full max-w-md mx-auto">
+      <legend className="fieldset-legend text-3xl text-center">
         {isEditing ? "Edit your Profile" : "Sign Up as a New User"}
-      </h1>
+      </legend>
+      <div>
+      <p className="pb-4 text-xl text-center text-red-500">{message?<span className="font-bold">Warning: </span>:""}{message}</p>
+      </div>
+      <div>
       <p >Fields marked with * are required</p>
-      <p>{message}</p>
+      </div>
       <form onSubmit={handleSubmit}>
-      <div >
-              <label>Email *: 
+          <div className="form-control mb-4">
+          <label className="label flex flex-col items-start font-semibold">Email *: 
               <input
+                className="input validator input-bordered mt-1 w-full" 
+                placeholder="mail@site.com"
                 type="email"
                 id="email"
                 value={email}
@@ -189,14 +196,15 @@ const UserDetailForm = ({userId}) => {
                 disabled={isEditing? true : false}
                 required
                 />
-                <p>Please note that email is not editable after sign up.</p>
+              <span className="text-xs">Please note that email is not editable after sign up.</span>
               </label>
             </div>
         {isEditing && (
           <>
-          <div >
-          <label >Account Type *:
+          <div className="form-control mb-4">
+          <label className="label flex flex-col items-start font-semibold" >Account Type *:
           <input
+          className="input input-bordered mt-1 w-full" 
             type="text"
             id="userrole"
             value={userrole}
@@ -205,9 +213,10 @@ const UserDetailForm = ({userId}) => {
             />
           </label>
         </div>
-            <div >
-        <label >Account Status *:
+        <div className="form-control mb-4">
+        <label className="label flex flex-col items-start font-semibold" >Account Status *:
         <input
+        className="input input-bordered mt-1 w-full"
           type="text"
           id="isactive"
           value={isactive}
@@ -219,9 +228,10 @@ const UserDetailForm = ({userId}) => {
           </>)}
         {!isEditing && (
           <>
-            <div>
-              <label >Password *:
+          <div className="form-control mb-4">
+          <label className="label flex flex-col items-start font-semibold" >Password *:
               <input
+              className="input input-bordered mt-1 w-full" placeholder="Your password" 
                 type="password"
                 id="password"
                 value={password}
@@ -231,9 +241,10 @@ const UserDetailForm = ({userId}) => {
               />
             </label>
             </div>              
-            <div >
-              <label >Confirm Password *:
+            <div className="form-control mb-4">
+            <label className="label flex flex-col items-start font-semibold" >Confirm Password *:
               <input
+              className="input input-bordered mt-1 w-full" placeholder="Confirm password" 
                 type="password"
                 id="passwordconf"
                 value={passwordconf}
@@ -245,9 +256,10 @@ const UserDetailForm = ({userId}) => {
             </div>
             </>
         )}
-        <div >
-          <label >Display Name *:
+          <div className="form-control mb-4">
+          <label className="label flex flex-col items-start font-semibold" >Display Name *:
           <input
+          className="input input-bordered mt-1 w-full" placeholder="Karina" 
             type="text"
             id="displayname"
             value={displayname}
@@ -256,9 +268,10 @@ const UserDetailForm = ({userId}) => {
           />
           </label>
         </div>
-        <div >
-          <label >Contact Number *:
+        <div className="form-control mb-4">
+        <label className="label flex flex-col items-start font-semibold" >Contact Number *:
           <input
+          className="input input-bordered mt-1 w-full" placeholder="12345678" 
             type="text"
             id="contactnumber"
             value={contactnumber}
@@ -269,19 +282,24 @@ const UserDetailForm = ({userId}) => {
         </div>
         {!isEditing && (
 
-        <div >
-        <button type="button" onClick={() => handleRoleChange("agent")}>
-        Agent
-      </button>
-      <button type="button" onClick={() => handleRoleChange("buyer")}>
-        Buyer
-      </button>
+        <div className="pt-2 pb-4 flex flex-row justify-between">
+        <label className="label font-semibold" >Account Type *:
+        </label>
+        <div className="flex flex-row justify-between">
+          <button type="button" className="btn btn-lg" onClick={() => handleRoleChange("agent")}>
+            Agent
+          </button>
+          <button type="button" className="btn btn-lg" onClick={() => handleRoleChange("buyer")}>
+            Buyer
+          </button>
+          </div>
         </div>)}
         {userrole === "agent" ? 
         <>
-        <div >
-          <label >License Id *:
+          <div className="form-control mb-4">
+          <label className="label flex flex-col items-start font-semibold" >License Id *:
           <input
+          className="input input-bordered mt-1 w-full" placeholder="T2555412R" 
             type="text"
             id="licenseid"
             value={licenseid}
@@ -290,9 +308,10 @@ const UserDetailForm = ({userId}) => {
             />
           </label>
         </div>
-        <div >
-          <label >Profile Photo *:
+        <div className="form-control mb-4">
+        <label className="label flex flex-col items-start font-semibold" >Profile Photo *:
           <textarea
+          className="textarea h-24  textarea-bordered mt-1 w-full" placeholder="https://img.abc123image.jpg" 
             type="url"
             id="profilephoto"
             value={profilephoto}
@@ -304,9 +323,10 @@ const UserDetailForm = ({userId}) => {
         </>
         :
         <>
-        <div >
-          <label >Prefer Contact Method *:
+          <div className="form-control mb-4">
+          <label className="label flex flex-col items-start font-semibold" >Prefer Contact Method *:
           <input
+          className="input input-bordered mt-1 w-full" placeholder="whatsapp" 
             type="text"
             id="prefercontactmethod"
             value={prefercontactmethod}
@@ -315,9 +335,10 @@ const UserDetailForm = ({userId}) => {
             />
           </label>
         </div>
-        <div >
-          <label >Prefer Location *:
+        <div className="form-control mb-4">
+        <label className="label flex flex-col items-start font-semibold" >Prefer Location *:
           <input
+          className="input input-bordered mt-1 w-full" placeholder="Tanjung Pagar" 
             type="text"
             id="preferlocation"
             value={preferlocation}
@@ -326,9 +347,10 @@ const UserDetailForm = ({userId}) => {
             />
           </label>
         </div>
-        <div >
-          <label >Prefer Budget *:
+        <div className="form-control mb-4">
+        <label className="label flex flex-col items-start font-semibold" >Prefer Budget *:
           <input
+          className="input input-bordered mt-1 w-full" placeholder="600000" 
             type="number"
             id="preferbudget"
             value={preferbudget}
@@ -337,9 +359,10 @@ const UserDetailForm = ({userId}) => {
             />
           </label>
         </div>
-        <div >
-          <label >Prefer Rooms *:
+        <div className="form-control mb-4">
+        <label className="label flex flex-col items-start font-semibold" >Prefer Rooms *:
           <input
+          className="input input-bordered mt-1 w-full" placeholder="3" 
             type="number"
             id="preferrooms"
             value={preferrooms}
@@ -351,37 +374,38 @@ const UserDetailForm = ({userId}) => {
         </>
         }
         {isEditing ? (
-          <div >
-            <button type="submit" >
+          <div className="label pt-2 pt-4 flex flex-row justify-center">
+            <button type="submit" className="btn" >
               Update Profile
             </button>
-            <button type="button" onClick={handleDelete} disabled={isDeleting }>
+            <button type="button" className="btn" onClick={handleDelete} disabled={isDeleting }>
               Delete Profile
             </button>
-            <button  type="button" onClick={() => navigate("/")}>
+            <button  type="button" className="btn" onClick={() => navigate("/")}>
               Cancel
             </button>
           </div>
         ) : (
-          <div >
-            <button
-              type="submit"
-            >
+          <div className="label pt-2 pt-4 flex flex-row justify-center">
+            <button type="submit" className="btn btn-lg btn-neutral" >
               Sign Up
             </button>
-            <button type="button" onClick={() => navigate("/")}>
+            <button type="button" className="btn" onClick={() => navigate("/")}>
               Cancel
             </button>
           </div>
         )}
       </form>
       {!isEditing && (
+        <div  className="pt-4 pt-4 ">
         <Link to="/login">
           Already have an account? Login Here
         </Link>
+        </div>
       )}
+    </fieldset>
     </div>
-    </>
+  </>
   );
 };
 

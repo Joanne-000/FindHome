@@ -64,8 +64,8 @@ const favourite = async (req, res) => {
       console.log("start in checkFavId");
 
       const result = await client.query(
-        `select * from favourites where listing_id = $1`,
-        [listingId]
+        /* SQL */ `select * from favourites where listing_id = $1 AND user_id = $2`,
+        [listingId, currentUser.id]
       );
       console.log("result.rows", result.rows);
 
@@ -132,7 +132,7 @@ const createFavourite = async (req, res) => {
     };
     const favId = checkFavId();
 
-    if (!listingId) {
+    if (!favId) {
       const text =
         "insert into favourites (user_id, listing_id) values ($1,$2) returning *";
       const value = [userId, listingId];
