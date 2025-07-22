@@ -76,7 +76,7 @@ const SignInForm = () => {
     <div className="card w-full max-w-md bg-base-100 shadow-xl">
       <div className="card-body">
         <h2 className="text-3xl font-bold text-center mb-2">Sign In</h2>
-        <p className="text-center text-error mb-4">{message}</p>
+        <p className="pb-4 text-xl text-center text-red-500">{message?<span className="font-bold">Warning: </span>:""}{message}</p>
 
         {/* Role Selector */}
         <div className="flex justify-center gap-4 mb-6">

@@ -238,7 +238,7 @@ const ListingForm = ({listingId}) => {
       {isEditing ? "Edit Listing" : "Create a New Listing"}
     </h1>
     <p className="text-sm text-gray-500">Fields marked with * are required.</p>
-    <p>{message}</p>
+    <p className="pb-4 text-xl text-center text-red-500">{message?<span className="font-bold">Warning: </span>:""}{message}</p>
 
     <form onSubmit={handleSubmit} className="space-y-8">
 

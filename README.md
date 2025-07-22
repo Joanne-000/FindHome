@@ -1,8 +1,10 @@
 # FindHome
 
-#### GitHub Repo: https://github.com/Joanne-000/FindHome.git
+GitHub Repo: https://github.com/Joanne-000/FindHome.git <br>
+Deployment: https://findhomeproperty.netlify.app/
 
-#### Deployment: https://findhomeproperty.netlify.app/
+FindHome
+is a full-stack property listing web application that allows users to browse, view, and manage real estate listings. Visitors can explore available properties, view details and images, and inquire about listings. Registered users can sign up, log in, save their favorite properties, and manage their profile.
 
 <img src="./assets/FindHome.png" alt="Homepage" width="60%" height=auto><br>
 

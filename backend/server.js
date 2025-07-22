@@ -12,6 +12,7 @@ const app = express();
 // const PORT = process.env.PORT || 3000;
 const PORT = 3000;
 
+//frontend domain
 const allowedOrigins = [
   "http://localhost:5173",
   "https://findhomeproperty.netlify.app",
@@ -26,6 +27,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.static("public"));
 
 app.use(express.json());
 app.use(logger("dev"));
@@ -42,4 +44,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Server error" });
 });
+
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}`));
+
+module.exports = { allowedOrigins };

@@ -3,7 +3,6 @@
 import './App.css'
 import debug from "debug";
 import { Routes, Route } from "react-router";
-// import { useState } from 'react'
 
 
 import UserDetailForm from "./components/UserDetailForm";
@@ -18,11 +17,12 @@ import FavPage from './components/FavPage';
 import NavBar from './components/Navbar';
 import HomePage from './components/HomePage';
 import NotFoundPage from './components/NotFOundPage';
+import ProductDisplay from './components/ProductDisplay';
 
 const log = debug("list:App");
 
 function App() {
-  
+
   log("Loading Routes");
   return (
     <>
@@ -38,8 +38,8 @@ function App() {
         <Route path="/listings/:listingId" element={<OneListingPage/>} />
         <Route path="/profile/edit" element={<EditProfile />} />
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/checkout" element={<ProductDisplay />} />
         <Route path="*" element={<NotFoundPage />} />
-
       </Routes>
     </>
   )

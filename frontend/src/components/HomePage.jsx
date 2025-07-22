@@ -72,7 +72,7 @@ const HomePage = () =>{
      
     return(
    <>
-   <header className="card bg-base-300 rounded-box  flex-row items-center justify-center h-24 w-full mb-6">
+   <header className="card shadow-xl bg-base-300 rounded-box  flex-row items-center justify-center h-24 w-full mb-6">
       <img src={FindHome} alt="Logo" className="h-16 w-16 mr-4" />
     <h1 className="text-2xl font-semibold mb-1">Recently Posted Listings</h1>
     </header>
@@ -84,10 +84,10 @@ const HomePage = () =>{
       :""}
    {isError? <p className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</p> : ""}
    {data && 
-    <div className="card bg-base-300 rounded-box grid h-full w-full lg:h-3/4 place-items-center">
+    <div className="card shadow-xl bg-base-300 rounded-box grid h-full w-full lg:h-3/4 place-items-center">
     <div className="flex flex-wrap justify-center gap-4 p-4">
       {data.map((item)=>(
-          <div key={item.id}  className="card bg-base-200 w-96 m-3 shadow-sm">
+          <div key={item.id}  className="card bg-base-200 w-96 m-3 shadow-lg">
     <div className="h-48 w-full overflow-hidden rounded-t-md">
     <Swiper
               slidesPerView={1}

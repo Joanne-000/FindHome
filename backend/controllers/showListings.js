@@ -19,7 +19,7 @@ const getProperties = async (req, res) => {
     const listings = listingsResult.rows;
 
     if (listings.length === 0) {
-      throw new Error("Listing not found.");
+      res.status(200).json(listings);
     }
 
     const listingwImagesP = listings.map(async (listing) => {
@@ -49,7 +49,7 @@ const getTop5Properties = async (req, res) => {
     const listings = listingsResult.rows;
 
     if (listings.length === 0) {
-      throw new Error("Listing not found.");
+      res.status(200).json(listings);
     }
 
     const listingwImagesP = listings.map(async (listing) => {

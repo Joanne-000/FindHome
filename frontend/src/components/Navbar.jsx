@@ -40,6 +40,7 @@ const NavBar = () => {
       <ul className="menu menu-horizontal text-xl ">
         {user ? (
           <>
+            <li><Link to="/checkout" className="hover:bg-yellow-300 bg-yellow-300 text-xl">Premium User</Link></li>
             <li><Link to="/profile" className="hover:bg-yellow-300 text-xl">Profile</Link></li>
             <li><Link to="/" className="hover:bg-yellow-300 text-xl" onClick={handleSignOut}>Sign Out</Link></li>
           </>

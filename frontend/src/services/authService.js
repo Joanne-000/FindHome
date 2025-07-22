@@ -63,4 +63,18 @@ const getTop5Listings = async () => {
   }
 };
 
-export { signUp, signIn, getTop5Listings };
+const checkout = async () => {
+  try {
+    console.log("checkout");
+
+    const res = await axios.post(`${BASE_URL}/create-checkout-session`);
+    console.log(res.data);
+    const session = await res.data;
+    window.location.href = session.url; // Stripe checkout page
+  } catch (err) {
+    console.log("Stripe session error:", err);
+    alert("Payment session failed to start. Please try again.");
+    throw err;
+  }
+};
+export { signUp, signIn, getTop5Listings, checkout };

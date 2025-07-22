@@ -60,7 +60,7 @@ const ListingsPage = () =>{
     if (isError) {
       return (
       <div className="flex justify-center">
-        <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> Something went wrong. <br/> <span>{error?.response?.data?.err}</span> </h1>
+        <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> Something went wrong. <br/> {error?.response?.data?.err}<span>{error?.response?.data?.err}</span> </h1>
       </div>
     )}
 
@@ -90,9 +90,8 @@ const ListingsPage = () =>{
           </div>
           :""}
       {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
-      {data && 
         <div className="flex w-full flex-col lg:flex-row">
-        <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">
+        <div className="card shadow-xl bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">
         <div className="flex flex-row justify-center">
         <label>
             <span className="font-semibold">Search: </span>
@@ -108,12 +107,15 @@ const ListingsPage = () =>{
         </div>
         </div>
         <div className="divider lg:divider-horizontal"></div>
-        <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-3/4 place-items-center">
+        <div className="card shadow-xl bg-base-300 rounded-box grid h-full w-full lg:w-3/4 place-items-center">
         <div className="flex flex-wrap justify-center gap-4 p-4">
-          {data.map((item)=>(
-              <div key={item.id}  className="card bg-base-200 w-96 m-3 shadow-sm">
-        <div className="h-48 w-full overflow-hidden rounded-t-md">
-        <Swiper
+        {data.length === 0 ? 
+          <p className="text-lg text-center text-neutral">No listings found for your search.</p>
+         : 
+          data.map((item)=>(
+          <div key={item.id}  className="card bg-base-200 w-96 m-3 shadow-lg">
+            <div className="h-48 w-full overflow-hidden rounded-t-md">
+            <Swiper
                   slidesPerView={1}
                   spaceBetween={30}
                   loop={true}
@@ -159,11 +161,10 @@ const ListingsPage = () =>{
                 </div>
               </div>
           ))}
-          </div>
         </div>
         </div>
-    }
-      </>
+        </div>
+        </>
     )
 }
 

@@ -32,7 +32,7 @@ const getFavourites = async (req, res) => {
     const listings = favResult.rows;
 
     if (listings.length === 0) {
-      throw new Error("No favourite listings");
+      res.status(200).json(listings);
     }
 
     const listingwImagesP = listings.map(async (listing) => {
