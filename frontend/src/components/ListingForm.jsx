@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router";
+import { NumericFormat } from "react-number-format";
 import {
   getOneListing,
   createListing,
@@ -298,8 +299,11 @@ const ListingForm = ({ listingId }) => {
           <div className="grid md:grid-cols-3 gap-6">
             <label className="form-control">
               <span className="label-text font-semibold">Price *</span>
-              <input
-                type="number"
+              <NumericFormat
+                prefix={"$"}
+                thousandSeparator={true}
+                allowNegative={false}
+                decimalScale={2}
                 name="price"
                 value={price}
                 onChange={handleChange}
@@ -339,8 +343,10 @@ const ListingForm = ({ listingId }) => {
           <div className="grid md:grid-cols-3 gap-6">
             <label className="form-control">
               <span className="label-text font-semibold">Unit Size (m²) *</span>
-              <input
-                type="number"
+              <NumericFormat
+                prefix={"$"}
+                thousandSeparator={true}
+                allowNegative={false}
                 name="unitsize"
                 value={unitsize}
                 onChange={handleChange}
@@ -351,8 +357,10 @@ const ListingForm = ({ listingId }) => {
 
             <label className="form-control">
               <span className="label-text font-semibold">Bedrooms *</span>
-              <input
-                type="number"
+              <NumericFormat
+                prefix={"$"}
+                thousandSeparator={true}
+                allowNegative={false}
                 name="bedroom"
                 value={bedroom}
                 onChange={handleChange}
@@ -363,8 +371,10 @@ const ListingForm = ({ listingId }) => {
 
             <label className="form-control">
               <span className="label-text font-semibold">Bathrooms *</span>
-              <input
-                type="number"
+              <NumericFormat
+                prefix={"$"}
+                thousandSeparator={true}
+                allowNegative={false}
                 name="bathroom"
                 value={bathroom}
                 onChange={handleChange}

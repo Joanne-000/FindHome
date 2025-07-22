@@ -3,8 +3,7 @@ import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router";
 import { signUp } from "../services/authService";
 import { getUser, updateUser, deleteUser } from "../services/userService";
-// import { deleteUser } from "../services/userService";
-// import isEmail from "validator/lib/isEmail";
+import { NumericFormat } from "react-number-format";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import debug from "debug";
 import { AxiosError } from "axios";
@@ -399,7 +398,7 @@ const UserDetailForm = ({ userId }) => {
                     Prefer Budget *:
                     <input
                       className="input input-bordered mt-1 w-full"
-                      placeholder="600000"
+                      placeholder="60000"
                       type="number"
                       id="preferbudget"
                       value={preferbudget}

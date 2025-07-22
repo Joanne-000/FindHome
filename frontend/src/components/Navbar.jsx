@@ -34,34 +34,41 @@ const NavBar = () => {
                   Favourites
                 </Link>
               </li>
-              <li>
-                <Link to="/enquiries" className="hover:bg-yellow-300">
-                  Enquiries
-                </Link>
-              </li>
+              {user.userrole === "agent" ? (
+                <li>
+                  <Link to="/enquiries" className="hover:bg-yellow-300">
+                    Enquiries
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
           )}
         </ul>
       </div>
-
+      <div className="navbar-end hidden lg:flex text-lg">
+        <ul className="menu menu-horizontal text-xl ">
+          {user.userrole === "agent" ? (
+            <li>
+              <Link
+                to="/listings/new"
+                className="hover:bg-yellow-300 text-neutral btn btn-soft btn-warning text-xl"
+              >
+                Add Listing
+              </Link>
+            </li>
+          ) : (
+            ""
+          )}
+        </ul>
+      </div>
       <div className="navbar-end hidden lg:flex text-lg">
         <ul className="menu menu-horizontal text-xl ">
           {user ? (
             <>
-              {user.userrole === "agent" ? (
-                <li>
-                  <Link
-                    to="/checkout"
-                    className="hover:bg-yellow-300 bg-yellow-300 text-xl"
-                  >
-                    Premium User
-                  </Link>
-                </li>
-              ) : (
-                ""
-              )}
               <li>
                 <Link to="/profile" className="hover:bg-yellow-300 text-xl">
                   Profile

@@ -10,6 +10,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import { AxiosError } from "axios";
+import no_image from "../assets/no_image.png";
 
 const log = debug("list:Fav Page");
 
@@ -114,9 +115,9 @@ const FavPage = () => {
         ""
       )}
 
-      <div className="flex w-full flex-col lg:flex-row">
+      <div className="flex w-full flex-col lg:flex-row p-3">
         <div className="card shadow-xl bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">
-          <div className="flex flex-row justify-center">
+          <div className="flex flex-row justify-center p-5">
             <label>
               <span className="font-semibold">Search: </span>
               <input
@@ -161,16 +162,26 @@ const FavPage = () => {
                       modules={[Pagination, Navigation]}
                       className="h-full w-full"
                     >
-                      {item.images.map((image) => (
+                      {item.images.length === 0 ? (
                         <SwiperSlide>
                           <img
                             className="h-full w-full object-cover"
-                            key={image.id}
-                            src={image.imageurl}
-                            alt={item.propertyname}
+                            src={no_image}
+                            alt="no image"
                           ></img>
                         </SwiperSlide>
-                      ))}
+                      ) : (
+                        item.images.map((image) => (
+                          <SwiperSlide>
+                            <img
+                              className="h-full w-full object-cover"
+                              key={image.id}
+                              src={image.imageurl}
+                              alt={item.propertyname}
+                            ></img>
+                          </SwiperSlide>
+                        ))
+                      )}
                     </Swiper>
                   </div>
                   <div className="card-body">
@@ -180,9 +191,18 @@ const FavPage = () => {
                       <div>{item.bedroom} bed</div>
                       <div>{item.bathroom} bath</div>
                     </div>
-                    <div>{item.price}</div>
-                    <div className="card-actions justify-end">
-                      <div>
+                    <div>
+                      $
+                      {Intl.NumberFormat("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }).format(Number(item.price))}
+                    </div>
+                    <div className="card-actions justify-between">
+                      <div className="text-sm text-gray-500 italic">
+                        📅: {new Date(item.timestamptz).toLocaleDateString()}
+                      </div>
+                      <div className="flex flex-row justify-end">
                         <button
                           className="btn btn-warning"
                           name="detBtn"

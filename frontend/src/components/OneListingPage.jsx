@@ -165,7 +165,11 @@ const OneListingPage = () => {
               </Swiper>
 
               <div className="bg-base-100 p-4 rounded-lg shadow-sm text-lg font-semibold">
-                💰 Price: ${price}
+                💰 Price: $
+                {Intl.NumberFormat("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(Number(price))}
               </div>
 
               <div className="flex flex-wrap gap-4">
