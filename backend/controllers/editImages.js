@@ -4,8 +4,6 @@ const editImages = async (client, req, listingId) => {
   try {
     await client.query("BEGIN");
     const { imageurls } = req.body;
-    console.log("imageurls", imageurls);
-    console.log("req.body", req.body);
 
     await client.query(`delete from images where listing_id = $1`, [listingId]);
     addImages(client, req, listingId);

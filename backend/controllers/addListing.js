@@ -1,5 +1,4 @@
 const addListing = async (client, req) => {
-  console.log("start in addListing");
   const {
     agent_id,
     propertyname,

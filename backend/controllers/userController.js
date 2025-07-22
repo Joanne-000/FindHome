@@ -50,7 +50,6 @@ const updateUser = async (req, res) => {
 };
 
 const destroyUser = async (req, res) => {
-  console.log(req.body);
   try {
     const currentUser = loadUserFromToken(req);
     const userId = req.params.userId;

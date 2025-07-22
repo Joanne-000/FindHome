@@ -7,7 +7,6 @@ const getAllListings = async (search) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
-    console.log("get listings start");
     const params = new URLSearchParams();
     if (search) params.append("keywords", search);
 
@@ -30,9 +29,6 @@ const getOneListing = async (listingId) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
-    console.log("get 1 listing start");
-    console.log("listingId", listingId);
-
     const res = await axios.get(`${BASE_URL}/${listingId}`);
 
     if (res.status !== 200) throw new Error("Failed to show 1 listing");
@@ -50,7 +46,6 @@ const getOneListing = async (listingId) => {
 const createListing = async (userId, userFormData) => {
   try {
     const currentUser = getUserFromToken();
-    console.log(userFormData);
 
     if (currentUser.id !== userId || currentUser.userrole !== "agent") {
       throw new Error("Unauthorized");
@@ -111,8 +106,6 @@ const updateListing = async (userId, listingId, userFormData) => {
 };
 
 const deleteListing = async (userId, listingId, userFormData) => {
-  console.log("userFormData in service", userFormData);
-
   try {
     const currentUser = getUserFromToken();
     if (currentUser.id !== userId) {

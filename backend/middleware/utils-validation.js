@@ -38,7 +38,6 @@ const dataValidation = (req) => {
   }
 
   if (userrole !== "buyer" && userrole !== "agent") {
-    console.log(req.body);
     throw new Error("Account type can only be either agent or buyer");
   }
 

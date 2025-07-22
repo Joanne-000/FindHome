@@ -1,6 +1,5 @@
 const addImages = async (client, req, listingId) => {
   try {
-    console.log("start in addImages");
     const { imageurls } = req.body;
 
     const text = `insert into images (listing_id,  imageurl) values ($1,$2) returning *`;

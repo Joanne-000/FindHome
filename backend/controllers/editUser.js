@@ -1,7 +1,4 @@
 const editUser = async (pool, req, res, currentUser) => {
-  console.log("start in function");
-  console.log("req", req.body);
-
   const {
     email,
     displayname,
@@ -46,9 +43,7 @@ const editUser = async (pool, req, res, currentUser) => {
 };
 
 const delUser = async (pool, req, res, currentUser) => {
-  console.log("start in function");
   const { email, isactive } = req.body;
-  console.log("req.body", req.body);
 
   const role = currentUser.userrole + "s";
   let user;

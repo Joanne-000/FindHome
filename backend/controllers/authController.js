@@ -18,7 +18,6 @@ const { userSignUp } = require("../controllers/signUp");
 const signUp = async (req, res) => {
   const client = await pool.connect();
 
-  console.log("start in signup");
   try {
     await client.query("BEGIN");
     dataValidation(req);
@@ -54,11 +53,8 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
   const client = await pool.connect();
 
-  console.log("start in signin");
-
   try {
     const { email, password } = req.body;
-    console.log("start in try");
     await client.query("BEGIN");
     signinValidation(req);
 

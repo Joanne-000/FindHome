@@ -78,7 +78,6 @@ const getOneProperty = async (req, res) => {
       [listingId, "available"]
     );
     const listing = listingResult.rows[0];
-    console.log(listing);
 
     const agentId = listing.agent_id;
 
@@ -96,7 +95,6 @@ const getOneProperty = async (req, res) => {
       agentId,
     ]);
     const agent = agentResult.rows;
-    console.log(agent);
 
     res.status(200).json({ listing, images, agent });
   } catch (err) {

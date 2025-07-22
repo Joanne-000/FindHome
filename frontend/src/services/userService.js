@@ -7,11 +7,7 @@ const getUser = async (userId) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
-    console.log("get user start");
-
     const currentUser = await getUserFromToken();
-    console.log("currentUser", currentUser);
-    console.log("userId", userId);
 
     if (!userId) {
       throw new Error("Please log in");
@@ -19,7 +15,6 @@ const getUser = async (userId) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      console.log("get user");
       const res = await axios.get(`${BASE_URL}/${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -74,8 +69,6 @@ const updateUser = async (userId, userFormData) => {
 
 // if users were to delete an account, we will set it as inactive instead of deleting them
 const deleteUser = async (userId, userFormData) => {
-  console.log("userFormData in service", userFormData);
-
   try {
     const currentUser = getUserFromToken();
     if (currentUser.id !== userId) {

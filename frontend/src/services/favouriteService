@@ -12,9 +12,6 @@ const getAllFavourites = async (userId) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      console.log("get fav start");
-      console.log("userId", userId);
-
       const res = await axios.get(`${BASE_URL}/${userId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -39,8 +36,6 @@ const getAllFavourites = async (userId) => {
 const checkFavourite = async (userId, listingId) => {
   try {
     const currentUser = getUserFromToken();
-    console.log(`userId`, userId);
-    console.log(`listingId`, listingId);
 
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
@@ -74,10 +69,7 @@ const checkFavourite = async (userId, listingId) => {
 const createFav = async (userId, listingId) => {
   try {
     const currentUser = getUserFromToken();
-    console.log(`userId`, userId);
-    console.log(`listingId`, listingId);
 
-    console.log(`Bearer ${localStorage.getItem("token")}`);
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {

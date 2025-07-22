@@ -52,7 +52,12 @@ const FavPage = () =>{
        }
      
       //  log(data)
-       
+      if (!user) {
+        const timeout = setTimeout(() => navigate("/signin"),(1000*5))
+        const clearTimeOut = () => clearTimeout(timeout)
+        return clearTimeOut, <p>You are not signed in. You will be directing to sign in page soon...</p>
+      }
+      
     return(
     <>
       <h1 className="text-3xl p-3 font-bold text-center text-warning mb-4">Favourite List</h1>

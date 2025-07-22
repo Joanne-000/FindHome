@@ -2,7 +2,6 @@ const bcrypt = require("bcrypt");
 
 const userSignUp = async (client, req, res) => {
   const saltRounds = 12;
-  console.log("start in function");
   const {
     email,
     password,

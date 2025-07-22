@@ -47,10 +47,8 @@ const getFavourites = async (req, res) => {
 };
 
 const favourite = async (req, res) => {
-  console.log("start in create fav");
   const client = await pool.connect();
   try {
-    console.log("start in try");
     await client.query("BEGIN");
     const currentUser = loadUserFromToken(req);
     const userId = req.params.userId;
@@ -61,13 +59,10 @@ const favourite = async (req, res) => {
     }
 
     const checkFavId = async () => {
-      console.log("start in checkFavId");
-
       const result = await client.query(
         /* SQL */ `select * from favourites where listing_id = $1 AND user_id = $2`,
         [listingId, currentUser.id]
       );
-      console.log("result.rows", result.rows);
 
       if (result.rows.length === 0) {
         return false;
@@ -76,16 +71,12 @@ const favourite = async (req, res) => {
       return favId;
     };
     const favId = await checkFavId();
-    console.log("favId", favId);
 
     if (favId) {
-      console.log("start in delete Fav");
       await client.query(`delete from favourites where id = $1`, [favId]);
       await client.query("COMMIT");
       res.status(200).json("Remove listing from favourite list");
     } else {
-      console.log("start in insert Fav");
-
       const text =
         "insert into favourites (user_id, listing_id) values ($1,$2) returning *";
       const value = [userId, listingId];
@@ -105,10 +96,8 @@ const favourite = async (req, res) => {
 };
 
 const createFavourite = async (req, res) => {
-  console.log("start in create fav", req);
   const client = await pool.connect();
   try {
-    console.log("start in try");
     await client.query("BEGIN");
     const currentUser = loadUserFromToken(req);
     const userId = req.params.userId;
