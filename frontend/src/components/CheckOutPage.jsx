@@ -21,7 +21,6 @@ const CheckOutPage = () => {
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout, then take the query in the params
     const query = new URLSearchParams(window.location.search);
-    console.log("query", query);
     if (query.get("success")) {
       setMessage("Order placed! You will receive an email confirmation.");
     }

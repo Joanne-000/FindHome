@@ -103,7 +103,6 @@ const dataValidation = (req) => {
     }
 
     const budgetNum = Number(String(preferbudget).replace(/\$|,/g, ""));
-    console.log(budgetNum);
     if (!budgetNum || isNaN(budgetNum) || budgetNum < 50000) {
       throw new Error(
         "Preferred budget must be a valid number greater than $50,000.00"

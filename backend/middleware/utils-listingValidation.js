@@ -26,7 +26,6 @@ const dataValidation = (req) => {
   }
 
   const listingPrice = Number(String(price).replace(/\$|,/g, ""));
-  console.log(listingPrice);
   if (!listingPrice || isNaN(listingPrice) || listingPrice < 50000) {
     throw new Error(
       "Listing price must be a valid number greater than $50,000.00"

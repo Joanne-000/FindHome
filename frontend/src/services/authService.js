@@ -4,13 +4,11 @@ import { getUserFromToken } from "../contexts/UserContext";
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}`;
 
 const signUp = async (formData) => {
-  console.log(formData);
   try {
     const res = await axios.post(`${BASE_URL}/signup`, formData);
     const data = await res.data;
 
     if (data.err) {
-      console.log(data.err);
       throw new Error(data.err);
     }
 
@@ -68,7 +66,6 @@ const getTop5Listings = async () => {
 
 const checkout = async (userId) => {
   try {
-    console.log("checkout");
     const currentUser = await getUserFromToken();
 
     if (!userId) {
@@ -77,8 +74,6 @@ const checkout = async (userId) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      console.log("checkout userId", userId);
-
       const res = await axios.post(
         `${BASE_URL}/${userId}/create-checkout-session`,
         {},
@@ -89,10 +84,8 @@ const checkout = async (userId) => {
           },
         }
       );
-      console.log(res.data);
       const session = await res.data;
       window.location.href = session.url; // Stripe checkout page
-      console.log("window.location.href", window.location.href);
     }
   } catch (err) {
     console.log("Stripe session error:", err);

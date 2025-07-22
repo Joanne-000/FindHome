@@ -9,7 +9,6 @@ const checkout = async (req, res) => {
     throw new Error("Unauthorized User");
   }
 
-  console.log("Creating Stripe session...");
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
@@ -24,7 +23,6 @@ const checkout = async (req, res) => {
   });
 
   res.json({ url: session.url });
-  console.log("Session URL:", session);
 };
 
 module.exports = {
