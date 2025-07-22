@@ -29,13 +29,12 @@ const ListingForm = ({ listingId }) => {
     imageurl1:
       "https://sg1-cdn.pgimgs.com/projectnet-project/218526/ZPPHO.153261118.R800X800.jpg",
   });
-  const [inputPrice, setInputPrice] = useState(600000);
 
   const [formData, setFormData] = useState({
     agent_id: userId,
     propertyname: "Blk 234 Andrew Road",
     address: "Blk 234 Andrew Road Singapore 334234",
-    price: inputPrice,
+    price: 60000,
     town: "Novena",
     nearestmrt: "Novena",
     unitsize: "89",
@@ -97,8 +96,6 @@ const ListingForm = ({ listingId }) => {
     imageurls,
   } = formData;
 
-  const { imageurl1, imageurl2, imageurl3, imageurl4, imageurl5 } = images;
-
   useEffect(() => {
     const fetchListingDetails = async () => {
       const listingDet = await getOneListing(listingId);
@@ -146,7 +143,6 @@ const ListingForm = ({ listingId }) => {
       if (error instanceof AxiosError) {
         setMessage(error.response?.data?.err);
       } else {
-        // Fallback for unexpected error types
         setMessage("An unknown error occurred.");
       }
     },
@@ -164,7 +160,6 @@ const ListingForm = ({ listingId }) => {
       if (error instanceof AxiosError) {
         setMessage(error.response?.data?.err);
       } else {
-        // Fallback for unexpected error types
         setMessage("An unknown error occurred.");
       }
     },
@@ -180,7 +175,6 @@ const ListingForm = ({ listingId }) => {
       if (error instanceof AxiosError) {
         setMessage(error.response?.data?.err);
       } else {
-        // Fallback for unexpected error types
         setMessage("An unknown error occurred.");
       }
     },
@@ -211,12 +205,6 @@ const ListingForm = ({ listingId }) => {
     setMessage("");
     setImages({ ...images, [evt.target.name]: evt.target.value });
   };
-
-  // const handleImageChange = (e, index) => {
-  //   const newImages = [...images];
-  //   newImages[index] = e.target.value;
-  //   setImages(newImages);
-  // };
 
   const handleSubmit = (evt) => {
     evt.preventDefault();

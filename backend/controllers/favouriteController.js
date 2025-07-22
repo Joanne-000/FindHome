@@ -1,8 +1,4 @@
 const { loadUserFromToken } = require("../middleware/utils");
-const { addListing } = require("./addListing");
-const { addImages } = require("./addImages");
-const { editListing, delListing } = require("./editListing");
-const { editImages } = require("./editImages");
 
 require("dotenv").config();
 const { pool } = require("../index");
@@ -174,4 +170,6 @@ const destroyFavourite = async (req, res) => {
 module.exports = {
   getFavourites,
   favourite,
+  createFavourite,
+  destroyFavourite,
 };
