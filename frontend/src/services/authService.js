@@ -1,4 +1,6 @@
 import axios from "axios";
+import { getUserFromToken } from "../contexts/UserContext";
+
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}`;
 
 const signUp = async (formData) => {
@@ -63,14 +65,34 @@ const getTop5Listings = async () => {
   }
 };
 
-const checkout = async () => {
+const checkout = async (userId) => {
   try {
     console.log("checkout");
+    const currentUser = await getUserFromToken();
 
-    const res = await axios.post(`${BASE_URL}/create-checkout-session`);
-    console.log(res.data);
-    const session = await res.data;
-    window.location.href = session.url; // Stripe checkout page
+    if (!userId) {
+      throw new Error("Please log in");
+    }
+    if (currentUser.id !== userId) {
+      throw new Error("Unauthorized");
+    } else {
+      console.log("checkout userId", userId);
+
+      const res = await axios.post(
+        `${BASE_URL}/${userId}/create-checkout-session`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res.data);
+      const session = await res.data;
+      window.location.href = session.url; // Stripe checkout page
+      console.log("window.location.href", window.location.href);
+    }
   } catch (err) {
     console.log("Stripe session error:", err);
     alert("Payment session failed to start. Please try again.");

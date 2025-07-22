@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import premium_user from "../assets/premium_user.png"
 import { checkout } from "../services/authService";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { useNavigate } from "react-router";
 
 const Message = ({ message }) => (
 <section>
@@ -8,13 +11,17 @@ const Message = ({ message }) => (
 </section>
 );
 
-const ProductDisplay = () => {
+const CheckOutPage = () => {
+  const navigate = useNavigate()
 const [message, setMessage] = useState("");
+const { user } = useContext(UserContext);
+
+const userId = user?.id;
 
 useEffect(() => {
   // Check to see if this is a redirect back from Checkout
   const query = new URLSearchParams(window.location.search);
-
+console.log("query",query)
   if (query.get("success")) {
     setMessage("Order placed! You will receive an email confirmation.");
   }
@@ -28,18 +35,21 @@ useEffect(() => {
 
 const handleSubmit = async (evt) => {
     evt.preventDefault();
-    await checkout();
+    await checkout(userId);
   };
 
 return (
     <>
     {message ? (
     <>
-        <div className="flex justify-center py-10 px-4">
+        <div className="flex justify-center flex-column py-10 px-4">
             <div className="card w-full text-center p-10 max-w-md bg-base-100 text-lg shadow-xl">
             <Message message={message} />
             </div>
         </div>
+        <div className="flex flex-column justify-center">
+            <button className="btn" onClick={()=>navigate("/")}>Back to Home</button>
+            </div>
     </>) : 
     <>
     <section className="flex justify-center py-10 px-4">
@@ -65,6 +75,6 @@ return (
   );
 }
 
-export default ProductDisplay
+export default CheckOutPage
 
 

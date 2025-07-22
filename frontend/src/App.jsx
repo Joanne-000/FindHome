@@ -17,7 +17,7 @@ import FavPage from './components/FavPage';
 import NavBar from './components/Navbar';
 import HomePage from './components/HomePage';
 import NotFoundPage from './components/NotFOundPage';
-import ProductDisplay from './components/ProductDisplay';
+import CheckOutPage from './components/CheckOutPage';
 
 const log = debug("list:App");
 
@@ -38,7 +38,7 @@ function App() {
         <Route path="/listings/:listingId" element={<OneListingPage/>} />
         <Route path="/profile/edit" element={<EditProfile />} />
         <Route path="/profile" element={<UserProfile />} />
-        <Route path="/checkout" element={<ProductDisplay />} />
+        <Route path="/checkout" element={<CheckOutPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
