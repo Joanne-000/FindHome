@@ -2,26 +2,6 @@ import React, { useState, useEffect } from "react";
 import premium_user from "../assets/premium_user.png"
 import { checkout } from "../services/authService";
 
-const product = () =>{
-    <section>
-    <div className="product">
-        <img
-        src={premium_user}
-        alt="Find Home Premium User"
-        />
-        <div className="description">
-            <h3>Find Home Premium User Subscription</h3>
-            <h5>$1.00</h5>
-        </div>
-    </div>
-        <form action="/create-checkout-session" method="POST">
-            <button type="submit">
-             Checkout
-            </button>
-        </form>
-    </section>
-  }
-
 const Message = ({ message }) => (
 <section>
     <p>{message}</p>
