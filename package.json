@@ -1,5 +1,5 @@
 {
-  "name":"findhome",
+  "name": "findhome",
   "private": true,
   "scripts": {
     "dev": "turbo run dev"
@@ -11,5 +11,8 @@
   "workspaces": [
     "frontend",
     "backend"
-  ]
+  ],
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
 }

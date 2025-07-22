@@ -2,6 +2,9 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
+      "dependencies": {
+        "cors": "^2.8.5",
+      },
       "devDependencies": {
         "turbo": "^2.5.5",
       },

@@ -9,12 +9,22 @@ const listingRouter = require("./routers/listingRouter");
 const favouriteRouter = require("./routers/favouriteRouter");
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://findhomeproperty.netlify.app/",
+];
 
 //connect to postgres
 const { pool } = require("./index");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(logger("dev"));
 app.use("/", authRouter);
@@ -22,4 +32,4 @@ app.use("/", authRouter);
 app.use("/listings", listingRouter);
 app.use("/favourites", favouriteRouter);
 app.use("/profile", userRouter);
-app.listen(port, () => console.log(`Example app listening on port ${port}`));
+app.listen(PORT, () => console.log(`Example app listening on port ${PORT}`));
