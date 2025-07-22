@@ -5,7 +5,7 @@ const NotFoundPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
       <h1 className="text-5xl font-bold text-red-600">404</h1>
       <p className="text-xl mt-2">
-        Oops! The page you’re looking for doesn’t exist.
+        Oops! The page you're looking for doesn't exist.
       </p>
       <Link
         to="/"
