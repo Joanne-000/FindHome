@@ -40,6 +40,7 @@ const userSignUp = async (client, req, res) => {
 
     user = result.rows[0];
   } else {
+    const budgetNum = Number(String(preferbudget).replace(/\$|,/g, ""));
     const buyerText = `insert into ${role} (email, hashedpw, displayname, contactnumber, userrole,prefercontactmethod, preferlocation, preferbudget,preferrooms, isactive) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning *`;
     const buyerValue = [
       email,
@@ -49,7 +50,7 @@ const userSignUp = async (client, req, res) => {
       userrole,
       prefercontactmethod,
       preferlocation,
-      preferbudget,
+      budgetNum,
       preferrooms,
       isactive,
     ];

@@ -5,8 +5,6 @@ const loadUserFromToken = (req) => req.user;
 const createPayload = (user) => {
   return {
     id: user.id,
-    email: user.email,
-    hashedpw: user.hashedpw,
     displayname: user.displayname,
     contactnumber: user.contactnumber,
     userrole: user.userrole,

@@ -31,8 +31,8 @@ const UserDetailForm = ({ userId }) => {
     isactive: "active",
     prefercontactmethod: "",
     preferlocation: "",
-    preferbudget: "",
-    preferrooms: "",
+    preferbudget: 600000,
+    preferrooms: 3,
   });
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const UserDetailForm = ({ userId }) => {
       }
     },
   });
-
+  log(formData);
   const deleteMutation = useMutation({
     mutationFn: ({ userId, formData }) => deleteUser(userId, formData),
     onSuccess: (data) => {
@@ -396,14 +396,17 @@ const UserDetailForm = ({ userId }) => {
                 <div className="form-control mb-4">
                   <label className="label flex flex-col items-start font-semibold">
                     Prefer Budget *:
-                    <input
-                      className="input input-bordered mt-1 w-full"
-                      placeholder="60000"
-                      type="number"
+                    <NumericFormat
+                      prefix={"$"}
+                      thousandSeparator={true}
+                      allowNegative={false}
+                      decimalScale={2}
                       id="preferbudget"
                       value={preferbudget}
                       name="preferbudget"
                       onChange={handleChange}
+                      className="input input-bordered"
+                      required
                     />
                   </label>
                 </div>

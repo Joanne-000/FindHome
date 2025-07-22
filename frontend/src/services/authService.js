@@ -4,6 +4,7 @@ import { getUserFromToken } from "../contexts/UserContext";
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}`;
 
 const signUp = async (formData) => {
+  console.log(formData);
   try {
     const res = await axios.post(`${BASE_URL}/signup`, formData);
     const data = await res.data;
