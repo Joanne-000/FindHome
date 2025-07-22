@@ -78,7 +78,6 @@ const SignInForm = () => {
         <h2 className="text-3xl font-bold text-center mb-2">Sign In</h2>
         <p className="pb-4 text-xl text-center text-red-500">{message?<span className="font-bold">Warning: </span>:""}{message}</p>
 
-        {/* Role Selector */}
         <div className="flex justify-center gap-4 mb-6">
           <button
             type="button"
@@ -97,7 +96,6 @@ const SignInForm = () => {
         </div>
 
         <form autoComplete="off" onSubmit={handleSubmit} className="space-y-4">
-          {/* Email Field */}
           <div>
 
           <label className="form-control w-full">
@@ -118,7 +116,6 @@ const SignInForm = () => {
           </div>
           <div>
           
-          {/* Password Field */}
           <label className="form-control w-full">
             <div className="label">
               <span className="label-text font-medium">Password</span>
@@ -135,7 +132,6 @@ const SignInForm = () => {
             />
           </label>
           </div>
-          {/* Buttons */}
           <div className="flex justify-between items-center mt-4">
             <button
               type="submit"

@@ -98,6 +98,10 @@ Display One Listing Page <br/>
 - https://tailwindcss.com/docs/installation/using-vite
 - https://daisyui.com/docs/use/
 
+#### Stripe SDK
+
+- https://docs.stripe.com/checkout/embedded/quickstart
+
 #### Playwright References:
 
 - https://playwright.dev/docs/api/class-test
