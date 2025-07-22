@@ -1,15 +1,17 @@
 import { useContext } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
 import { toast } from "react-toastify";
 import FindHome from "../assets/FindHome.png";
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
   const handleSignOut = () => {
     localStorage.removeItem("token");
     setUser(null);
     toast.success("You have signed out successfully");
+    navigate("/");
   };
 
   return (
@@ -34,7 +36,7 @@ const NavBar = () => {
                   Favourites
                 </Link>
               </li>
-              {user.userrole === "agent" ? (
+              {user && user.userrole === "agent" ? (
                 <li>
                   <Link to="/enquiries" className="hover:bg-yellow-300">
                     Enquiries
@@ -51,7 +53,7 @@ const NavBar = () => {
       </div>
       <div className="navbar-end hidden lg:flex text-lg">
         <ul className="menu menu-horizontal text-xl ">
-          {user.userrole === "agent" ? (
+          {user && user.userrole === "agent" ? (
             <li>
               <Link
                 to="/listings/new"

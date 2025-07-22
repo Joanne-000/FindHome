@@ -25,22 +25,17 @@ const ListingForm = ({ listingId }) => {
   const [isDeleting, setIsDelete] = useState(false);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
-  const [images, setImages] = useState(
-    {
-      imageurl1:
-        "https://sg1-cdn.pgimgs.com/projectnet-project/218526/ZPPHO.153261118.R800X800.jpg",
-    },
-    { imageurl2: "" },
-    { imageurl3: "" },
-    { imageurl4: "" },
-    { imageurl5: "" }
-  );
+  const [images, setImages] = useState({
+    imageurl1:
+      "https://sg1-cdn.pgimgs.com/projectnet-project/218526/ZPPHO.153261118.R800X800.jpg",
+  });
+  const [inputPrice, setInputPrice] = useState(600000);
 
   const [formData, setFormData] = useState({
     agent_id: userId,
     propertyname: "Blk 234 Andrew Road",
     address: "Blk 234 Andrew Road Singapore 334234",
-    price: "650000",
+    price: inputPrice,
     town: "Novena",
     nearestmrt: "Novena",
     unitsize: "89",
@@ -344,7 +339,6 @@ const ListingForm = ({ listingId }) => {
             <label className="form-control">
               <span className="label-text font-semibold">Unit Size (m²) *</span>
               <NumericFormat
-                prefix={"$"}
                 thousandSeparator={true}
                 allowNegative={false}
                 name="unitsize"
@@ -358,7 +352,6 @@ const ListingForm = ({ listingId }) => {
             <label className="form-control">
               <span className="label-text font-semibold">Bedrooms *</span>
               <NumericFormat
-                prefix={"$"}
                 thousandSeparator={true}
                 allowNegative={false}
                 name="bedroom"
@@ -372,7 +365,6 @@ const ListingForm = ({ listingId }) => {
             <label className="form-control">
               <span className="label-text font-semibold">Bathrooms *</span>
               <NumericFormat
-                prefix={"$"}
                 thousandSeparator={true}
                 allowNegative={false}
                 name="bathroom"

@@ -14,12 +14,15 @@ const addListing = async (client, req) => {
     status,
   } = req.body;
 
+  const listingPrice = Number(String(price).replace(/\$|,/g, ""));
+
+  console.log(price, listingPrice);
   const text = `insert into listings (agent_id, propertyname, address, price, town, nearestmrt, unitsize ,bedroom,bathroom, typeoflease, description, status) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning *`;
   const value = [
     agent_id,
     propertyname,
     address,
-    price,
+    listingPrice,
     town,
     nearestmrt,
     unitsize,
