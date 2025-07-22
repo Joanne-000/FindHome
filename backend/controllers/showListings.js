@@ -3,8 +3,9 @@ const { pool } = require("../index");
 
 const getProperties = async (req, res) => {
   try {
-    const { keywords } = req.query;
+    console.log("getprop");
 
+    const { keywords } = req.query;
     let text = `select * from listings where status = $1`;
     const value = ["available"];
 

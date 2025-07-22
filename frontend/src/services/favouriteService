@@ -3,7 +3,7 @@ import { getUserFromToken } from "../contexts/UserContext";
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/favourites`;
 
-const getAllFavourites = async (userId) => {
+const getAllFavourites = async (userId, search) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
@@ -12,12 +12,18 @@ const getAllFavourites = async (userId) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized");
     } else {
-      const res = await axios.get(`${BASE_URL}/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const params = new URLSearchParams();
+      if (search) params.append("keywords", search);
+
+      const res = await axios.get(
+        `${BASE_URL}/${userId}?${params.toString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (res.status !== 200) throw new Error("Failed to show favourite list");
       const data = await res.data;

@@ -24,7 +24,6 @@ const ListingsPage = () =>{
   const userId = user?.id
   const [input, setInput] = useState("")
   const [search, setSearch] = useState("")
-  const [filter, setFilter] = useState("")
 
     const navigate = useNavigate();
     const queryClient = useQueryClient()

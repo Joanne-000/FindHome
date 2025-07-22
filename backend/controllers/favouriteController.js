@@ -17,11 +17,18 @@ const getFavourites = async (req, res) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized User");
     }
+    const { keywords } = req.query;
 
-    const favResult = await pool.query(
-      /* SQL */ `select * from favourites join listings on listings.id = favourites.listing_id where user_id = $1`,
-      [userId]
-    );
+    let text = `select * from favourites join listings on listings.id = favourites.listing_id where status = $1 AND user_id = $2`;
+    const value = ["available", userId];
+
+    if (keywords) {
+      text += ` AND (propertyname ILIKE $3 OR address ILIKE $3 OR description ILIKE $3 OR town ILIKE $3 OR nearestmrt ILIKE $3)`;
+      value.push(`%${keywords}%`);
+    }
+    text += ` order by timestamptz desc`;
+
+    const favResult = await pool.query(text, value);
     const listings = favResult.rows;
 
     if (listings.length === 0) {
@@ -167,6 +174,4 @@ const destroyFavourite = async (req, res) => {
 module.exports = {
   getFavourites,
   favourite,
-  createFavourite,
-  destroyFavourite,
 };

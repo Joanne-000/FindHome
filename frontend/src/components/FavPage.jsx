@@ -21,13 +21,15 @@ const log = debug("list:Fav Page");
 const FavPage = () =>{
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("")
+  const [input, setInput] = useState("")
+  const [search, setSearch] = useState("")
   const userId = user?.id
   const navigate = useNavigate();
   const queryClient = useQueryClient()
     
       const { isLoading, isError, data, error }  = useQuery({ 
-        queryKey: ['favourites'], 
-        queryFn:  () => getAllFavourites(userId)
+        queryKey: ['favourites',search], 
+        queryFn:  () => getAllFavourites(userId,search)
       })
   
       const favMutation = useMutation({
@@ -51,13 +53,22 @@ const FavPage = () =>{
           favMutation.mutate({userId,listingId})
        }
      
-      //  log(data)
+       const handleSearchChange = (e) =>{
+        log(e.target.value)
+        setInput(e.target.value)
+      }
+  
+      const handleSearch = () => {
+        log("inside handle delete 1")
+        setSearch(input);
+        };
+
       if (!user) {
         const timeout = setTimeout(() => navigate("/signin"),(1000*5))
         const clearTimeOut = () => clearTimeout(timeout)
         return clearTimeOut, <p>You are not signed in. You will be directing to sign in page soon...</p>
       }
-      
+
     return(
     <>
       <h1 className="text-3xl p-3 font-bold text-center text-warning mb-4">Favourite List</h1>
@@ -70,7 +81,21 @@ const FavPage = () =>{
       {isError? <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> {error?.response?.data?.err  || "Something went wrong."}</h1> : ""}
       {data && 
       <div className="flex w-full flex-col lg:flex-row">
-<div className="card bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">content</div>
+      <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">
+        <div className="flex flex-row justify-center">
+          <label>
+            <span className="font-semibold">Search: </span>
+            <input
+              name="search"
+              value={input}
+              onChange={handleSearchChange}
+              className="input input-bordered w-60%"
+              required
+            />
+            <button type="button" className="flex btn justify-end" onClick={handleSearch}>Search</button>
+          </label>
+        </div>
+      </div>
 <div className="divider lg:divider-horizontal"></div>
       <div className="card bg-base-300 rounded-box grid h-full w-full lg:w-3/4 place-items-center">
       <div className="flex flex-wrap justify-center gap-4 p-4">

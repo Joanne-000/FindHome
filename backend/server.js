@@ -9,7 +9,8 @@ const listingRouter = require("./routers/listingRouter");
 const favouriteRouter = require("./routers/favouriteRouter");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 const allowedOrigins = [
   "http://localhost:5173",
