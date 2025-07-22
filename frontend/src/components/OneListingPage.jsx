@@ -67,8 +67,12 @@ const OneListingPage = () =>{
         </div>
       );
     }
-
-    // if (!data) return null;
+    if (isError) {
+      return (
+      <div className="flex justify-center">
+        <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> Something went wrong. <br/> <span>{error?.response?.data?.err}</span> </h1>
+      </div>
+    )}
 
       const {address,agent_id,bathroom,bedroom,description,id,nearestmrt,price,propertyname,status,timestamptz,town,typeoflease,unitsize} = data.listing
 

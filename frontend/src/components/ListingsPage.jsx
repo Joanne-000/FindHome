@@ -49,10 +49,22 @@ const ListingsPage = () =>{
     })
 
 
-      if (isLoading) {
-        return <span className="loading loading-spinner text-warning"></span>
-      }
-    
+    if (isLoading) {
+      return (
+        <div className="flex justify-center">
+          <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
+        </div>
+      );
+    }
+
+    if (isError) {
+      return (
+      <div className="flex justify-center">
+        <h1 className="text-xl p-3 font-bold text-center text-neutral mb-4"> Something went wrong. <br/> <span>{error?.response?.data?.err}</span> </h1>
+      </div>
+    )}
+
+
       const handleFav = (e) =>{
         log(e.target.id)
         const listingId = e.target.id

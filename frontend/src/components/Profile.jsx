@@ -37,11 +37,18 @@ const UserProfile = () => {
   if (!user) {
     const timeout = setTimeout(() => navigate("/signin"),(1000*5))
     const clearTimeOut = () => clearTimeout(timeout)
-    return clearTimeOut, <p>You are not signed in. You will be directing to sign in page soon...</p>
-  }
+    return clearTimeOut, (
+      <div className="flex justify-center">
+        <p>You are not signed in. You will be directing to sign in page soon...</p>
+      </div>
+  )}
 
   if (isLoading) {
-    return <span className="loading loading-spinner text-warning loading-xl" ></span>
+    return (
+      <div className="flex justify-center">
+        <h1 className="loading loading-spinner items-center text-warning loading-xl" ></h1>
+      </div>
+    );
   }
 
   if (isError) {

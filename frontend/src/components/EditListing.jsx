@@ -16,9 +16,12 @@ const EditListing = () =>{
 
     if (!user) {
         const timeout = setTimeout(() => navigate("/signin"),(1000*5))
-    const clearTimeOut = () => clearTimeout(timeout)
-    return clearTimeOut, <div>You are not signed in. You will be redirecting to Sign In page soon...</div>; // or redirect to signin
-    }
+        const clearTimeOut = () => clearTimeout(timeout)
+        return clearTimeOut, (
+          <div className="flex justify-center">
+            <p>You are not signed in. You will be directing to sign in page soon...</p>
+          </div>
+      )}
 
     if (!listingId) {
         const timeout = setTimeout(() => navigate("/signin"),(1000*5))

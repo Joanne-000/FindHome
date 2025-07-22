@@ -222,6 +222,15 @@ const ListingForm = ({listingId}) => {
       deleteMutation.mutate({ userId, listingId })
     };
 
+    if (!user) {
+      const timeout = setTimeout(() => navigate("/signin"),(1000*5))
+      const clearTimeOut = () => clearTimeout(timeout)
+      return clearTimeOut, (
+        <div className="flex justify-center">
+          <p>You are not signed in. You will be directing to sign in page soon...</p>
+        </div>
+    )}
+    
     return (
       <div className="min-h-screen bg-base-100 p-6">
   <div className="max-w-5xl mx-auto bg-base-200 rounded-xl shadow p-8 space-y-6">
