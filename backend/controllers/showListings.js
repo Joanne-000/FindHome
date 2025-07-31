@@ -2,16 +2,58 @@ require("dotenv").config();
 const { pool } = require("../index");
 
 const getProperties = async (req, res) => {
+  // console.log("query", req.query);
+  console.log("query", req.query.filters);
+
   try {
     const { keywords } = req.query;
+    let filters = req.query.filters;
+
+    if (typeof filters === "string") {
+      filters = JSON.parse(filters);
+    }
+
     let text = `select * from listings where status = $1`;
     const value = ["available"];
 
+    let index = 2;
     if (keywords) {
-      text += ` AND (propertyname ILIKE $2 OR address ILIKE $2 OR description ILIKE $2 OR town ILIKE $2 OR nearestmrt ILIKE $2)`;
+      text += ` AND (propertyname ILIKE $${index} OR address ILIKE $${index} OR description ILIKE $${index} OR town ILIKE $${index} OR nearestmrt ILIKE $${index})`;
       value.push(`%${keywords}%`);
+      index++;
+    }
+
+    if (filters.propertyType) {
+      text += ` AND (description ILIKE $${index} )`;
+      value.push(`%${filters.propertyType}%`);
+      index++;
+    }
+    console.log("query", filters);
+
+    if (filters.maxPrice) {
+      console.log("query", Number(filters.maxPrice));
+
+      text += ` AND ( price < $${index} )`;
+      value.push(Number(filters.maxPrice));
+      index++;
+    }
+    if (filters.postedDate) {
+      text += ` AND ( timestamptz > $${index} )`;
+      value.push(`${filters.postedDate}`);
+      index++;
+    }
+    if (filters.bedrooms) {
+      text += ` AND ( bedroom = $${index})`;
+      value.push(Number(filters.bedrooms));
+      index++;
+    }
+    if (filters.location) {
+      text += ` AND (propertyname ILIKE $${index} OR address ILIKE $${index} OR description ILIKE $${index} OR town ILIKE $${index} OR nearestmrt ILIKE $${index})`;
+      value.push(`%${filters.location}%`);
+      index++;
     }
     text += ` order by timestamptz desc`;
+
     const listingsResult = await pool.query(text, value);
 
     const listings = listingsResult.rows;

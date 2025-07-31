@@ -3,12 +3,13 @@ import { getUserFromToken } from "../contexts/UserContext";
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/listings`;
 
-const getAllListings = async (search) => {
+const getAllListings = async (search, filters) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
     const params = new URLSearchParams();
     if (search) params.append("keywords", search);
+    if (filters) params.append("filters", JSON.stringify(filters));
 
     const res = await axios.get(`${BASE_URL}?${params.toString()}`);
 
