@@ -49,7 +49,26 @@ const getTop5Listings = async () => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
-    const res = await axios.get(`${BASE_URL}`);
+    const res = await axios.get(`${BASE_URL}/getTop5Properties`);
+
+    if (res.status !== 200) throw new Error("Failed to show listings");
+    const data = await res.data;
+
+    if (data.err) {
+      throw new Error(data.err);
+    }
+    return data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const getTop5FavProperties = async () => {
+  // userId is from userContext where we setUser during signin.
+  // currentUser is get from token when we save suring signin.
+  try {
+    const res = await axios.get(`${BASE_URL}/getTop5FavProperties`);
 
     if (res.status !== 200) throw new Error("Failed to show listings");
     const data = await res.data;
@@ -93,4 +112,4 @@ const checkout = async (userId) => {
     throw err;
   }
 };
-export { signUp, signIn, getTop5Listings, checkout };
+export { signUp, signIn, getTop5Listings, getTop5FavProperties, checkout };

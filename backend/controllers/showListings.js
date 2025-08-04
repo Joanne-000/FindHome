@@ -110,6 +110,46 @@ const getTop5Properties = async (req, res) => {
   }
 };
 
+const getTop5FavProperties = async (req, res) => {
+  try {
+    let text = `  SELECT 
+    favourites.listing_id,
+    COUNT(*) AS frequency,
+    listings.*
+  FROM favourites
+  JOIN listings ON listings.id = favourites.listing_id
+  WHERE listings.status = $1
+  GROUP BY favourites.listing_id, listings.id
+  ORDER BY frequency DESC
+  LIMIT 5`;
+    const value = ["available"];
+
+    const top5favListingsResult = await pool.query(text, value);
+    const listings = top5favListingsResult.rows;
+    console.log("top 5 fav", listings);
+
+    if (listings.length === 0) {
+      return res.status(200).json(listings);
+    }
+
+    const listingwImagesP = listings.map(async (listing) => {
+      const result = await pool.query(
+        `select * from images where listing_id = $1`,
+        [listing.id]
+      );
+      listing["images"] = result.rows;
+      console.log("top 5 fav", listings);
+      return listing;
+    });
+
+    const listingswImages = await Promise.all(listingwImagesP);
+
+    res.status(200).json(listingswImages);
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+};
+
 const getOneProperty = async (req, res) => {
   const listingId = Number(req.params.listingId);
 
@@ -146,5 +186,6 @@ const getOneProperty = async (req, res) => {
 module.exports = {
   getProperties,
   getTop5Properties,
+  getTop5FavProperties,
   getOneProperty,
 };

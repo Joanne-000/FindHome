@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { getTop5Listings } from "../services/authService";
+import { getTop5FavProperties } from "../services/authService";
 import { checkFavourite } from "../services/favouriteService";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import debug from "debug";
@@ -17,15 +17,17 @@ const TopFavouriteCard = () => {
   const queryClient = useQueryClient();
 
   const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["listings"],
-    queryFn: () => getTop5Listings(),
+    queryKey: ["top5FavListings"],
+    queryFn: () => getTop5FavProperties(),
   });
 
   const favMutation = useMutation({
     mutationFn: ({ userId, listingId }) => checkFavourite(userId, listingId),
     onSuccess: (data) => {
       log("createFavMut", data);
-      queryClient.invalidateQueries({ queryKey: ["favourites"] });
+      queryClient.invalidateQueries({
+        queryKey: ["favourites", "top5FavListings"],
+      });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
