@@ -87,7 +87,7 @@ const TopFavouriteCard = () => {
         <div className="mt-10 card shadow-xl bg-base-300 rounded-box grid h-full w-full lg:h-3/4 place-items-center">
           <div className="card shadow-xl bg-base-150 rounded-box  flex-row items-center justify-center h-24 w-full mb-6">
             <h1 className="text-xl font-semibold mb-1">
-              Top Favourite Listings
+              Top 5 Favourited Listings
             </h1>
           </div>
           <ListingCards data={data} handleFav={handleFav} />
