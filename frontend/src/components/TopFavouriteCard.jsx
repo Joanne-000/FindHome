@@ -5,12 +5,11 @@ import { checkFavourite } from "../services/favouriteService";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import debug from "debug";
 import { AxiosError } from "axios";
-import TopFavouriteCard from "./TopFavouriteCard";
 import ListingCards from "./ListingCards";
 
 const log = debug("list:Listings Page");
 
-const HomePage = () => {
+const TopFavouriteCard = () => {
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("");
   const userId = user?.id;
@@ -83,18 +82,17 @@ const HomePage = () => {
         ""
       )}
       {data && (
-        <div className="card shadow-xl bg-base-300 rounded-box grid h-full w-full lg:h-3/4 place-items-center">
+        <div className="mt-10 card shadow-xl bg-base-300 rounded-box grid h-full w-full lg:h-3/4 place-items-center">
           <div className="card shadow-xl bg-base-150 rounded-box  flex-row items-center justify-center h-24 w-full mb-6">
             <h1 className="text-xl font-semibold mb-1">
-              Recently Posted Listings
+              Top Favourite Listings
             </h1>
           </div>
           <ListingCards data={data} handleFav={handleFav} />
         </div>
       )}
-      <TopFavouriteCard />
     </>
   );
 };
 
-export default HomePage;
+export default TopFavouriteCard;
