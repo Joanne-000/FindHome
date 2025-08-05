@@ -9,7 +9,13 @@ const getAllListings = async (search, filters) => {
   try {
     const params = new URLSearchParams();
     if (search) params.append("keywords", search);
-    if (filters) params.append("filters", JSON.stringify(filters));
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) {
+          params.append(key, value);
+        }
+      });
+    }
 
     const res = await axios.get(`${BASE_URL}?${params.toString()}`);
 

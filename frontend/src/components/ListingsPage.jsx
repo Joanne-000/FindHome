@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import debug from "debug";
 import { AxiosError } from "axios";
 import ListingCards from "./ListingCards";
+import { useSearchParams } from "react-router";
 
 const log = debug("list:Listings Page");
 const ListingsPage = () => {
@@ -30,6 +31,8 @@ const ListingsPage = () => {
     bedrooms: "",
     location: "",
   });
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -87,6 +90,11 @@ const ListingsPage = () => {
 
   const handleSearch = () => {
     log("inside handle search");
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("search", input);
+      return newParams;
+    });
     setSearch(input);
   };
 
@@ -100,6 +108,15 @@ const ListingsPage = () => {
 
   const handleApplyFilters = () => {
     log("inside handle filter");
+    const newParams = new URLSearchParams(searchParams);
+    Object.entries(inputFilters).forEach(([key, value]) => {
+      if (value) {
+        newParams.set(key, value);
+      } else {
+        newParams.delete(key);
+      }
+    });
+    setSearchParams(newParams);
     setFilters(inputFilters);
   };
 

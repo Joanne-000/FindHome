@@ -6,12 +6,8 @@ const getProperties = async (req, res) => {
   console.log("query", req.query.filters);
 
   try {
-    const { keywords } = req.query;
-    let filters = req.query.filters;
-
-    if (typeof filters === "string") {
-      filters = JSON.parse(filters);
-    }
+    const { keywords, propertyType, maxPrice, postedDate, bedrooms, location } =
+      req.query;
 
     let text = `select * from listings where status = $1`;
     const value = ["available"];
@@ -23,33 +19,32 @@ const getProperties = async (req, res) => {
       index++;
     }
 
-    if (filters.propertyType) {
+    if (propertyType) {
       text += ` AND (description ILIKE $${index} )`;
-      value.push(`%${filters.propertyType}%`);
+      value.push(`%${propertyType}%`);
       index++;
     }
-    console.log("query", filters);
 
-    if (filters.maxPrice) {
-      console.log("query", Number(filters.maxPrice));
+    if (maxPrice) {
+      console.log("query", Number(maxPrice));
 
       text += ` AND ( price < $${index} )`;
-      value.push(Number(filters.maxPrice));
+      value.push(Number(maxPrice));
       index++;
     }
-    if (filters.postedDate) {
+    if (postedDate) {
       text += ` AND ( timestamptz > $${index} )`;
-      value.push(`${filters.postedDate}`);
+      value.push(`${postedDate}`);
       index++;
     }
-    if (filters.bedrooms) {
+    if (bedrooms) {
       text += ` AND ( bedroom = $${index})`;
-      value.push(Number(filters.bedrooms));
+      value.push(Number(bedrooms));
       index++;
     }
-    if (filters.location) {
+    if (location) {
       text += ` AND (propertyname ILIKE $${index} OR address ILIKE $${index} OR description ILIKE $${index} OR town ILIKE $${index} OR nearestmrt ILIKE $${index})`;
-      value.push(`%${filters.location}%`);
+      value.push(`%${location}%`);
       index++;
     }
     text += ` order by timestamptz desc`;
