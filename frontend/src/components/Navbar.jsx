@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
-import { toast } from "react-toastify";
 import FindHome from "../assets/FindHome.png";
 
 const NavBar = () => {
@@ -10,7 +9,6 @@ const NavBar = () => {
   const handleSignOut = () => {
     localStorage.removeItem("token");
     setUser(null);
-    toast.success("You have signed out successfully");
     navigate("/");
   };
 

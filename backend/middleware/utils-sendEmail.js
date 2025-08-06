@@ -16,6 +16,7 @@ const notifyViaEmail = async (mailOptions) => {
 
     const info = await transporter.sendMail(mailOptions);
     console.log("Email sent: " + info.response);
+    console.log("📬 Preview URL: " + nodemailer.getTestMessageUrl(info));
   } catch (err) {
     console.error("Failed to send email:", err);
   }

@@ -64,7 +64,7 @@ const userSignUp = async (client, req, res) => {
     from: '"FindHome" <maddison53@ethereal.email>',
     to: email,
     subject: "FINDHOME - Account signed up successfully!",
-    html: `<p>Hi ${displayname} Thank you for signing up as FINDHOME user! 🎉</p>`,
+    html: `<p>Hi ${displayname}! Thank you for signing up as FINDHOME user! 🎉</p>`,
   };
 
   notifyViaEmail(mailOptions);
