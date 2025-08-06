@@ -2,9 +2,6 @@ require("dotenv").config();
 const { pool } = require("../index");
 
 const getProperties = async (req, res) => {
-  // console.log("query", req.query);
-  console.log("query", req.query.filters);
-
   try {
     const { keywords, propertyType, maxPrice, postedDate, bedrooms, location } =
       req.query;
@@ -26,8 +23,6 @@ const getProperties = async (req, res) => {
     }
 
     if (maxPrice) {
-      console.log("query", Number(maxPrice));
-
       text += ` AND ( price < $${index} )`;
       value.push(Number(maxPrice));
       index++;
@@ -121,7 +116,6 @@ const getTop5FavProperties = async (req, res) => {
 
     const top5favListingsResult = await pool.query(text, value);
     const listings = top5favListingsResult.rows;
-    console.log("top 5 fav", listings);
 
     if (listings.length === 0) {
       return res.status(200).json(listings);
@@ -133,7 +127,6 @@ const getTop5FavProperties = async (req, res) => {
         [listing.id]
       );
       listing["images"] = result.rows;
-      console.log("top 5 fav", listings);
       return listing;
     });
 

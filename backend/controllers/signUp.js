@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
-
+const nodemailer = require("nodemailer");
+const { notifyViaEmail } = require("../middleware/utils-sendEMail");
 const userSignUp = async (client, req, res) => {
   const saltRounds = 12;
   const {
@@ -58,6 +59,15 @@ const userSignUp = async (client, req, res) => {
 
     user = result.rows[0];
   }
+
+  const mailOptions = {
+    from: '"FindHome" <maddison53@ethereal.email>',
+    to: email,
+    subject: "FINDHOME - Account signed up successfully!",
+    html: `<p>Hi ${displayname} Thank you for signing up as FINDHOME user! 🎉</p>`,
+  };
+
+  notifyViaEmail(mailOptions);
   return user;
 };
 

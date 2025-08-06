@@ -14,7 +14,6 @@ const log = debug("list:Listings Page");
 
 const ListingCards = ({ data, handleFav }) => {
   const { user } = useContext(UserContext);
-  console.log(data);
   const navigate = useNavigate();
   return (
     <>
