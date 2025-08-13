@@ -3,7 +3,7 @@ import { getUserFromToken } from "../contexts/UserContext";
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/favourites`;
 
-const getAllFavourites = async (userId, search) => {
+const getAllFavourites = async (userId, search, filters) => {
   // userId is from userContext where we setUser during signin.
   // currentUser is get from token when we save suring signin.
   try {
