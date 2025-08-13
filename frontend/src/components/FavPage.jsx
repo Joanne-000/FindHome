@@ -11,21 +11,28 @@ import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import { AxiosError } from "axios";
 import no_image from "../assets/no_image.png";
+import SearchFilter from "./SearchFilter";
 
 const log = debug("list:Fav Page");
 
 const FavPage = () => {
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("");
-  const [input, setInput] = useState("");
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState({
+    propertyType: "",
+    maxPrice: "",
+    postedDate: "",
+    bedrooms: "",
+    location: "",
+  });
   const userId = user?.id;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["favourites", search],
-    queryFn: () => getAllFavourites(userId, search),
+    queryKey: ["favourites", search, filters],
+    queryFn: () => getAllFavourites(userId, search, filters),
   });
 
   const favMutation = useMutation({
@@ -47,16 +54,6 @@ const FavPage = () => {
     log(e.target.id);
     const listingId = e.target.id;
     favMutation.mutate({ userId, listingId });
-  };
-
-  const handleSearchChange = (e) => {
-    log(e.target.value);
-    setInput(e.target.value);
-  };
-
-  const handleSearch = () => {
-    log("inside handle delete 1");
-    setSearch(input);
   };
 
   if (!user) {
@@ -116,27 +113,7 @@ const FavPage = () => {
       )}
 
       <div className="flex w-full flex-col lg:flex-row p-3">
-        <div className="card shadow-xl bg-base-300 rounded-box grid h-full w-full lg:w-1/4 place-items-center">
-          <div className="flex flex-row justify-center p-5">
-            <label>
-              <span className="font-semibold">Search: </span>
-              <input
-                name="search"
-                value={input}
-                onChange={handleSearchChange}
-                className="input input-bordered w-60%"
-                required
-              />
-              <button
-                type="button"
-                className="flex btn justify-end"
-                onClick={handleSearch}
-              >
-                Search
-              </button>
-            </label>
-          </div>
-        </div>
+        <SearchFilter setSearch={setSearch} setFilters={setFilters} />
         <div className="divider lg:divider-horizontal"></div>
         <div className="card  shadow-xl bg-base-300 rounded-box grid h-full w-full lg:w-3/4 place-items-center">
           <div className="flex flex-wrap justify-center gap-4 p-4">

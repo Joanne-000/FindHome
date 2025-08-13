@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import { useState, useEffect } from "react";
 import debug from "debug";
 

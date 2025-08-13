@@ -2,8 +2,7 @@ const { loadUserFromToken } = require("../middleware/utils");
 
 require("dotenv").config();
 const { pool } = require("../index");
-
-// put this pool into a seperate file , then you inport to everywhere
+const { checkParams } = require("../controllers/checkParams");
 
 const getFavourites = async (req, res) => {
   try {
@@ -13,18 +12,27 @@ const getFavourites = async (req, res) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized User");
     }
-    const { keywords } = req.query;
+    const { keywords, propertyType, maxPrice, postedDate, bedrooms, location } =
+      req.query;
 
     let text = `select * from favourites join listings on listings.id = favourites.listing_id where status = $1 AND user_id = $2`;
     const value = ["available", userId];
 
-    if (keywords) {
-      text += ` AND (propertyname ILIKE $3 OR address ILIKE $3 OR description ILIKE $3 OR town ILIKE $3 OR nearestmrt ILIKE $3)`;
-      value.push(`%${keywords}%`);
-    }
-    text += ` order by timestamptz desc`;
+    let index = 3;
 
-    const favResult = await pool.query(text, value);
+    const { text: finalText, value: finalValue } = checkParams(
+      index,
+      text,
+      value,
+      keywords,
+      propertyType,
+      maxPrice,
+      postedDate,
+      bedrooms,
+      location
+    );
+
+    const favResult = await pool.query(finalText, finalValue);
     const listings = favResult.rows;
 
     if (listings.length === 0) {
