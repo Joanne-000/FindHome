@@ -8,7 +8,7 @@ const {
 const {
   getProperties,
   getOneProperty,
-} = require("../controllers/showListings");
+} = require("../controllers/showListingsController");
 const verifyToken = require("../middleware/verify-token");
 
 router.get("/", getProperties);

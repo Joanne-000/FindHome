@@ -12,8 +12,8 @@ const {
 const {
   dataValidation,
   signinValidation,
-} = require("../middleware/utils-validation");
-const { userSignUp } = require("../controllers/signUp");
+} = require("../middleware/utils-userValidation");
+const { userSignUp } = require("./helpers-user/signUp");
 
 const signUp = async (req, res) => {
   const client = await pool.connect();

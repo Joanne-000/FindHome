@@ -1,6 +1,8 @@
 const { loadUserFromToken, createPayload } = require("../middleware/utils");
-const { dataValidation } = require("../middleware/utils-validation");
-const { editUser, delUser } = require("./editUser");
+const { dataValidation } = require("../middleware/utils-userValidation");
+const { editUser } = require("./helpers-user/editUser");
+const { delUser } = require("./helpers-user/delUser");
+
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 

@@ -1,7 +1,8 @@
 const { loadUserFromToken } = require("../middleware/utils");
-const { addListing } = require("./addListing");
-const { addImages } = require("./addImages");
-const { editListing, delListing } = require("./editListing");
+const { addListing } = require("./helpers-listing/addListing");
+const { addImages } = require("./helpers-listing/addImages");
+const { editListing } = require("./helpers-listing/editListing");
+const { delListing } = require("./helpers-listing/delListing");
 const { editImages } = require("./editImages");
 const { dataValidation } = require("../middleware/utils-listingValidation");
 

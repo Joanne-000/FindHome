@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-const { notifyViaEmail } = require("../middleware/utils-sendEmail");
+const { notifyViaEmail } = require("../../middleware/utils-sendEmail");
 const userSignUp = async (client, req, res) => {
   const saltRounds = 12;
   const {

@@ -1,5 +1,3 @@
-const validator = require("validator");
-
 const dataValidation = (req) => {
   const {
     agent_id,

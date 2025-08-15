@@ -5,8 +5,8 @@ const { signUp, signIn } = require("../controllers/authController");
 const {
   getTop5Properties,
   getTop5FavProperties,
-} = require("../controllers/showListings");
-const { checkout } = require("../controllers/checkout");
+} = require("../controllers/showListingsController");
+const { checkout } = require("../controllers/checkoutController");
 
 router.get("/getTop5Properties", getTop5Properties);
 router.get("/getTop5FavProperties", getTop5FavProperties);
