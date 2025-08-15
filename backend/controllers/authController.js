@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-const { pool } = require("../index");
+const { pool } = require("../pool");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");

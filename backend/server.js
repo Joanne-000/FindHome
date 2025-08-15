@@ -9,8 +9,7 @@ const listingRouter = require("./routers/listingRouter");
 const favouriteRouter = require("./routers/favouriteRouter");
 
 const app = express();
-// const PORT = process.env.PORT || 3000;
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 //frontend domain
 const allowedOrigins = [
@@ -19,7 +18,7 @@ const allowedOrigins = [
 ];
 
 //connect to postgres
-const { pool } = require("./index");
+const { pool } = require("./pool");
 
 app.use(
   cors({
@@ -27,8 +26,6 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.static("public"));
-
 app.use(express.json());
 app.use(logger("dev"));
 
@@ -46,5 +43,3 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}`));
-
-module.exports = { allowedOrigins };

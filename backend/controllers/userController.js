@@ -5,7 +5,7 @@ const validator = require("validator");
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
-const { pool } = require("../index");
+const { pool } = require("../pool");
 
 const getUser = async (req, res) => {
   try {

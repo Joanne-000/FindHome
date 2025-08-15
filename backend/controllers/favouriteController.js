@@ -1,7 +1,7 @@
 const { loadUserFromToken } = require("../middleware/utils");
 
 require("dotenv").config();
-const { pool } = require("../index");
+const { pool } = require("../pool");
 const { checkParams } = require("../controllers/checkParams");
 
 const getFavourites = async (req, res) => {

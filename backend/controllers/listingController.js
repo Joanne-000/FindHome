@@ -6,7 +6,7 @@ const { editImages } = require("./editImages");
 const { dataValidation } = require("../middleware/utils-listingValidation");
 
 require("dotenv").config();
-const { pool } = require("../index");
+const { pool } = require("../pool");
 
 const createListing = async (req, res) => {
   const client = await pool.connect();

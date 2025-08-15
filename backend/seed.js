@@ -1,7 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const { pool } = require("./index");
+const { pool } = require("./pool");
 const { faker } = require("@faker-js/faker");
 
 const createSeed = async () => {

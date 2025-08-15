@@ -1,5 +1,3 @@
-const { addImages } = require("./addImages");
-
 const editImages = async (client, req, listingId) => {
   try {
     await client.query("BEGIN");
