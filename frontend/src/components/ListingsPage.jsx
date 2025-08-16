@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { getAllListings } from "../services/listingService";
 import { checkFavourite } from "../services/favouriteService";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import SearchFilter from "./SearchFilter";
 
 const log = debug("list:Listings Page");
 const ListingsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("");
   const userId = user?.id;
@@ -26,9 +27,12 @@ const ListingsPage = () => {
     bedrooms: "",
     location: "",
   });
+
+  const [page, setPage] = useState(Number(searchParams.get("page")));
+
   const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["listings", search, filters],
-    queryFn: () => getAllListings(search, filters),
+    queryKey: ["listings", search, filters, page],
+    queryFn: () => getAllListings(search, filters, page),
   });
 
   const favMutation = useMutation({
@@ -47,6 +51,21 @@ const ListingsPage = () => {
     },
   });
 
+  const itemPerPage = 6;
+  let firstPage = 1;
+  let currentPage = page || 1;
+  let prevPage = currentPage - 1;
+  let nextPage = currentPage + 1;
+  let lastPage = Math.ceil(data?.countOfTotalListings / itemPerPage);
+
+  console.log(
+    "firstPage,currentPage,prevPage,nextPage,lastPage",
+    firstPage,
+    currentPage,
+    prevPage,
+    nextPage,
+    lastPage
+  );
   if (isLoading) {
     return (
       <div className="flex justify-center">
@@ -73,6 +92,16 @@ const ListingsPage = () => {
     favMutation.mutate({ userId, listingId });
   };
 
+  const handlePage = (e) => {
+    console.log(e.target.name);
+    const newPage = Number(e.target.name);
+    setPage(newPage);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("page", e.target.name);
+      return newParams;
+    });
+  };
   return (
     <>
       <p>{message}</p>
@@ -101,7 +130,56 @@ const ListingsPage = () => {
                 No listings found for your search.
               </p>
             ) : (
-              <ListingCards data={data} handleFav={handleFav} />
+              <ListingCards data={data.listingswImages} handleFav={handleFav} />
+            )}
+          </div>
+          <div className="join">
+            {firstPage === currentPage ? null : (
+              <>
+                <button
+                  className="join-item btn"
+                  name={firstPage}
+                  onClick={handlePage}
+                >
+                  {firstPage}
+                </button>
+              </>
+            )}
+            {firstPage === prevPage || currentPage === 1 ? null : (
+              <>
+                <button
+                  className="join-item btn"
+                  name={prevPage}
+                  onClick={handlePage}
+                >
+                  {prevPage}
+                </button>
+              </>
+            )}
+            <button
+              className="join-item btn btn-active"
+              name={currentPage}
+              onClick={handlePage}
+            >
+              {currentPage}
+            </button>
+            {nextPage > lastPage || nextPage === lastPage ? null : (
+              <button
+                className="join-item btn"
+                name={nextPage}
+                onClick={handlePage}
+              >
+                {nextPage}
+              </button>
+            )}
+            {currentPage === lastPage ? null : (
+              <button
+                className="join-item btn"
+                name={lastPage}
+                onClick={handlePage}
+              >
+                {lastPage}
+              </button>
             )}
           </div>
         </div>

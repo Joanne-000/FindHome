@@ -3,7 +3,7 @@ const { addListing } = require("./helpers-listing/addListing");
 const { addImages } = require("./helpers-listing/addImages");
 const { editListing } = require("./helpers-listing/editListing");
 const { delListing } = require("./helpers-listing/delListing");
-const { editImages } = require("./editImages");
+const { editImages } = require("./helpers-listing/editImages");
 const { dataValidation } = require("../middleware/utils-listingValidation");
 
 require("dotenv").config();

@@ -34,7 +34,7 @@ const SearchFilter = ({ setSearch, setFilters }) => {
 
   const handleSearch = () => {
     log("inside handle search");
-    setSearchParams((prev) => {
+    setSearchParams(() => {
       const newParams = new URLSearchParams(prev);
       newParams.set("search", input);
       return newParams;

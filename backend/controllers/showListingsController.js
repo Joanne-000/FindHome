@@ -4,17 +4,33 @@ const { checkParams } = require("./helpers-listing/checkParams");
 
 const getProperties = async (req, res) => {
   try {
-    const { keywords, propertyType, maxPrice, postedDate, bedrooms, location } =
-      req.query;
+    console.log("req.query", req.query);
+    const {
+      page,
+      keywords,
+      propertyType,
+      maxPrice,
+      postedDate,
+      bedrooms,
+      location,
+    } = req.query;
 
     let text = `select * from listings where status = $1`;
+    let countText = `select count(*) from listings where status = $1`;
+
     const value = ["available"];
 
     let index = 2;
 
-    const { text: finalText, value: finalValue } = checkParams(
+    const {
+      text: finalText,
+      value: finalValue,
+      countText: countQueryText,
+    } = checkParams(
+      page,
       index,
       text,
+      countText,
       value,
       keywords,
       propertyType,
@@ -23,6 +39,9 @@ const getProperties = async (req, res) => {
       bedrooms,
       location
     );
+
+    const countResults = await pool.query(countQueryText, finalValue);
+    const countOfTotalListings = countResults.rows[0].count;
 
     const listingsResult = await pool.query(finalText, finalValue);
 
@@ -44,7 +63,7 @@ const getProperties = async (req, res) => {
 
     const listingswImages = await Promise.all(listingwImagesP);
 
-    res.status(200).json(listingswImages);
+    res.status(200).json({ listingswImages, countOfTotalListings });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
