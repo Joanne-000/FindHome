@@ -57,6 +57,7 @@ const ListingsPage = () => {
   let prevPage = currentPage - 1;
   let nextPage = currentPage + 1;
   let lastPage = Math.ceil(data?.countOfTotalListings / itemPerPage);
+  console.log(data?.countOfTotalListings);
 
   console.log(
     "firstPage,currentPage,prevPage,nextPage,lastPage",
@@ -130,56 +131,61 @@ const ListingsPage = () => {
                 No listings found for your search.
               </p>
             ) : (
-              <ListingCards data={data.listingswImages} handleFav={handleFav} />
-            )}
-          </div>
-          <div className="join">
-            {firstPage === currentPage ? null : (
               <>
-                <button
-                  className="join-item btn"
-                  name={firstPage}
-                  onClick={handlePage}
-                >
-                  {firstPage}
-                </button>
+                <ListingCards
+                  data={data.listingswImages}
+                  handleFav={handleFav}
+                />
+                <div className="join">
+                  {firstPage === currentPage ? null : (
+                    <>
+                      <button
+                        className="join-item btn"
+                        name={firstPage}
+                        onClick={handlePage}
+                      >
+                        {firstPage}
+                      </button>
+                    </>
+                  )}
+                  {firstPage === prevPage || currentPage === 1 ? null : (
+                    <>
+                      <button
+                        className="join-item btn"
+                        name={prevPage}
+                        onClick={handlePage}
+                      >
+                        {prevPage}
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className="join-item btn btn-active"
+                    name={currentPage}
+                    onClick={handlePage}
+                  >
+                    {currentPage}
+                  </button>
+                  {nextPage > lastPage || nextPage === lastPage ? null : (
+                    <button
+                      className="join-item btn"
+                      name={nextPage}
+                      onClick={handlePage}
+                    >
+                      {nextPage}
+                    </button>
+                  )}
+                  {currentPage === lastPage ? null : (
+                    <button
+                      className="join-item btn"
+                      name={lastPage}
+                      onClick={handlePage}
+                    >
+                      {lastPage}
+                    </button>
+                  )}
+                </div>
               </>
-            )}
-            {firstPage === prevPage || currentPage === 1 ? null : (
-              <>
-                <button
-                  className="join-item btn"
-                  name={prevPage}
-                  onClick={handlePage}
-                >
-                  {prevPage}
-                </button>
-              </>
-            )}
-            <button
-              className="join-item btn btn-active"
-              name={currentPage}
-              onClick={handlePage}
-            >
-              {currentPage}
-            </button>
-            {nextPage > lastPage || nextPage === lastPage ? null : (
-              <button
-                className="join-item btn"
-                name={nextPage}
-                onClick={handlePage}
-              >
-                {nextPage}
-              </button>
-            )}
-            {currentPage === lastPage ? null : (
-              <button
-                className="join-item btn"
-                name={lastPage}
-                onClick={handlePage}
-              >
-                {lastPage}
-              </button>
             )}
           </div>
         </div>
