@@ -89,34 +89,6 @@ const SearchFilter = ({ setSearch, setFilters }) => {
   return (
     <>
       <div className="card shadow-xl bg-base-300 rounded-box w-full lg:w-1/4 p-5 space-y-4">
-        {/* Search Field */}
-        <div className="form-control w-full">
-          <label className="label-text font-semibold mb-1">
-            Quick Search keywords
-            <br />
-            <span className="text-sm font-normal text-base-content/70">
-              in title, address, town or MRT
-            </span>
-            <div className="flex gap-2 mt-2">
-              <input
-                name="search"
-                value={input}
-                onChange={handleSearchChange}
-                className="input input-bordered w-full"
-                placeholder="Search properties..."
-                required
-              />
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleSearch}
-              >
-                Search
-              </button>
-            </div>
-          </label>
-        </div>
-
         {/* Property Type Filter */}
         <div className="form-control w-full pt-10">
           <label className="label-text font-semibold">
