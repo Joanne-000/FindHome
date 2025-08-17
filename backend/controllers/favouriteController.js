@@ -12,17 +12,32 @@ const getFavourites = async (req, res) => {
     if (currentUser.id !== userId) {
       throw new Error("Unauthorized User");
     }
-    const { keywords, propertyType, maxPrice, postedDate, bedrooms, location } =
-      req.query;
+    const {
+      page,
+      keywords,
+      propertyType,
+      maxPrice,
+      postedDate,
+      bedrooms,
+      location,
+    } = req.query;
 
     let text = `select * from favourites join listings on listings.id = favourites.listing_id where status = $1 AND user_id = $2`;
+    let countText = `select count(*) from favourites join listings on listings.id = favourites.listing_id where status = $1 AND user_id = $2`;
+
     const value = ["available", userId];
 
     let index = 3;
 
-    const { text: finalText, value: finalValue } = checkParams(
+    const {
+      text: finalText,
+      value: finalValue,
+      countText: countQueryText,
+    } = checkParams(
+      page,
       index,
       text,
+      countText,
       value,
       keywords,
       propertyType,
@@ -31,6 +46,8 @@ const getFavourites = async (req, res) => {
       bedrooms,
       location
     );
+    const countResults = await pool.query(countQueryText, finalValue);
+    const countOfTotalListings = countResults.rows[0].count;
 
     const favResult = await pool.query(finalText, finalValue);
     const listings = favResult.rows;
@@ -51,7 +68,7 @@ const getFavourites = async (req, res) => {
 
     const listingswImages = await Promise.all(listingwImagesP);
 
-    res.status(200).json(listingswImages);
+    res.status(200).json({ listingswImages, countOfTotalListings });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }

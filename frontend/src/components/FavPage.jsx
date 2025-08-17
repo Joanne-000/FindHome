@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { getAllFavourites, checkFavourite } from "../services/favouriteService";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import debug from "debug";
@@ -12,10 +12,14 @@ import { Pagination, Navigation } from "swiper/modules";
 import { AxiosError } from "axios";
 import no_image from "../assets/no_image.png";
 import SearchFilter from "./SearchFilter";
+import ListingCards from "./ListingCards";
 
 const log = debug("list:Fav Page");
 
 const FavPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [page, setPage] = useState(Number(searchParams.get("page")));
+
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
@@ -56,6 +60,17 @@ const FavPage = () => {
     favMutation.mutate({ userId, listingId });
   };
 
+  const handlePage = (e) => {
+    console.log(e.target.name);
+    const newPage = Number(e.target.name);
+    setPage(newPage);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("page", e.target.name);
+      return newParams;
+    });
+  };
+
   if (!user) {
     const timeout = setTimeout(() => navigate("/signin"), 1000 * 5);
     const clearTimeOut = () => clearTimeout(timeout);
@@ -70,6 +85,15 @@ const FavPage = () => {
       )
     );
   }
+
+  const itemPerPage = 6;
+  let firstPage = 1;
+  let currentPage = page || 1;
+  let prevPage = currentPage - 1;
+  let nextPage = currentPage + 1;
+  let lastPage = Math.ceil(data?.countOfTotalListings / itemPerPage);
+  console.log(data?.countOfTotalListings);
+
   if (isLoading) {
     return (
       <div className="flex justify-center">
@@ -122,91 +146,146 @@ const FavPage = () => {
                 No listings found for your search.
               </p>
             ) : (
-              data.map((item) => (
-                <div
-                  key={item.id}
-                  className="card bg-base-200 w-96 m-3 shadow-lg"
-                >
-                  <div className="h-48 w-full overflow-hidden rounded-t-md">
-                    <Swiper
-                      slidesPerView={1}
-                      spaceBetween={30}
-                      loop={true}
-                      pagination={{
-                        clickable: true,
-                      }}
-                      navigation={true}
-                      modules={[Pagination, Navigation]}
-                      className="h-full w-full"
+              <div className="flex w-full flex-col lg:flex-col p-3">
+                <ListingCards
+                  data={data.listingswImages}
+                  handleFav={handleFav}
+                />
+                <div className="join justify-center m-5">
+                  {firstPage === currentPage ? null : (
+                    <>
+                      <button
+                        className="join-item btn"
+                        name={firstPage}
+                        onClick={handlePage}
+                      >
+                        {firstPage}
+                      </button>
+                    </>
+                  )}
+                  {firstPage === prevPage || currentPage === 1 ? null : (
+                    <>
+                      <button
+                        className="join-item btn"
+                        name={prevPage}
+                        onClick={handlePage}
+                      >
+                        {prevPage}
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className="join-item btn btn-active"
+                    name={currentPage}
+                    onClick={handlePage}
+                  >
+                    {currentPage}
+                  </button>
+                  {nextPage > lastPage || nextPage === lastPage ? null : (
+                    <button
+                      className="join-item btn"
+                      name={nextPage}
+                      onClick={handlePage}
                     >
-                      {item.images.length === 0 ? (
-                        <SwiperSlide>
-                          <img
-                            className="h-full w-full object-cover"
-                            src={no_image}
-                            alt="no image"
-                          ></img>
-                        </SwiperSlide>
-                      ) : (
-                        item.images.map((image) => (
-                          <SwiperSlide>
-                            <img
-                              className="h-full w-full object-cover"
-                              key={image.id}
-                              src={image.imageurl}
-                              alt={item.propertyname}
-                            ></img>
-                          </SwiperSlide>
-                        ))
-                      )}
-                    </Swiper>
-                  </div>
-                  <div className="card-body">
-                    <div className="card-title">{item.propertyname}</div>
-                    <div>
-                      <div>{item.unitsize}m2</div>
-                      <div>{item.bedroom} bed</div>
-                      <div>{item.bathroom} bath</div>
-                    </div>
-                    <div>
-                      $
-                      {Intl.NumberFormat("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      }).format(Number(item.price))}
-                    </div>
-                    <div className="card-actions justify-between">
-                      <div className="text-sm text-gray-500 italic">
-                        📅: {new Date(item.timestamptz).toLocaleDateString()}
-                      </div>
-                      <div className="flex flex-row justify-end">
-                        <button
-                          className="btn btn-warning"
-                          name="detBtn"
-                          type="button"
-                          id={item.id}
-                          onClick={() => navigate(`/listings/${item.id}`)}
-                        >
-                          See details
-                        </button>
-                      </div>
-                      {user && (
-                        <div>
-                          <button
-                            className="btn btn-warning btn-sm"
-                            name="favBtn"
-                            type="button"
-                            id={item.id}
-                            onClick={handleFav}
-                          >
-                            ❤️ Fav
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                      {nextPage}
+                    </button>
+                  )}
+                  {currentPage === lastPage ? null : (
+                    <button
+                      className="join-item btn"
+                      name={lastPage}
+                      onClick={handlePage}
+                    >
+                      {lastPage}
+                    </button>
+                  )}
                 </div>
-              ))
+              </div>
+              // data.map((item) => (
+              //   <div
+              //     key={item.id}
+              //     className="card bg-base-200 w-96 m-3 shadow-lg"
+              //   >
+              //     <div className="h-48 w-full overflow-hidden rounded-t-md">
+              //       <Swiper
+              //         slidesPerView={1}
+              //         spaceBetween={30}
+              //         loop={true}
+              //         pagination={{
+              //           clickable: true,
+              //         }}
+              //         navigation={true}
+              //         modules={[Pagination, Navigation]}
+              //         className="h-full w-full"
+              //       >
+              //         {item.images.length === 0 ? (
+              //           <SwiperSlide>
+              //             <img
+              //               className="h-full w-full object-cover"
+              //               src={no_image}
+              //               alt="no image"
+              //             ></img>
+              //           </SwiperSlide>
+              //         ) : (
+              //           item.images.map((image) => (
+              //             <SwiperSlide>
+              //               <img
+              //                 className="h-full w-full object-cover"
+              //                 key={image.id}
+              //                 src={image.imageurl}
+              //                 alt={item.propertyname}
+              //               ></img>
+              //             </SwiperSlide>
+              //           ))
+              //         )}
+              //       </Swiper>
+              //     </div>
+              //     <div className="card-body">
+              //       <div className="card-title">{item.propertyname}</div>
+              //       <div>
+              //         <div>{item.unitsize}m2</div>
+              //         <div>{item.bedroom} bed</div>
+              //         <div>{item.bathroom} bath</div>
+              //       </div>
+              //       <div>
+              //         $
+              //         {Intl.NumberFormat("en-US", {
+              //           minimumFractionDigits: 2,
+              //           maximumFractionDigits: 2,
+              //         }).format(Number(item.price))}
+              //       </div>
+              //       <div className="card-actions justify-between">
+              //         <div className="text-sm text-gray-500 italic">
+              //           📅: {new Date(item.timestamptz).toLocaleDateString()}
+              //         </div>
+              //         <div className="flex flex-row justify-end">
+              //           <button
+              //             className="btn btn-warning"
+              //             name="detBtn"
+              //             type="button"
+              //             id={item.id}
+              //             onClick={() => navigate(`/listings/${item.id}`)}
+              //           >
+              //             See details
+              //           </button>
+              //         </div>
+              //         {user && (
+              //           <div>
+              //             <button
+              //               className="btn btn-warning btn-sm"
+              //               name="favBtn"
+              //               type="button"
+              //               id={item.id}
+              //               onClick={handleFav}
+              //             >
+              //               ❤️ Fav
+              //             </button>
+              //           </div>
+              //         )}
+              //       </div>
+              //     </div>
+              //   </div>
+              // ))
             )}
           </div>
         </div>

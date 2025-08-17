@@ -83,6 +83,7 @@ const SearchFilter = ({ setSearch, setFilters }) => {
       bedrooms: "",
       location: "",
     });
+    setSearchParams(new URLSearchParams());
   };
 
   return (
