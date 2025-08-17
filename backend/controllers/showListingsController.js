@@ -4,7 +4,6 @@ const { checkParams } = require("./helpers-listing/checkParams");
 
 const getProperties = async (req, res) => {
   try {
-    console.log("req.query", req.query);
     const {
       page,
       keywords,

@@ -61,7 +61,6 @@ const FavPage = () => {
   };
 
   const handlePage = (e) => {
-    console.log(e.target.name);
     const newPage = Number(e.target.name);
     setPage(newPage);
     setSearchParams((prev) => {
@@ -92,7 +91,6 @@ const FavPage = () => {
   let prevPage = currentPage - 1;
   let nextPage = currentPage + 1;
   let lastPage = Math.ceil(data?.countOfTotalListings / itemPerPage);
-  console.log(data?.countOfTotalListings);
 
   if (isLoading) {
     return (

@@ -55,7 +55,6 @@ const checkParams = (
   const itemPerPage = 6;
   if (page) {
     const currentPage = Number(page);
-    console.log("page", currentPage);
     text += ` limit ${itemPerPage} offset ${(page - 1) * itemPerPage}`;
   }
 

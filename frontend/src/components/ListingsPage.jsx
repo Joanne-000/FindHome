@@ -57,16 +57,7 @@ const ListingsPage = () => {
   let prevPage = currentPage - 1;
   let nextPage = currentPage + 1;
   let lastPage = Math.ceil(data?.countOfTotalListings / itemPerPage);
-  console.log(data?.countOfTotalListings);
 
-  console.log(
-    "firstPage,currentPage,prevPage,nextPage,lastPage",
-    firstPage,
-    currentPage,
-    prevPage,
-    nextPage,
-    lastPage
-  );
   if (isLoading) {
     return (
       <div className="flex justify-center">
@@ -94,7 +85,6 @@ const ListingsPage = () => {
   };
 
   const handlePage = (e) => {
-    console.log(e.target.name);
     const newPage = Number(e.target.name);
     setPage(newPage);
     setSearchParams((prev) => {
