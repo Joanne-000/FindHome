@@ -131,12 +131,12 @@ const ListingsPage = () => {
                 No listings found for your search.
               </p>
             ) : (
-              <>
+              <div className="flex w-full flex-col lg:flex-col p-3">
                 <ListingCards
                   data={data.listingswImages}
                   handleFav={handleFav}
                 />
-                <div className="join">
+                <div className="join justify-center m-5">
                   {firstPage === currentPage ? null : (
                     <>
                       <button
@@ -185,7 +185,7 @@ const ListingsPage = () => {
                     </button>
                   )}
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>
